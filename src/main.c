@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/03 17:08:38 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/03 18:32:57 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,4 +17,5 @@ int	main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 	ft_printf("hello habibi\n");
+	ft_printf("heheheh\n");
 }
