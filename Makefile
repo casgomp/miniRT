@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
+#    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/04 18:25:16 by aabdella         ###   ########.fr        #
+#    Updated: 2026/02/06 19:58:31 by pecastro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,10 @@ CC = cc
 
 FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include
 LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
-SRC = $(addprefix src/, initialize_win.c main.c)
+SRC = $(addprefix src/, main.c \
+						lib_events.c \
+						rendering.c)
+
 OBJ = $(SRC:src/%.c=built/%.o)
 
 all: libft minilibx $(NAME)
