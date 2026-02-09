@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/04 20:36:33 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/09 16:50:46 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # define OPEN_ERR "open file failed\n"
 # define MLX_ERR "mlx_intialization failure\n"
 # define ESC 0xff1b
+# define GREEN_PIXEL 0xFF00
+# define RED_PIXEL 0xFF0000
 
 # include "libft.h"
 # include "mlx.h"
@@ -28,13 +30,34 @@
 # include <math.h>
 # include <string.h>
 
-typedef struct l_scene
+typedef struct s_img
 {
-	void	*mlx;
-	void	*win;
-}t_scene;
+	void	*mlx_img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}t_img;
 
-void	window_init(t_scene *scene);
-int		close_window(t_scene *scene, int exit_code);
-int		key_hook(int keycode, t_scene *scene);
+typedef struct s_rect
+{
+	int	x;
+	int	y;
+	int	width;
+	int	height;
+	int	color;
+}	t_rect;
+
+typedef struct l_data
+{
+	void	*mlx_ptr;
+	void	*win_ptr;
+	t_img	img;
+}t_data;
+
+void	window_init(t_data *scene);
+int		close_window(t_data *scene, int exit_code);
+int		key_hook(int keycode, t_data *scene);
+//int		render_rect(t_data *data, t_rect rect);
+int		render(t_data *data);
 #endif
