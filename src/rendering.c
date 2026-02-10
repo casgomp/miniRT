@@ -6,12 +6,13 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 19:22:29 by pecastro          #+#    #+#             */
-/*   Updated: 2026/02/09 16:47:00 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:18:27 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
+//rect function is just for testing:
 int	render_rect(t_data *data, t_rect rect)
 {
 	int	i;
@@ -32,7 +33,6 @@ int	render_rect(t_data *data, t_rect rect)
 
 int	render(t_data *data)
 {
-	render_rect(data, (t_rect){0, 0, 100, 100, GREEN_PIXEL});
 	render_rect(data, (t_rect){0, 0, 100, 100, RED_PIXEL});
 	return (0);
 }

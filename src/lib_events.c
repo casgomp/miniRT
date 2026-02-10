@@ -1,43 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initialize_win.c                                   :+:      :+:    :+:   */
+/*   lib_events.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 18:11:34 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/09 16:45:35 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/10 16:58:11 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void	window_init(t_data *data)
+int	handle_destroy_notify(void *param)
 {
-	data->mlx_ptr = mlx_init();
-	if (!data->mlx_ptr)
-	{
-		write(2, MLX_ERR, ft_strlen(MLX_ERR));
-		close_window(data, 1);
-	}
-	data->win_ptr = mlx_new_window(data->mlx_ptr, 1980, 1080, "miniRT_scene");
-	mlx_hook(data->win_ptr, 17, 0, close_window, data);
-	mlx_hook(data->win_ptr, 2, 1L << 0, key_hook, data);
-	mlx_loop(data->mlx_ptr);
-}
+	t_data	*data;
 
-int	key_hook(int keycode, t_data *data)
-{
-	if (keycode == ESC)
-		close_window(data, 0);
+	data = (t_data *)param;
+	terminate(data, 0, NULL);
 	return (0);
 }
 
-int	close_window(t_data *data, int exit_code)
+int	handle_keypress(int keysym, void *param)
 {
-	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-	mlx_destroy_display(data -> mlx_ptr);
-	free(data -> mlx_ptr);
+	t_data	*data;
+
+	data = (t_data *)param;
+	if (keysym == XK_Escape)
+		terminate(data, 0, NULL);
+	return (0);
+}
+
+void	terminate(t_data *data, int exit_code, char *error_msg)
+{
+	if (data->img.mlx_img)
+		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
+	if (data->win_ptr)
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	if (data->mlx_ptr)
+	{
+		mlx_destroy_display(data->mlx_ptr);
+		free(data->mlx_ptr);
+	}
+	if (error_msg)
+		perror(error_msg);
 	exit(exit_code);
-	return (exit_code);
 }
