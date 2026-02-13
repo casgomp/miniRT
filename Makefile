@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/10 12:32:42 by aabdella         ###   ########.fr        #
+#    Updated: 2026/02/13 18:41:21 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,10 @@ LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
 SRC = $(addprefix src/, main.c \
 						lib_events.c \
 						transform_marix.c \
+						utils_matrix.c \
+						utils_matrix_2.c \
+						utils_tuples.c \
+						inversion_matrix.c \
 						rendering.c)
 
 OBJ = $(SRC:src/%.c=built/%.o)
