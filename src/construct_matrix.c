@@ -1,36 +1,63 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_matrix_2.c                                   :+:      :+:    :+:   */
+/*   construct_matrix.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:21:48 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/13 20:46:37 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 17:03:13 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void	ft_swap(float *a, float *b)
+void	ft_swap(double *a, double *b)
 {
-	float	tmp;
+	double	tmp;
 
 	tmp = *a;
 	*a = *b;
 	*b = tmp;
 }
 
-float	**duplicate_grid(float **grid)
+double	**identity_mtrx(int size)
+{
+	double	**imtrx;
+	int		diag;
+	int		i;
+	int		j;
+
+	imtrx = allocate_grid(size);
+	if (!imtrx)
+		return (NULL);
+	i = -1;
+	diag = -1;
+	while (++i < size)
+	{
+		diag ++;
+		j = -1;
+		while (++j < size)
+		{
+			if (j == diag)
+				imtrx[i][j] = 1;
+		}
+	}
+	return (imtrx);
+}
+
+double	**duplicate_grid(double **grid)
 {
 	int		i;
 	int		j;
 	int		size;
-	float	**duplicate_grid;
+	double	**duplicate_grid;
 
 	i = 0;
 	size = grid_size(grid);
 	duplicate_grid = allocate_grid(size);
+	if (!duplicate_grid)
+		return (NULL);
 	while (duplicate_grid[i])
 	{
 		j = 0;
@@ -44,16 +71,18 @@ float	**duplicate_grid(float **grid)
 	return (duplicate_grid);
 }
 
-float	**transpose_grid(float **tmtrx)
+double	**transpose_grid(double **tmtrx)
 {
 	int		i;
 	int		j;
 	int		size;
-	float	**dup_matrix;
+	double	**dup_matrix;
 
 	i = 0;
 	size = grid_size(tmtrx);
 	dup_matrix = duplicate_grid(tmtrx);
+	if (!dup_matrix)
+		return (NULL);
 	while (i < size)
 	{
 		j = i + 1;
@@ -67,16 +96,18 @@ float	**transpose_grid(float **tmtrx)
 	return (dup_matrix);
 }
 
-t_matrix	construct_matrix(float **grid)
+t_matrix	construct_matrix(double **grid)
 {
 	t_matrix	matrix;
 	int			size;
 
 	size = grid_size(grid);
 	matrix.size = size;
-	matrix.grid = grid;
+	matrix.grid = duplicate_grid(grid);
 	matrix.transpose = transpose_grid(grid);
 	matrix.determinant = determinant(grid, size);
 	matrix.inverse = inverse(grid, size);
+	if (!matrix.grid || !matrix.inverse || !matrix.transpose)
+		return ((t_matrix){0});
 	return (matrix);
 }

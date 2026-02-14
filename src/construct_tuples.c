@@ -1,26 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_tuples.c                                     :+:      :+:    :+:   */
+/*   construct_tuples.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:42:12 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/11 17:08:07 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 18:15:50 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
+double	*allocate_coordinate(double x, double y, double z, double w)
+{
+	double		*coordinate;
+	const int	size = 4;
+
+	coordinate = malloc(4 * sizeof(double));
+	if (!coordinate)
+		return (perror(MALL_ERR), NULL);
+	coordinate[0] = x;
+	coordinate[1] = y;
+	coordinate[2] = z;
+	coordinate[3] = w;
+	return (coordinate);
+}
+
 void	normalize_vector(t_tuple *vector)
 {
-	float	magnitude;
+	double	magnitude;
 
 	magnitude = 0;
 	magnitude = sqrtf(powf(vector->tuple[0], 2) + powf(vector->tuple[1], 2)
 			+ powf(vector->tuple[2], 2) + powf(vector->tuple[3], 2));
 	vector->magnitude = magnitude;
-	vector->unit_vector = malloc(4 * sizeof(int));
+	vector->unit_vector = malloc(4 * sizeof(double));
 	if (!vector->unit_vector)
 		return ;
 	vector->unit_vector[0] = vector->tuple[0] / magnitude;
@@ -29,18 +44,14 @@ void	normalize_vector(t_tuple *vector)
 	vector->unit_vector[3] = vector->tuple[3] / magnitude;
 }
 
-t_tuple	construct_tuple(float x, float y, float z, float w)
+t_tuple	construct_tuple(double x, double y, double z, double w)
 {
 	t_tuple		tuple;
 
 	tuple = (t_tuple){0};
-	tuple.tuple = malloc(4 * sizeof(int));
+	tuple.tuple = allocate_coordinate(x, y, z, w);
 	if (!tuple.tuple)
-		return (perror(MALL_ERR), (t_tuple){0});
-	tuple.tuple[0] = x;
-	tuple.tuple[1] = y;
-	tuple.tuple[2] = z;
-	tuple.tuple[3] = w;
+		return((t_tuple){0});
 	if (w == 0)
 	{
 		tuple.tuple_type = VECTOR;

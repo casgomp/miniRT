@@ -6,60 +6,70 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/13 21:19:32 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 16:32:53 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
+void	grid_cpy(double **dst, double src[100][100], int size)
+{
+	int i = 0;
+	int j = 0;
+
+	while (i < size)
+	{
+		j = 0;
+		while (j < size)
+		{
+			dst[i][j] = src[i][j];
+			j ++;
+		}
+		i ++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_data			data;
-	float			**grid_1;
-	float			**grid_2;
 	t_matrix		matrix;
 	t_tuple			tuple;
 	int				size;
+	double			**grid_1;
+	double			**grid_2;
 
 	(void)argc;
 	(void)argv;
 	size = 3;
+	double		test_grid_1[100][100] = {
+									{88, 158, 72},
+									{156, 293, 120},
+									{151, 255, 132}
+
+								};
+	double		test_grid_2[100][100] = {
+									{10, 16, 0},
+									{1, 9, 12},
+									{4, 3, 0}
+								};
 	grid_1 = allocate_grid(size);
 	grid_2 = allocate_grid(size);
-	grid_1[0][0] = 51;
-	grid_1[0][1] = 38;
-	grid_1[0][2] = 2;
-	grid_1[1][0] = 6;
-	grid_1[1][1] = 8;
-	grid_1[1][2] = 10;
-	grid_1[2][0] = 22;
-	grid_1[2][1] = 31;
-	grid_1[2][2] = 11;
-	grid_1[3] = NULL;
-
-	grid_2[0][0] = 83;
-	grid_2[0][1] = 9;
-	grid_2[0][2] = 0;
-	grid_2[1][0] = 14;
-	grid_2[1][1] = 22;
-	grid_2[1][2] = 65;
-	grid_2[2][0] = 0;
-	grid_2[2][1] = 2;
-	grid_2[2][2] = 9;
-	grid_1[3] = NULL;
-
-	matrix.grid = matrix_multiply(grid_1, grid_2);
+	grid_cpy(grid_1, test_grid_1, size);
+	grid_cpy(grid_2, test_grid_2, size);
 	tuple = construct_tuple(5.5, 6.25, 3.33, 0);
-	matrix = construct_matrix(matrix.grid);
+	matrix = construct_matrix(grid_1);
 	print_grid(matrix.grid);
-	printf("\n %f", matrix.determinant);
+	printf("\n %f\n", matrix.determinant);
 	print_grid(matrix.transpose);
 	printf("\n");
 	print_grid(matrix.inverse);
 	printf("\n");
+	double **multi = matrix_multiply(grid_1, matrix.inverse);
+	print_grid(multi);
 	free_matrix(&matrix);
 	free_grid(grid_1);
 	free_grid(grid_2);
+	free_grid(multi);
 	free_tuple(&tuple);
 	if (!ft_minilibx_setup(&data))
 		return (1);

@@ -6,25 +6,25 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:16:55 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/13 21:10:56 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 16:52:39 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-float	**allocate_grid(int size)
+double	**allocate_grid(int size)
 {
 	int		i;
-	float	**grid;
+	double	**grid;
 
 	i = 0;
-	grid = malloc((size + 1) * sizeof(float *));
+	grid = malloc((size + 1) * sizeof(double *));
 	if (!grid)
 		return (perror(MALL_ERR), NULL);
 	grid[size] = NULL;
 	while (i < size)
 	{
-		grid[i] = ft_calloc(size, sizeof(float));
+		grid[i] = ft_calloc(size, sizeof(double));
 		if (!grid[i])
 		{
 			while (i > 0)
@@ -33,26 +33,26 @@ float	**allocate_grid(int size)
 				free(grid[i]);
 			}
 			free(grid);
-			return (NULL);
+			return (perror(MALL_ERR), NULL);
 		}
 		i ++;
 	}
 	return (grid);
 }
 
-int	grid_size(float **grid)
+int	grid_size(double **grid)
 {
 	int		rows;
 
 	rows = 0;
-	if(!grid)
+	if (!grid)
 		return (0);
 	while (grid[rows] != NULL)
 		rows++;
 	return (rows);
 }
 
-void	print_grid(float **grid)
+void	print_grid(double **grid)
 {
 	int	i;
 	int	j;
@@ -65,7 +65,7 @@ void	print_grid(float **grid)
 		j = 0;
 		while (j < size)
 		{
-			printf("%8.2f", grid[i][j]);
+			printf("%8.2lf ", grid[i][j]);
 			j++;
 		}
 		printf("\n");
@@ -73,9 +73,9 @@ void	print_grid(float **grid)
 	}
 }
 
-static float	dot_product(int i, int j, float **grid_1, float **grid_2)
+static double	dot_product(int i, int j, double **grid_1, double **grid_2)
 {
-	float		result;
+	double		result;
 	int			size;
 	int			k;
 
@@ -90,17 +90,19 @@ static float	dot_product(int i, int j, float **grid_1, float **grid_2)
 	return (result);
 }
 
-float	**matrix_multiply(float **grid_1, float **grid_2)
+double	**matrix_multiply(double **grid_1, double **grid_2)
 {
 	int			i;
 	int			j;
-	float		**result;
+	double		**result;
 	int			size;
 
 	i = 0;
 	j = 0;
 	size = grid_size(grid_1);
 	result = allocate_grid(size);
+	if (!result)
+		return (NULL);
 	while (i < size)
 	{
 		j = 0;

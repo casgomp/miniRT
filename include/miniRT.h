@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/13 20:44:50 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 17:46:42 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@
 # define MALL_ERR "memory allocation failure\n"
 # define OPEN_ERR "open file failed\n"
 # define MLX_ERR "mlx_intialization failure\n"
+# define PI 3.14159265358979323846
 # define ESC 0xff1b
 # define WIN_W 800
 # define WIN_H 800
 # define GREEN_PIXEL 0xFF00
 # define RED_PIXEL 0xFF0000
 
-typedef	enum e_TUPLE_TYP
+typedef enum e_TUPLE_TYP
 {
 	VECTOR,
 	POINT,
@@ -62,27 +63,27 @@ typedef struct s_data
 
 typedef struct s_matrix
 {
-	float	**grid;
+	double	**grid;
 	int		size;
-	float	**transpose;
-	float	**inverse;
-	float	determinant;
+	double	**transpose;
+	double	**inverse;
+	double	determinant;
 }	t_matrix;
 
 typedef struct s_tuple
 {
-	float			*tuple;
+	double			*tuple;
 	t_TUPLE_TYP		tuple_type;
-	float			*unit_vector;
-	float			magnitude;
+	double			*unit_vector;
+	double			magnitude;
 }	t_tuple;
 
 typedef struct s_rect
 {
-	float	x;
-	float	y;
-	float	width;
-	float	height;
+	double	x;
+	double	y;
+	double	width;
+	double	height;
 	int		color;
 }	t_rect;
 
@@ -101,26 +102,27 @@ void		img_pix_put(t_img *img, int x, int y, int color);
 void		terminate(t_data *data, int exit_code, char *error_msg);
 
 //matrix utils
-void		print_grid(float **grid);
-float		**allocate_grid(int size);
-void		free_grid(float **grid);
+void		print_grid(double **grid);
+double		**allocate_grid(int size);
+void		free_grid(double **grid);
 void		free_matrix(t_matrix *matrix);
-float		**matrix_multiply(float **grid_1, float **grid_2);
-int			grid_size(float **grid);
-float		**duplicate_grid(float **grid);
+double		**matrix_multiply(double **grid_1, double **grid_2);
+int			grid_size(double **grid);
+double		**duplicate_grid(double **grid);
 
 //construct matrix
-float		**inverse(float **grid, int size);
-float		**tranpose_grid(float **tmtrx);
-t_matrix	construct_matrix(float **grid);
-float		**get_submatrix(float **mtrx, int size, int rowskip, int colskip);
-float		cofactor(float **mtrx, int size, int row, int col);
+double		**inverse(double **grid, int size);
+double		**tranpose_grid(double **tmtrx);
+t_matrix	construct_matrix(double **grid);
+double		**get_submatrix(double **mtrx, int size, int rowskip, int colskip);
+double		cofactor(double **mtrx, int size, int row, int col);
+double		**identity_mtrx(int size);
 
 //tuples
-t_tuple		construct_tuple(float x, float y, float z, float w);
+t_tuple		construct_tuple(double x, double y, double z, double w);
 void		normalize_vector(t_tuple *vector);
 void		free_tuple(t_tuple *tuple);
-float		determinant(float **grid, int size);
+double		determinant(double **grid, int size);
 
 
 #endif

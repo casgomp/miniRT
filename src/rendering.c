@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 19:22:29 by pecastro          #+#    #+#             */
-/*   Updated: 2026/02/11 13:45:46 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 16:01:57 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 //rect function is just for testing:
 int	render_rect(t_data *data, t_rect rect)
 {
-	float	i;
-	float	j;
+	double	i;
+	double	j;
 
 	if (!data->win_ptr)
 		return (1);

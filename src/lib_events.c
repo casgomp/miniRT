@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 18:11:34 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/13 20:49:33 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 16:01:50 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	terminate(t_data *data, int exit_code, char *error_msg)
 	exit(exit_code);
 }
 
-void	free_grid(float **grid)
+void	free_grid(double **grid)
 {
 	int	i;
 	int	size;
@@ -68,4 +68,7 @@ void	free_matrix(t_matrix *matrix)
 	free_grid(matrix->grid);
 	free_grid(matrix->transpose);
 	free_grid(matrix->inverse);
+	matrix -> grid = NULL;
+	matrix -> transpose = NULL;
+	matrix -> inverse = NULL;
 }

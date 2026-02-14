@@ -6,16 +6,16 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:40:41 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/13 20:47:24 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/14 16:42:02 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-float	**inverse(float **grid, int size)
+double	**inverse(double **grid, int size)
 {
-	float	**invgrid;
-	float	det;
+	double	**invgrid;
+	double	det;
 	int		i;
 	int		j;
 
@@ -23,6 +23,8 @@ float	**inverse(float **grid, int size)
 	if (det == 0)
 		return (NULL);
 	invgrid = allocate_grid(size);
+	if (!invgrid)
+		return (NULL);
 	i = -1;
 	while (++i < size)
 	{
@@ -35,9 +37,9 @@ float	**inverse(float **grid, int size)
 	return (invgrid);
 }
 
-float	**get_submatrix(float **mtrx, int size, int rowskip, int colskip)
+double	**get_submatrix(double **mtrx, int size, int rowskip, int colskip)
 {
-	float	**submtrx;
+	double	**submtrx;
 	int		i;
 	int		sub_i;
 	int		j;
@@ -46,6 +48,8 @@ float	**get_submatrix(float **mtrx, int size, int rowskip, int colskip)
 	if (!mtrx || rowskip >= size || colskip >= size)
 		return (NULL);
 	submtrx = allocate_grid(size - 1);
+	if (!submtrx)
+		return (NULL);
 	i = 0;
 	sub_i = 0;
 	while (i < size)
@@ -69,10 +73,10 @@ float	**get_submatrix(float **mtrx, int size, int rowskip, int colskip)
 	return (submtrx);
 }
 
-float	cofactor(float **mtrx, int size, int row, int col)
+double	cofactor(double **mtrx, int size, int row, int col)
 {
-	float	**submtrx;
-	float	det;
+	double	**submtrx;
+	double	det;
 	int		sign;
 
 	submtrx = get_submatrix(mtrx, size, row, col);
@@ -84,10 +88,10 @@ float	cofactor(float **mtrx, int size, int row, int col)
 	return (det * sign);
 }
 
-float	determinant(float **grid, int size)
+double	determinant(double **grid, int size)
 {
-	int	col;
-	int	det;
+	int		col;
+	double	det;
 
 	if (size == 1)
 		return (grid[0][0]);
