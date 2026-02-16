@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 17:46:42 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:16:17 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define GREEN_PIXEL 0xFF00
 # define RED_PIXEL 0xFF0000
 
-typedef enum e_TUPLE_TYP
+typedef enum e_TUPLE_TYP //why not just add the w at the end: 0 for tuple and 1 for point (as in the book)
 {
 	VECTOR,
 	POINT,
@@ -65,9 +65,9 @@ typedef struct s_matrix
 {
 	double	**grid;
 	int		size;
-	double	**transpose;
-	double	**inverse;
-	double	determinant;
+	double	**transpose;//this variable name should change because the function name is the same
+	double	**inverse;//this variable name should change because the function name is the same
+	double	determinant;//this variable name should change because the function name is the same
 }	t_matrix;
 
 typedef struct s_tuple

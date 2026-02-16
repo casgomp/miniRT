@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:27:04 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/02 18:27:06 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:15:17 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,8 @@ long		ft_atol(const char *nptr);
 long long	ft_atoll(const char *nptr);
 bool		ft_atol_flow(const char *nptr);
 int			ft_isquote(int c);
+
+//utils
+void		ft_swap(double *a, double *b);
+
 #endif

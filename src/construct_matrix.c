@@ -3,25 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   construct_matrix.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:21:48 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 17:03:13 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:16:12 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void	ft_swap(double *a, double *b)
+/*void	ft_swap(double *a, double *b) //i've put it in libft
 {
 	double	tmp;
 
 	tmp = *a;
 	*a = *b;
 	*b = tmp;
-}
+}*/
 
-double	**identity_mtrx(int size)
+/*
+double	**identity_mtrx(int size) //i've made the function simpler (see below)
 {
 	double	**imtrx;
 	int		diag;
@@ -43,6 +44,20 @@ double	**identity_mtrx(int size)
 				imtrx[i][j] = 1;
 		}
 	}
+	return (imtrx);
+}*/
+
+double	**identity_mtrx(int size)
+{
+	double	**imtrx;
+	int		i;
+
+	imtrx = allocate_grid(size);
+	if (!imtrx)
+		return (NULL);
+	i = -1;
+	while (++i < size)
+		imtrx[i][i] = 1;
 	return (imtrx);
 }
 
