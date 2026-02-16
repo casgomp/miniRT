@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 16:32:53 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/15 16:52:40 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(int argc, char **argv)
 {
 	t_data			data;
 	t_matrix		matrix;
-	t_tuple			tuple;
+	double			*tuple;
 	int				size;
 	double			**grid_1;
 	double			**grid_2;
@@ -56,7 +56,7 @@ int	main(int argc, char **argv)
 	grid_2 = allocate_grid(size);
 	grid_cpy(grid_1, test_grid_1, size);
 	grid_cpy(grid_2, test_grid_2, size);
-	tuple = construct_tuple(5.5, 6.25, 3.33, 0);
+	tuple = allocate_tuple(5.5, 6.25, 3.33, 0);
 	matrix = construct_matrix(grid_1);
 	print_grid(matrix.grid);
 	printf("\n %f\n", matrix.determinant);
@@ -70,7 +70,12 @@ int	main(int argc, char **argv)
 	free_grid(grid_1);
 	free_grid(grid_2);
 	free_grid(multi);
-	free_tuple(&tuple);
+	double	angle = degrees_to_radians(90);
+	double	*rotate;
+	rotate = rotate_tuple_z(tuple, angle);
+	printf("\n%f, %f, %f\n", rotate[0], rotate[1], rotate[2]);
+	free(rotate);
+	free(tuple);
 	if (!ft_minilibx_setup(&data))
 		return (1);
 	return (0);

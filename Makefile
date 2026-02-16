@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/14 17:44:10 by aabdella         ###   ########.fr        #
+#    Updated: 2026/02/16 21:44:19 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,13 @@ SRC = $(addprefix src/, main.c \
 						transform_marix.c \
 						transform_tuple.c \
 						utils_matrix.c \
+						utils_tuple.c \
 						construct_matrix.c \
 						construct_tuples.c \
 						inversion_matrix.c \
+						line_line_intersection.c \
+						ray_sphere_intersection.c \
+						ray_tracing_utils.c\
 						rendering.c)
 
 OBJ = $(SRC:src/%.c=built/%.o)

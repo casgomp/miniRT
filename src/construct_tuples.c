@@ -6,16 +6,15 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:42:12 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 18:15:50 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/15 16:02:07 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-double	*allocate_coordinate(double x, double y, double z, double w)
+double	*allocate_tuple(double x, double y, double z, double w)
 {
 	double		*coordinate;
-	const int	size = 4;
 
 	coordinate = malloc(4 * sizeof(double));
 	if (!coordinate)
@@ -49,7 +48,7 @@ t_tuple	construct_tuple(double x, double y, double z, double w)
 	t_tuple		tuple;
 
 	tuple = (t_tuple){0};
-	tuple.tuple = allocate_coordinate(x, y, z, w);
+	tuple.tuple = allocate_tuple(x, y, z, w);
 	if (!tuple.tuple)
 		return((t_tuple){0});
 	if (w == 0)

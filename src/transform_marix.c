@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:43:57 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 17:45:46 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/15 17:00:45 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,39 @@ double	**rotation_x(double r)
 		grid[i][size - 1 - i] = sin(r);
 	}
 	grid[1][2] = -grid[1][2];
+	return (grid);
+}
+
+double	**scaling(double *coord)
+{
+	double		**grid;
+	const int	size = 4;
+	int			i;
+
+	grid = identity_mtrx(size);
+	if (!grid)
+		return (NULL);
+	i = -1;
+	while (++i < size - 1)
+	{
+		grid[i][i] = coord[i];
+	}
+	return (grid);
+}
+
+double	**translation(double *coord)
+{
+	double		**grid;
+	const int	size = 4;
+	int			i;
+
+	grid = identity_mtrx(size);
+	if (!grid)
+		return (NULL);
+	i = -1;
+	while (++i < size - 1)
+	{
+		grid[i][size - 1] = coord[i];
+	}
 	return (grid);
 }
