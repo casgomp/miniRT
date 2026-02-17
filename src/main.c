@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 16:32:53 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/17 16:06:36 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,14 @@ int	main(int argc, char **argv)
 	int				size;
 	double			**grid_1;
 	double			**grid_2;
+	int				fd;
 
+	if (argc != 2)
+		return (1);
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		return (perror(argv[1]), 1);
+	//parse(fd);
 	(void)argc;
 	(void)argv;
 	size = 3;

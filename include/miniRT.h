@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/16 11:16:17 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/17 16:08:23 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define GREEN_PIXEL 0xFF00
 # define RED_PIXEL 0xFF0000
 
-typedef enum e_TUPLE_TYP //why not just add the w at the end: 0 for tuple and 1 for point (as in the book)
+typedef enum e_TUPLE_TYP
 {
 	VECTOR,
 	POINT,
@@ -86,6 +86,12 @@ typedef struct s_rect
 	double	height;
 	int		color;
 }	t_rect;
+
+typedef struct s_intersection
+{
+	//tvalues (intersections);
+	//object that was intersected;
+}
 
 //main
 int			main(int argc, char **argv);
