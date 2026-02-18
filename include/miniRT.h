@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 21:22:44 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/18 21:25:59 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ typedef enum e_TUPLE_TYP
 	VECTOR,
 	POINT,
 }	t_TUPLE_TYP;
+
+typedef enum e_OBJECT_TYP
+{
+	SPHERE,
+	CYLINDER,
+	PLANE,
+}	t_OBJECT_TYP;
 
 typedef struct s_img
 {
@@ -86,6 +93,15 @@ typedef struct s_tuple
 	double			magnitude;
 }	t_tuple;
 
+typedef struct s_plane
+{
+	double	x;
+	double	y;
+	double	width;
+	double	height;
+	int		color;
+}	t_plane;
+
 typedef struct s_rect
 {
 	double	x;
@@ -95,42 +111,50 @@ typedef struct s_rect
 	int		color;
 }	t_rect;
 
-typedef enum e_type
+typedef struct s_cylinder
 {
-	SPHERE,
-	PLANE,
-	CYLINDER
-}	t_type;
+	double	x;
+	double	y;
+	double	width;
+	double	height;
+	int		color;
+}	t_cylinder;
 
-typedef struct	s_object
-{
-	t_type		type;
-	t_matrix	transform;
-	t_material	material; //although for now material is just color (int or double?)
-	void		*shape_data;//pointer to an object (t_sphere, t_plane, or t_cylinder)
-}	t_object;
-
-typedef struct s_intersection
-{
-	double		t;
-	t_sphere	*sphere;//this will eventually need to work for any object
-} t_intersection;
-
-typedef struct	s_sphere
+typedef struct s_sphere
 {
 	double	radius;
-	double	center;
-	double	discriminant;
-	//tranform matrix;
-	double	t1;
-	double	t2;
-	int		id;
+	double	*center;
 }	t_sphere;
+
+typedef struct s_objects
+{
+	int					object_id;
+	t_OBJECT_TYP		object_type;
+	struct s_object		*next;
+	union
+	{
+		t_sphere		*sphere;
+		t_plane			*plane;
+		t_cylinder		*cylinder;
+	}	u_obj;
+
+}	t_objects;
+
+typedef struct s_intersection_lst
+{
+	double						*t;
+	double						**points_lst;
+	double						hit;
+	double						*hit_points;
+	double						object_id;
+	struct s_intersection_lst	*next;
+}	t_instersection_lst;
 
 typedef struct s_ray
 {
-	double	*origin;
-	double	*direction;
+	double					*ray_origin;
+	double					*ray_direction;
+	t_instersection_lst		*intersection_lst;
 }	t_ray;
 
 //main
@@ -194,5 +218,15 @@ t_intersection	*intersection(t_ray r, t_sphere *s);
 t_intersection	*intersect_list_append(t_intersection *xs, 
 							t_intersection *xslst, int *count, int *capacity);
 int				get_pixel_color(t_ray r, t_sphere *s);
+
+//construct intersections
+double		*ray_sphere_intersection(double *ray_origin,
+				double *ray_direction, double *sphere_center);
+double		**ray_sphere_points(double *ray_origin, double *ray_direction,
+				double *t);
+double		*get_discriminant(double *ray_origin, double *ray_direction,
+				double *sphere_origin);
+double		*multiply_scalar(double *tuple, double scalar);
+
 
 #endif
