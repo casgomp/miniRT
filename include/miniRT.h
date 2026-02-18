@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 17:03:01 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/18 19:48:46 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,10 +135,10 @@ typedef struct s_objects
 
 typedef struct s_intersection_lst
 {
-	double						*t_lst;
+	double						*t;
 	double						**points_lst;
-	double						t_hit;
-	double						*hit_point;
+	double						hit;
+	double						*hit_points;
 	double						object_id;
 	struct s_intersection_lst	*next;
 }	t_instersection_lst;
@@ -205,5 +205,15 @@ double		*cross_product(double *vector_1, double *vector_2);
 double		*add_tuple(double *tuple_1, double *tuple_2);
 double		*subtract_tuple(double *tuple_1, double *tuple_2);
 double		dot_product_tuple(double *tuple_1, double *tuple_2);
+
+//construct intersections
+double		*ray_sphere_intersection(double *ray_origin,
+				double *ray_direction, double *sphere_center);
+double		**ray_sphere_points(double *ray_origin, double *ray_direction,
+				double *t);
+double		*get_discriminant(double *ray_origin, double *ray_direction,
+				double *sphere_origin);
+double		*multiply_scalar(double *tuple, double scalar);
+
 
 #endif
