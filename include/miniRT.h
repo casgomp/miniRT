@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/16 22:33:19 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/18 16:08:52 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ typedef enum e_TUPLE_TYP
 	VECTOR,
 	POINT,
 }	t_TUPLE_TYP;
+
+typedef enum e_OBJECT_TYP
+{
+	SPHERE,
+	CYLINDER,
+	PLANE,
+}	t_OBJECT_TYP;
 
 typedef struct s_img
 {
@@ -79,6 +86,15 @@ typedef struct s_tuple
 	double			magnitude;
 }	t_tuple;
 
+typedef struct s_plane
+{
+	double	x;
+	double	y;
+	double	width;
+	double	height;
+	int		color;
+}	t_plane;
+
 typedef struct s_rect
 {
 	double	x;
@@ -88,15 +104,50 @@ typedef struct s_rect
 	int		color;
 }	t_rect;
 
+typedef struct s_cylinder
+{
+	double	x;
+	double	y;
+	double	width;
+	double	height;
+	int		color;
+}	t_cylinder;
+
 typedef struct s_sphere
 {
 	double	radius;
-	double	center;
-	double	discriminant;
-	double	t1;
-	double	t2;
-	int		id;
+	double	*center;
 }	t_sphere;
+
+typedef struct s_objects
+{
+	int					object_id;
+	struct s_object		*next;
+	union
+	{
+		t_sphere		*sphere;
+		t_plane			*plane;
+		t_cylinder		*cylinder;
+	}	u_obj;
+
+}	t_objects;
+
+typedef struct s_intersection_lst
+{
+	double	*t_lst;
+	double	**points_lst;
+	double	t_hit;
+	double	*hit_point;
+	double	object_id;
+}	t_instersection_lst;
+
+typedef struct s_ray
+{
+	double		*ray_origin;
+	double		*ray_direction;
+	t_objects	*obj_lst;
+}	t_ray;
+
 //main
 int			main(int argc, char **argv);
 int			ft_minilibx_setup(t_data *data);
