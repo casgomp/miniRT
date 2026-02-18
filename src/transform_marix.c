@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:43:57 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/17 16:07:24 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/18 10:04:46 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,39 @@ double	**rotation_x(double r)
 		grid[i][size - 1 - i] = sin(r);
 	}
 	grid[1][2] = -grid[1][2];
+	return (grid);
+}
+
+double	**scaling(double *coord)
+{
+	double		**grid;
+	const int	size = 4;
+	int			i;
+
+	grid = identity_mtrx(size);
+	if (!grid)
+		return (NULL);
+	i = -1;
+	while (++i < size - 1)
+	{
+		grid[i][i] = coord[i];
+	}
+	return (grid);
+}
+
+double	**translation(double *coord)
+{
+	double		**grid;
+	const int	size = 4;
+	int			i;
+
+	grid = identity_mtrx(size);
+	if (!grid)
+		return (NULL);
+	i = -1;
+	while (++i < size - 1)
+	{
+		grid[i][size - 1] = coord[i];
+	}
 	return (grid);
 }

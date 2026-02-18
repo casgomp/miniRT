@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/17 16:08:23 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/18 10:05:46 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <stdlib.h>
 # include <math.h>
 # include <string.h>
+#include <sys/time.h>
 
 # define RD_ERR "read file failure\n"
 # define MALL_ERR "memory allocation failure\n"
@@ -93,6 +94,15 @@ typedef struct s_intersection
 	//object that was intersected;
 }
 
+typedef struct s_sphere
+{
+	double	radius;
+	double	center;
+	double	discriminant;
+	double	t1;
+	double	t2;
+	int		id;
+}	t_sphere;
 //main
 int			main(int argc, char **argv);
 int			ft_minilibx_setup(t_data *data);
@@ -115,6 +125,11 @@ void		free_matrix(t_matrix *matrix);
 double		**matrix_multiply(double **grid_1, double **grid_2);
 int			grid_size(double **grid);
 double		**duplicate_grid(double **grid);
+double		**rotation_x(double r);
+double		**rotation_y(double r);
+double		**rotation_z(double r);
+double		**scaling(double *coord);
+double		**translation(double *coord);
 
 //construct matrix
 double		**inverse(double **grid, int size);
@@ -129,6 +144,19 @@ t_tuple		construct_tuple(double x, double y, double z, double w);
 void		normalize_vector(t_tuple *vector);
 void		free_tuple(t_tuple *tuple);
 double		determinant(double **grid, int size);
-
+double		*allocate_tuple(double x, double y, double z, double w);
+double		degrees_to_radians(double degrees);
+double		radians_to_degrees(double radians);
+double		**tuple_to_matrix(double *tuple);
+double		*matrix_to_tuple(double **grid);
+double		*rotate_tuple_x(double *tuple, double angle);
+double		*rotate_tuple_y(double *tuple, double angle);
+double		*rotate_tuple_z(double *tuple, double angle);
+double		*scale_tuple(double *tuple);
+double		*translate_tuple(double *tuple);
+double		*cross_product(double *vector_1, double *vector_2);
+double		*add_tuple(double *tuple_1, double *tuple_2);
+double		*subtract_tuple(double *tuple_1, double *tuple_2);
+double		dot_product_tuple(double *tuple_1, double *tuple_2);
 
 #endif
