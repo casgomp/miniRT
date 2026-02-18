@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 10:05:46 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/18 15:55:50 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,21 @@ typedef struct s_data
 
 }	t_data;
 
+/*
 typedef struct s_matrix
 {
 	double	**grid;
 	int		size;
-	double	**transpose;//this variable name should change because the function name is the same
-	double	**inverse;//this variable name should change because the function name is the same
-	double	determinant;//this variable name should change because the function name is the same
-}	t_matrix;
+	double	**transpose;
+	double	**inverse;
+	double	determinant;
+}	t_matrix;*/
+
+typedef struct s_matrix
+{
+	int		size;
+	double	m[4][4];
+}	t_matrix;//simplified version to avoid memory leaks
 
 typedef struct s_tuple
 {
@@ -88,21 +95,44 @@ typedef struct s_rect
 	int		color;
 }	t_rect;
 
+typedef enum e_type
+{
+	SPHERE,
+	PLANE,
+	CYLINDER
+}	t_type;
+
+typedef struct	s_object
+{
+	t_type		type;
+	t_matrix	transform;
+	t_material	material; //although for now material is just color (int or double?)
+	void		*shape_data;//pointer to an object (t_sphere, t_plane, or t_cylinder)
+}	t_object;
+
 typedef struct s_intersection
 {
-	//tvalues (intersections);
-	//object that was intersected;
-}
+	double		t;
+	t_sphere	*sphere;//this will eventually need to work for any object
+} t_intersection;
 
-typedef struct s_sphere
+typedef struct	s_sphere
 {
 	double	radius;
 	double	center;
 	double	discriminant;
+	//tranform matrix;
 	double	t1;
 	double	t2;
 	int		id;
 }	t_sphere;
+
+typedef struct s_ray
+{
+	double	origin;
+	double	direction;
+}	t_ray;
+
 //main
 int			main(int argc, char **argv);
 int			ft_minilibx_setup(t_data *data);
