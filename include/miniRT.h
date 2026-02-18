@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 15:55:50 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/18 21:22:44 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ typedef struct	s_sphere
 
 typedef struct s_ray
 {
-	double	origin;
-	double	direction;
+	double	*origin;
+	double	*direction;
 }	t_ray;
 
 //main
@@ -188,5 +188,11 @@ double		*cross_product(double *vector_1, double *vector_2);
 double		*add_tuple(double *tuple_1, double *tuple_2);
 double		*subtract_tuple(double *tuple_1, double *tuple_2);
 double		dot_product_tuple(double *tuple_1, double *tuple_2);
+
+//test_camera
+t_intersection	*intersection(t_ray r, t_sphere *s);
+t_intersection	*intersect_list_append(t_intersection *xs, 
+							t_intersection *xslst, int *count, int *capacity);
+int				get_pixel_color(t_ray r, t_sphere *s);
 
 #endif

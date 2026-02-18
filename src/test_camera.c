@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray_sphere_intersection.c                          :+:      :+:    :+:   */
+/*   test_camera.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 15:49:19 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/18 21:22:33 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,60 +58,88 @@ t_intersection	*intersection(t_ray r, t_sphere *s)
 }
 
 t_intersection	*intersect_list_append(t_intersection *xs, 
-							t_intersection *xslst, int xs_count, int *capacity)
+							t_intersection *xslst, int *count, int *capacity)
 {
 	t_intersection	*newptr;
+	int				i;
 
 	newptr = NULL;
-	if (xs_count > *capacity)
+	if (*count + 2 > *capacity) //2 would eventually be a number passed to function based on object intersected
 	{
-		*capacity == *capacity * 2;
+		*capacity = *capacity * 2;
 		newptr = malloc(sizeof(t_intersection) * *capacity);
 		if (!newptr)
-			return (free(xs), NULL);
-		memcpy(newptr, xslst, xs_count - 2);
-		newptr[xs_count - 1] = ;
-		newptr[xs_count] = ;
+			return (free(xs), free(xslst), NULL);
+		i = -1;
+		while (++i < *count)
+			newptr[i] = xslst[i];
+		free(xslst);
+		xslst = newptr;
 	}
-	//memcpy stuff to newptr
-	//add xs to newptr
-
-	xslst = newptr;
+	xslst[*count] = xs[0];
+	xslst[*count + 1] = xs[1];
+	*count += 2; //eventually chnage to the number of actual object.
 	free(xs);
 	return (xslst);
 }
 
-void	render_loop(void)/*either void or take scene arguments*/
+int	get_pixel_color(t_ray r, t_sphere *s)//this function gets called for every ray
 {
 	t_intersection	*xs;
 	t_intersection	*xslst;
-	t_ray			r; //
-	t_sphere		s; //
-	int				obj_count;//obj_ct wont work with complex scene?
+	t_intersection	*hit;
 	int				xs_count;
 	int				capacity;
 	int				i;
+	int				color;
 
+	//create intersection list for every object
 	xs_count = 0;
 	capacity = 8;
-	while (++i < obj_count)
+	while (++i < 1) //eventually < number of objects in scene
 	{
-		xs = intersection(r, &s);
+		xs = intersection(r, s);
 		if (xs)
 		{
-			xs_count += 2; //this wont work whith complex scene (plane xs=1 not 2)
 			xslst = intersect_list_append(xs, xslst, xs_count, &capacity);
 			if (!xslst)
-				return (NULL);// first free list?
+				return (NULL);
 		}
 	}
-	//free xs in this function
-	//do something with t and then free
-	//group intersections
 
-	//identify the hit
+	//find the hit
+	hit = NULL;
+	i = -1;
+	while (++i < xs_count)
+	{
+		if (xslst[i].t > 0.0001)
+		{
+			if (!hit || xslst[i].t < hit->t)
+				hit = &xslst[i];
+		}
+	}
+	color = 0x000000;
+	if (hit)
+		color = 0xFF0000;
+	return (free(xslst), color);
+}
 
-	//if hits exists paint red otherwise paint black
+void	render_loop(t_data *data, t_sphere *s)
+{
+	int		x;
+	int		y;
+	int		color;
+	t_ray	r;
 
-	//free
+	r.origin = allocate_tuple(0,0,-5,1); //camera origin (which is also the ray's origin)
+	y = -1;
+	while (++y < WIN_H)
+	{
+		x = -1;
+		while (++x < WIN_W)
+		{
+			get_pixel_color(r, s);
+			img_pix_put(&(data->img), x, y, color);
+		}
+	}
 }
