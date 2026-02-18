@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   construct_tuples.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:42:12 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 18:15:50 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/17 16:22:28 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	normalize_vector(t_tuple *vector)
 	double	magnitude;
 
 	magnitude = 0;
-	magnitude = sqrtf(powf(vector->tuple[0], 2) + powf(vector->tuple[1], 2)
-			+ powf(vector->tuple[2], 2) + powf(vector->tuple[3], 2));
+	magnitude = sqrtf(pow(vector->tuple[0], 2) + pow(vector->tuple[1], 2)
+			+ pow(vector->tuple[2], 2) + pow(vector->tuple[3], 2));
 	vector->magnitude = magnitude;
 	vector->unit_vector = malloc(4 * sizeof(double));
 	if (!vector->unit_vector)
