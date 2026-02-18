@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 16:08:52 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/18 17:03:01 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ typedef struct s_sphere
 typedef struct s_objects
 {
 	int					object_id;
+	t_OBJECT_TYP		object_type;
 	struct s_object		*next;
 	union
 	{
@@ -134,18 +135,19 @@ typedef struct s_objects
 
 typedef struct s_intersection_lst
 {
-	double	*t_lst;
-	double	**points_lst;
-	double	t_hit;
-	double	*hit_point;
-	double	object_id;
+	double						*t_lst;
+	double						**points_lst;
+	double						t_hit;
+	double						*hit_point;
+	double						object_id;
+	struct s_intersection_lst	*next;
 }	t_instersection_lst;
 
 typedef struct s_ray
 {
-	double		*ray_origin;
-	double		*ray_direction;
-	t_objects	*obj_lst;
+	double					*ray_origin;
+	double					*ray_direction;
+	t_instersection_lst		*intersection_lst;
 }	t_ray;
 
 //main

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/17 21:55:45 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/18 17:20:58 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,19 @@ double	**ray_sphere_points(double *ray_origin, double *ray_direction,
 	return (intersection_arr);
 }
 
-t_ray	construct_ray(double *ray_origin, double *ray_direction)
+t_ray	construct_ray(double *ray_origin, double *ray_direction
+	, t_objects *obj_lst)
 {
 	t_ray	ray;
 
 	ray = (t_ray){0};
 	ray.ray_origin = ray_origin;
 	ray.ray_direction = ray_direction;
+	while (obj_lst)
+	{
+		if (obj_lst->object_type == SPHERE)
+			//
+
+	}
 
 }
