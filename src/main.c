@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 10:06:50 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/21 17:43:21 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	grid_cpy(double **dst, double src[100][100], int size)
 		i ++;
 	}
 }
-
+/*
 int	main(int argc, char **argv)
 {
 	t_data			data;
@@ -83,9 +83,68 @@ int	main(int argc, char **argv)
 	printf("\n%f, %f, %f\n", rotate[0], rotate[1], rotate[2]);
 	free(rotate);
 	free(tuple);
-	if (!ft_minilibx_setup(&data))
+	if (ft_minilibx_setup(&data))
 		return (1);
+	//create sphere
+	t_sphere s;
+	s.radius = 1;
+	s.center = allocate_tuple(0,0,0,1);
+	render_loop(&data, &s);
+	mlx_loop(data.mlx_ptr);
+	free(s.center);
 	return (0);
+}*/
+
+/*//test window
+int	main(int argc, char **argv)
+{
+    void *mlx;
+    void *win;
+
+	(void)argc;
+	(void)argv;
+    mlx = mlx_init();
+    if (!mlx) {
+        printf("MLX INIT FAILED\n");
+        return (1);
+    }
+    win = mlx_new_window(mlx, 800, 800, "TEST");
+    if (!win) {
+        printf("WIN INIT FAILED\n");
+        return (1);
+    }
+    printf("Window should be open. Press Ctrl+C to stop.\n");
+    mlx_loop(mlx);
+    return (0);
+}*/
+
+int main(int argc, char **argv)
+{
+    t_data data;
+    // ... (Your matrix/tuple print tests) ...
+
+	(void)argc;
+	(void)argv;
+    if (ft_minilibx_setup(&data))
+	{
+		return (perror("minilibx_setup"), 1);
+	}
+	
+	printf("Success in minilibx_setup\n");
+
+    // This forces the window to appear on some systems
+    mlx_do_sync(data.mlx_ptr); 
+
+    t_sphere s;
+    s.radius = 1;
+    s.center = allocate_tuple(0,0,0,1);
+
+    printf("Starting render... please wait...\n");
+    render_loop(&data, &s);
+    printf("Render finished!\n");
+
+    mlx_loop(data.mlx_ptr);
+    return (0);
 }
 
 int	ft_minilibx_setup(t_data *data)
@@ -101,9 +160,8 @@ int	ft_minilibx_setup(t_data *data)
 	data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIN_W, WIN_H);
 	data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp,
 			&data->img.line_len, &data->img.endian);
-	mlx_loop_hook(data->mlx_ptr, &render, data);
+	//mlx_loop_hook(data->mlx_ptr, &render, data); //use only for animations
 	mlx_hook(data->win_ptr, 17, 0, handle_destroy_notify, data);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, handle_keypress, data);
-	mlx_loop(data->mlx_ptr);
 	return (0);
 }

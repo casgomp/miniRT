@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
+#    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/18 19:44:02 by aabdella         ###   ########.fr        #
+#    Updated: 2026/02/21 14:37:00 by pecastro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,17 +18,17 @@ FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include
 LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
 SRC = $(addprefix src/, main.c \
 						lib_events.c \
-						transform_marix.c \
+						transform_matrix.c \
 						transform_tuple.c \
 						utils_matrix.c \
 						utils_tuple.c \
 						construct_matrix.c \
 						construct_tuples.c \
 						inversion_matrix.c \
-						construct_ray_intersect.c \
 						line_line_intersection.c \
 						ray_sphere_intersection.c \
 						ray_tracing_utils.c\
+						test_camera.c \
 						rendering.c)
 
 OBJ = $(SRC:src/%.c=built/%.o)

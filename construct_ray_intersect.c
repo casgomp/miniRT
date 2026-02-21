@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   construct_ray_intersect.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 19:41:32 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 20:12:46 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/21 14:29:45 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,15 @@ t_ray	construct_ray(double *ray_origin, double *ray_direction
 		if (!ray.intersection_lst->t)
 		{
 			if (obj_lst->object_type == CYLINDER)
-				//CYlinder hit function
+				;//CYlinder hit function
 		}
 		if (!ray.intersection_lst->t)
 		{
 			if (obj_lst->object_type == PLANE)
-				/// plane hit function ;
+				;/// plane hit function ;
 		}
-		if (ray.intersection_lst->)
-			//append function to the intersection lst ;;
+		if (ray.intersection_lst->t)
+			;//append function to the intersection lst ;;
 		obj_lst = obj_lst -> next;
 	}
 }

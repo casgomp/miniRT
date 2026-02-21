@@ -6,46 +6,11 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:21:48 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/17 16:09:35 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/21 14:17:01 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-/*void	ft_swap(double *a, double *b) //i've put it in libft
-{
-	double	tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}*/
-
-/*
-double	**identity_mtrx(int size) //i've made the function simpler (see below)
-{
-	double	**imtrx;
-	int		diag;
-	int		i;
-	int		j;
-
-	imtrx = allocate_grid(size);
-	if (!imtrx)
-		return (NULL);
-	i = -1;
-	diag = -1;
-	while (++i < size)
-	{
-		diag ++;
-		j = -1;
-		while (++j < size)
-		{
-			if (j == diag)
-				imtrx[i][j] = 1;
-		}
-	}
-	return (imtrx);
-}*/
 
 double	**identity_mtrx(int size)
 {

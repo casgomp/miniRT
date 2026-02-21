@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:42:12 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 10:06:23 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/21 17:43:18 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ double	*allocate_tuple(double x, double y, double z, double w)
 	return (coordinate);
 }
 
+/*
 void	normalize_vector(t_tuple *vector)
 {
 	double	magnitude;
@@ -42,7 +43,25 @@ void	normalize_vector(t_tuple *vector)
 	vector->unit_vector[2] = vector->tuple[2] / magnitude;
 	vector->unit_vector[3] = vector->tuple[3] / magnitude;
 }
+*/
 
+void	normalize_vector(double *vector)
+{
+	double	magnitude;
+
+	magnitude = sqrt((vector[0] * vector[0]) +
+					(vector[1] * vector[1]) +
+					(vector[2] * vector[2]));
+
+	if (magnitude == 0)
+		return ;
+
+	vector[0] /= magnitude;
+	vector[1] /= magnitude;
+	vector[2] /= magnitude;
+	vector[3] = 0;
+}
+/*
 t_tuple	construct_tuple(double x, double y, double z, double w)
 {
 	t_tuple		tuple;
@@ -62,7 +81,7 @@ t_tuple	construct_tuple(double x, double y, double z, double w)
 		tuple.tuple_type = POINT;
 	return (tuple);
 }
-
+*/
 void	free_tuple(t_tuple *tuple)
 {
 	free(tuple->tuple);

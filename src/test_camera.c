@@ -6,29 +6,11 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 21:22:33 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/21 17:43:20 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-/*double	get_discriminant(double *ray_origin, double *ray_direction,
-		double *sphere_center)*/
-/*double	get_discriminant(t_ray r, t_sphere s)
-{
-	double	a;
-	double	b;
-	double	c;
-	double	*sphere_to_ray;
-	double	discriminant;
-
-	sphere_to_ray = subtract_tuple(&s.center, &r.origin);
-	a = dot_product_tuple(&r.direction, &r.direction);
-	b = 2 * dot_product_tuple(&r.direction, sphere_to_ray);
-	c = dot_product_tuple(sphere_to_ray, sphere_to_ray) - 1;
-	discriminant = pow(b, 2) - (4 * a * c);
-	return (discriminant);
-}*/
 
 t_intersection	*intersection(t_ray r, t_sphere *s)
 {
@@ -39,10 +21,11 @@ t_intersection	*intersection(t_ray r, t_sphere *s)
 	double			discriminant;
 	t_intersection	*xs;
 
-	sphere_to_ray = subtract_tuple(&s->center, &r.origin);
-	a = dot_product_tuple(&r.direction, &r.direction);
-	b = 2 * dot_product_tuple(&r.direction, sphere_to_ray);
+	sphere_to_ray = subtract_tuple(r.ray_origin, s->center);
+	a = dot_product_tuple(r.ray_direction, r.ray_direction);
+	b = 2 * dot_product_tuple(r.ray_direction, sphere_to_ray);
 	c = dot_product_tuple(sphere_to_ray, sphere_to_ray) - 1;
+	free(sphere_to_ray);
 	discriminant = pow(b, 2) - (4 * a * c);
 	if (discriminant < 0)
 		return (NULL);
@@ -96,14 +79,18 @@ int	get_pixel_color(t_ray r, t_sphere *s)//this function gets called for every r
 	//create intersection list for every object
 	xs_count = 0;
 	capacity = 8;
+	xslst = malloc(sizeof(t_intersection) * capacity);
+	if (!xslst)
+		return (0x000000);
+	i = -1;
 	while (++i < 1) //eventually < number of objects in scene
 	{
 		xs = intersection(r, s);
 		if (xs)
 		{
-			xslst = intersect_list_append(xs, xslst, xs_count, &capacity);
+			xslst = intersect_list_append(xs, xslst, &xs_count, &capacity);
 			if (!xslst)
-				return (NULL);
+				return (0x000000);
 		}
 	}
 
@@ -126,20 +113,38 @@ int	get_pixel_color(t_ray r, t_sphere *s)//this function gets called for every r
 
 void	render_loop(t_data *data, t_sphere *s)
 {
-	int		x;
-	int		y;
-	int		color;
-	t_ray	r;
+	int				x;
+	int				y;
+	t_ray			r;
+	double			world_x;
+	double			world_y;
+	const double	wall_z = 10;
+	const double	wall_size = 7.0;
+	double			pixel_size = wall_size / WIN_W;
+	double			*target;
+	int				color;
 
-	r.origin = allocate_tuple(0,0,-5,1); //camera origin (which is also the ray's origin)
+	r.ray_origin = allocate_tuple(0,0,-5,1); //camera origin (which is also the ray's origin)
 	y = -1;
 	while (++y < WIN_H)
 	{
+		world_y = (wall_size / 2) - (pixel_size * y);
 		x = -1;
 		while (++x < WIN_W)
 		{
-			get_pixel_color(r, s);
+			world_x = -(wall_size / 2) + (pixel_size * x);
+
+			target = allocate_tuple(world_x, world_y, wall_z, 1);
+			r.ray_direction = subtract_tuple(target, r.ray_origin);
+			normalize_vector(r.ray_direction);
+
+			color = get_pixel_color(r, s);
 			img_pix_put(&(data->img), x, y, color);
+
+			free(target);
+			free(r.ray_direction);
 		}
 	}
+	free(r.ray_origin);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 21:25:59 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/21 17:43:23 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define MLX_ERR "mlx_intialization failure\n"
 # define PI 3.14159265358979323846
 # define ESC 0xff1b
-# define WIN_W 800
+# define WIN_W 800 //800 is good size
 # define WIN_H 800
 # define GREEN_PIXEL 0xFF00
 # define RED_PIXEL 0xFF0000
@@ -69,7 +69,7 @@ typedef struct s_data
 
 }	t_data;
 
-/*
+
 typedef struct s_matrix
 {
 	double	**grid;
@@ -77,19 +77,19 @@ typedef struct s_matrix
 	double	**transpose;
 	double	**inverse;
 	double	determinant;
-}	t_matrix;*/
-
+}	t_matrix;
+/*
 typedef struct s_matrix
 {
 	int		size;
 	double	m[4][4];
 }	t_matrix;//simplified version to avoid memory leaks
-
+*/
 typedef struct s_tuple
 {
 	double			*tuple;
 	t_TUPLE_TYP		tuple_type;
-	double			*unit_vector;
+	double			*unit_vector;//can delete and simply override the double *tuple with unit vecotr. In case we need original back multiply unit*magnitude
 	double			magnitude;
 }	t_tuple;
 
@@ -140,6 +140,13 @@ typedef struct s_objects
 
 }	t_objects;
 
+//temp intersection struct for the camera file.
+typedef struct s_intersection
+{
+	double		t;
+	t_sphere	*sphere;
+} t_intersection;
+
 typedef struct s_intersection_lst
 {
 	double						*t;
@@ -150,6 +157,7 @@ typedef struct s_intersection_lst
 	struct s_intersection_lst	*next;
 }	t_instersection_lst;
 
+
 typedef struct s_ray
 {
 	double					*ray_origin;
@@ -157,6 +165,14 @@ typedef struct s_ray
 	t_instersection_lst		*intersection_lst;
 }	t_ray;
 
+/*
+typedef struct s_ray
+{
+	t_tuple					*ray_origin;
+	t_tuple					*ray_direction;
+	t_instersection_lst		*intersection_lst;
+}	t_ray;
+*/
 //main
 int			main(int argc, char **argv);
 int			ft_minilibx_setup(t_data *data);
@@ -195,7 +211,8 @@ double		**identity_mtrx(int size);
 
 //tuples
 t_tuple		construct_tuple(double x, double y, double z, double w);
-void		normalize_vector(t_tuple *vector);
+//void		normalize_vector(t_tuple *vector);
+void		normalize_vector(double *vector);
 void		free_tuple(t_tuple *tuple);
 double		determinant(double **grid, int size);
 double		*allocate_tuple(double x, double y, double z, double w);
@@ -218,6 +235,7 @@ t_intersection	*intersection(t_ray r, t_sphere *s);
 t_intersection	*intersect_list_append(t_intersection *xs, 
 							t_intersection *xslst, int *count, int *capacity);
 int				get_pixel_color(t_ray r, t_sphere *s);
+void			render_loop(t_data *data, t_sphere *s);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,
@@ -227,6 +245,5 @@ double		**ray_sphere_points(double *ray_origin, double *ray_direction,
 double		*get_discriminant(double *ray_origin, double *ray_direction,
 				double *sphere_origin);
 double		*multiply_scalar(double *tuple, double scalar);
-
 
 #endif
