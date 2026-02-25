@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inversion_matrix.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:40:41 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/14 16:42:02 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/25 19:28:52 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,38 +39,39 @@ double	**inverse(double **grid, int size)
 
 double	**get_submatrix(double **mtrx, int size, int rowskip, int colskip)
 {
-	double	**submtrx;
+	double	**sub;
 	int		i;
-	int		sub_i;
+	int		si;
 	int		j;
-	int 	sub_j;
+	int 	sj;
 
 	if (!mtrx || rowskip >= size || colskip >= size)
 		return (NULL);
-	submtrx = allocate_grid(size - 1);
-	if (!submtrx)
+	sub = allocate_grid(size - 1);
+	if (!sub)
 		return (NULL);
+	si = 0;
 	i = 0;
-	sub_i = 0;
 	while (i < size)
 	{
-		j = 0;
-		sub_j = 0;
-		if (i == rowskip)
-			i++;
-		else
+		if (i != rowskip)
 		{
-			while (i != rowskip && j < size)
+			sj = 0;
+			j = 0;
+			while (j < size)
 			{
 				if (j != colskip)
-					submtrx[sub_i][sub_j++] = mtrx[i][j];
-				j++;
+				{
+					sub[si][sj] = mtrx[i][j];
+					sj ++;
+				}
+				j ++;
 			}
-			sub_i += (i != rowskip);
-			i++;
+			si ++;
 		}
+		i ++;
 	}
-	return (submtrx);
+	return (sub);
 }
 
 double	cofactor(double **mtrx, int size, int row, int col)
@@ -80,6 +81,7 @@ double	cofactor(double **mtrx, int size, int row, int col)
 	int		sign;
 
 	submtrx = get_submatrix(mtrx, size, row, col);
+	//if !submtrx return NULL;
 	det = determinant(submtrx, size - 1);
 	free_grid(submtrx);
 	sign = 1;

@@ -6,12 +6,12 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/21 17:43:20 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/25 18:46:36 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
+/*
 t_intersection	*intersection(t_ray r, t_sphere *s)
 {
 	double			a;
@@ -21,7 +21,7 @@ t_intersection	*intersection(t_ray r, t_sphere *s)
 	double			discriminant;
 	t_intersection	*xs;
 
-	sphere_to_ray = subtract_tuple(r.ray_origin, s->center);
+	sphere_to_ray = subtract_tuple(s->center, r.ray_origin);
 	a = dot_product_tuple(r.ray_direction, r.ray_direction);
 	b = 2 * dot_product_tuple(r.ray_direction, sphere_to_ray);
 	c = dot_product_tuple(sphere_to_ray, sphere_to_ray) - 1;
@@ -61,12 +61,12 @@ t_intersection	*intersect_list_append(t_intersection *xs,
 	}
 	xslst[*count] = xs[0];
 	xslst[*count + 1] = xs[1];
-	*count += 2; //eventually chnage to the number of actual object.
+	*count += 2; //eventually change to the number of actual object.
 	free(xs);
 	return (xslst);
 }
 
-int	get_pixel_color(t_ray r, t_sphere *s)//this function gets called for every ray
+int	get_pixel_color(t_ray r, t_sphere *s)//this function gets called for every ray (eventually t_sphere gets replaces by all objects (world or scene))
 {
 	t_intersection	*xs;
 	t_intersection	*xslst;
@@ -81,7 +81,7 @@ int	get_pixel_color(t_ray r, t_sphere *s)//this function gets called for every r
 	capacity = 8;
 	xslst = malloc(sizeof(t_intersection) * capacity);
 	if (!xslst)
-		return (0x000000);
+		return (0x000000); //should probablu create a macro for black color.
 	i = -1;
 	while (++i < 1) //eventually < number of objects in scene
 	{
@@ -148,3 +148,4 @@ void	render_loop(t_data *data, t_sphere *s)
 	free(r.ray_origin);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 }
+	*/

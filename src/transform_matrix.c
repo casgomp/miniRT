@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   transform_marix.c                                  :+:      :+:    :+:   */
+/*   transform_matrix.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 18:43:57 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 10:04:46 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/25 19:29:11 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-//missing translation and scaling here?
 double	**rotation_z(double r)
 {
 	double		**grid;

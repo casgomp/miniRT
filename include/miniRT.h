@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/21 17:43:23 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/25 19:29:01 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ typedef struct s_data
 
 }	t_data;
 
-
 typedef struct s_matrix
 {
 	double	**grid;
@@ -85,6 +84,7 @@ typedef struct s_matrix
 	double	m[4][4];
 }	t_matrix;//simplified version to avoid memory leaks
 */
+
 typedef struct s_tuple
 {
 	double			*tuple;
@@ -120,31 +120,41 @@ typedef struct s_cylinder
 	int		color;
 }	t_cylinder;
 
-typedef struct s_sphere
+typedef struct s_sphere //probably won't need individual shape structs.
 {
 	double	radius;
 	double	*center;
+	double	**transform;
 }	t_sphere;
 
-typedef struct s_objects
+typedef struct s_object
 {
 	int					object_id;
 	t_OBJECT_TYP		object_type;
-	struct s_object		*next;
-	union
+	double				**transform;
+	double				**inverse;
+	//t_material		material;
+	/*union
 	{
 		t_sphere		*sphere;
 		t_plane			*plane;
 		t_cylinder		*cylinder;
-	}	u_obj;
-
-}	t_objects;
+	}	u_obj;*/
+	struct s_object		*next;
+}	t_object;
 
 //temp intersection struct for the camera file.
-typedef struct s_intersection
+/*typedef struct s_intersection
 {
 	double		t;
 	t_sphere	*sphere;
+} t_intersection;*/
+
+//temp intersection struct for the camera file v2.
+typedef struct s_intersection
+{
+	double		t;
+	t_object	*obj;
 } t_intersection;
 
 typedef struct s_intersection_lst
@@ -173,6 +183,7 @@ typedef struct s_ray
 	t_instersection_lst		*intersection_lst;
 }	t_ray;
 */
+
 //main
 int			main(int argc, char **argv);
 int			ft_minilibx_setup(t_data *data);
@@ -230,12 +241,28 @@ double		*add_tuple(double *tuple_1, double *tuple_2);
 double		*subtract_tuple(double *tuple_1, double *tuple_2);
 double		dot_product_tuple(double *tuple_1, double *tuple_2);
 
-//test_camera
+/*//test_camera
 t_intersection	*intersection(t_ray r, t_sphere *s);
 t_intersection	*intersect_list_append(t_intersection *xs, 
 							t_intersection *xslst, int *count, int *capacity);
 int				get_pixel_color(t_ray r, t_sphere *s);
 void			render_loop(t_data *data, t_sphere *s);
+//*/
+
+//test_camera2
+t_intersection	*intersection2(t_ray r, t_object *s);
+t_intersection	*intersect_list_append2(t_intersection *xs, 
+							t_intersection *xslst, int *count, int *capacity);
+int				get_pixel_color2(t_ray r, t_object *s);
+void			render_loop2(t_data *data, t_object *s);
+
+//utils
+t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
+double  *multiply_matrix_tuple(double **m, double *t);
+
+//lightshade
+double  *lightshade_test(t_sphere *s, double *p);
+double  *normal_at(t_sphere *s, double *p);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/21 17:43:21 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/25 19:29:03 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,34 +118,80 @@ int	main(int argc, char **argv)
     return (0);
 }*/
 
-int main(int argc, char **argv)
+/*
+int main(int argc, char **argv) //main Ch.5
 {
     t_data data;
-    // ... (Your matrix/tuple print tests) ...
 
 	(void)argc;
 	(void)argv;
     if (ft_minilibx_setup(&data))
-	{
 		return (perror("minilibx_setup"), 1);
-	}
 	
-	printf("Success in minilibx_setup\n");
-
-    // This forces the window to appear on some systems
-    mlx_do_sync(data.mlx_ptr); 
+    mlx_do_sync(data.mlx_ptr); //unnecessary? (forces the window to appear on some systems)
 
     t_sphere s;
     s.radius = 1;
     s.center = allocate_tuple(0,0,0,1);
 
-    printf("Starting render... please wait...\n");
+    printf("Starting render\n");
     render_loop(&data, &s);
-    printf("Render finished!\n");
+    printf("Render finished\n");
 
     mlx_loop(data.mlx_ptr);
     return (0);
-}
+}//*/
+
+
+int main(int argc, char **argv) //main Ch.5 v2
+{
+    t_data 		data;
+	t_object	*s;
+
+	(void)argc;
+	(void)argv;
+    if (ft_minilibx_setup(&data))
+		return (perror("minilibx_setup"), 1);
+	
+    mlx_do_sync(data.mlx_ptr); //unnecessary? (forces the window to appear on some systems)
+
+	s = malloc(sizeof(t_object));
+	if (!s)
+		return (1);
+	s->next = NULL;
+    s->transform = identity_mtrx(4);//eventually in parser (always initilize to identity , then multiply by tranformations if there are)
+	s->inverse = inverse(s->transform, 4);
+
+    printf("Starting render\n");
+    render_loop2(&data, s);
+    printf("Render finished\n");
+
+    mlx_loop(data.mlx_ptr);
+    return (0);
+}//*/
+
+/*
+int	main(int argc, char **argv)
+{
+	t_sphere	s;
+	double		*p;
+	double		*normal;
+
+	(void)argc;
+	(void)argv;
+	//eventually would pass world/scene instead of just one object
+	s.radius = 1;
+    s.center = allocate_tuple(0,0,0,1);
+	if (!s.center)
+		return (0);
+	p = allocate_tuple(1,0,0,1);
+	normal = lightshade_test(&s, p);
+	free(s.center);
+	free(p);
+	printf("normal = %f,%f,%f\n", normal[0], normal[1], normal[2]);
+	free(normal);
+	return (1);
+}//*/
 
 int	ft_minilibx_setup(t_data *data)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_sphere_intersection.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/18 19:44:09 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/25 13:20:13 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ double	*get_discriminant(double *ray_origin, double *ray_direction,
 	discriminant = allocate_tuple(0, 0, 0, 0);
 	if (!discriminant)
 		return (NULL);
-	sphere_to_ray = subtract_tuple(ray_origin, sphere_origin);
+	sphere_to_ray = subtract_tuple(sphere_origin, ray_origin);
 	discriminant[0] = dot_product_tuple(ray_direction, ray_direction);
 	discriminant[1] = 2 * dot_product_tuple(ray_direction, sphere_to_ray);
 	discriminant[2] = dot_product_tuple(sphere_to_ray, sphere_to_ray) - 1;

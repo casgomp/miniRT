@@ -6,25 +6,25 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/02/18 09:57:55 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/25 19:29:07 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-double  *normal_at(t_sphere s, point p)//fix
+#include "miniRT.h"
+
+double  *normal_at(t_sphere *s, double *p) //p = eventually same function calculates also other objects
 {
-    normalize(p - point(0, 0, 0);
+    double  *vector;
+
+    vector = subtract_tuple(p, s->center);
+    return (vector);
 }
 
-normalize(/**/)
+double  *lightshade_test(t_sphere *s, double *p) //p = eventually same function calculates also other objects
 {
-    //p - origin of sphere point(0,0,0);
-}
-
-
-int main(void)
-{
-    double *n;
-
-    n = normal_at;
-    return (1);
+    double  *normal;
+    
+    normal = normal_at(s, p);
+    normalize_vector(normal);
+    return (normal);
 }

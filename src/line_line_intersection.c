@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   line_line_intersection.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 16:03:30 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/16 21:51:42 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/02/25 13:19:55 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	is_co_planar(double *origin_1, double *origin_2,
 	double		*cross;
 
 	cooplanar = 0;
-	subtract = subtract_tuple(origin_2, origin_1);
+	subtract = subtract_tuple(origin_1, origin_2);
 	if (!subtract)
 		return (2);
 	cross = cross_product(vector_1, vector_2);
@@ -33,7 +33,7 @@ int	is_co_planar(double *origin_1, double *origin_2,
 		return (0);
 }
 
-double	get_prameter_ray(double *origin_1, double *oringin_2,
+double	get_prameter_ray(double *origin_1, double *origin_2,
 	double *vector_1, double *vector_2)
 {
 	double	par_1;
@@ -42,7 +42,7 @@ double	get_prameter_ray(double *origin_1, double *oringin_2,
 	double	*cross_2;
 	double	numerator;
 
-	origin_subtract = subtract_tuple(oringin_2, origin_1);
+	origin_subtract = subtract_tuple(origin_1, origin_2); //origin1 - origin2 (see subtract function)
 	cross_1 = cross_product(origin_subtract, vector_1);
 	cross_2 = cross_product(vector_1, vector_2);
 	numerator = dot_product_tuple(origin_subtract, cross_2);

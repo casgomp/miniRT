@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 17:21:43 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/21 13:19:32 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/25 19:28:59 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ double	*subtract_tuple(double *tuple_1, double *tuple_2)
 	remainder = malloc (4 * sizeof(double));
 	if (! remainder)
 		return (perror(MALL_ERR), NULL);
-	remainder[0] = tuple_2[0] - tuple_1[0];
-	remainder[1] = tuple_2[1] - tuple_1[1];
-	remainder[2] = tuple_2[2] - tuple_1[2];
-	remainder[3] = tuple_2[3] - tuple_1[3];
+	remainder[0] = tuple_1[0] - tuple_2[0];
+	remainder[1] = tuple_1[1] - tuple_2[1];
+	remainder[2] = tuple_1[2] - tuple_2[2];
+	remainder[3] = tuple_1[3] - tuple_2[3];
 	return (remainder);
 }
 

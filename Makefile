@@ -6,7 +6,7 @@
 #    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/21 14:37:00 by pecastro         ###   ########.fr        #
+#    Updated: 2026/02/25 19:28:57 by pecastro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,9 @@ SRC = $(addprefix src/, main.c \
 						ray_sphere_intersection.c \
 						ray_tracing_utils.c\
 						test_camera.c \
+						test_camera2.c \
+						utils.c \
+						lightshade.c \
 						rendering.c)
 
 OBJ = $(SRC:src/%.c=built/%.o)
