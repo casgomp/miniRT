@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 19:29:03 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/26 16:25:58 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,31 +142,33 @@ int main(int argc, char **argv) //main Ch.5
     return (0);
 }//*/
 
-
-int main(int argc, char **argv) //main Ch.5 v2
+int main(int argc, char **argv) //main Ch.5 v2 with transformation
 {
     t_data 		data;
-	t_object	*s;
+	t_object	*s;//eventually this would be world, a t_object linked list of all objects in the scene (i.e. in the world)
 
 	(void)argc;
 	(void)argv;
     if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);
 	
-    mlx_do_sync(data.mlx_ptr); //unnecessary? (forces the window to appear on some systems)
+    mlx_do_sync(data.mlx_ptr);//unnecessary? (used for debugging: forces the window to appear on some systems)
 
 	s = malloc(sizeof(t_object));
 	if (!s)
 		return (1);
+	//initialize object:
 	s->next = NULL;
     s->transform = identity_mtrx(4);//eventually in parser (always initilize to identity , then multiply by tranformations if there are)
 	s->inverse = inverse(s->transform, 4);
+	s->object_type = 1;
 
     printf("Starting render\n");
     render_loop2(&data, s);
     printf("Render finished\n");
 
     mlx_loop(data.mlx_ptr);
+	free(s);
     return (0);
 }//*/
 

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 19:28:48 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/26 16:25:56 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,19 @@ t_intersection	*intersection2(t_ray r, t_object *objp)
 
 	local_r = transform_ray(r, objp->inverse);
 	sphere_to_ray = local_r.ray_origin;
-	local_r.ray_direction[3] = 0;
-	sphere_to_ray[3] = 0;
+	local_r.ray_direction[3] = 0;//important to set this to 0, otherwise the dot_product_tuple will return a wrong result.
+	sphere_to_ray[3] = 0;//important to set this to 0, otherwise the dot_product_tuple will return a wrong result.
 	a = dot_product_tuple(local_r.ray_direction, local_r.ray_direction);
 	b = 2 * dot_product_tuple(local_r.ray_direction, sphere_to_ray);
 	c = dot_product_tuple(sphere_to_ray, sphere_to_ray) - 1;
-	free(local_r.ray_origin);
-	free(local_r.ray_direction);
+	free(local_r.ray_origin);//free only local copies
+	free(local_r.ray_direction);//free only local copies
 	discriminant = pow(b, 2) - (4 * a * c);
 	if (discriminant < 0)
 		return (NULL);
-	xs = malloc(sizeof(t_intersection) * 2);
+	xs = malloc(sizeof(t_intersection) * 2);//norminette too many variables...make function to create xs and store values.
 	if (!xs)
 		return (NULL);
-	//norminette too many variables...make function to create xs and store values.
 	xs[0].t = (-b - sqrt(discriminant)) / (2 * a);
 	xs[1].t = (-b + sqrt(discriminant)) / (2 * a);
 	xs[0].obj = objp;
@@ -71,7 +70,7 @@ t_intersection	*intersect_list_append2(t_intersection *xs,
 	return (xslst);
 }
 
-int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for every ray (eventually t_sphere gets replaces by all objects (world or scene))
+int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for every ray.
 {
 	t_intersection	*xs;
 	t_intersection	*xslst;
@@ -81,13 +80,15 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 	int				i;
 	int				color;
 	t_object		*curr;
+	double			*hit_point;
+	double			*normal;
 
 	//create intersection list for every object
 	xs_count = 0;
 	capacity = 8;
 	xslst = malloc(sizeof(t_intersection) * capacity);
 	if (!xslst)
-		return (0x000000); //should probablu create a macro for black color.
+		return (0x000000); //should probably create a macro for black color.
 	curr = world;
 	while(curr)
 	{
@@ -100,7 +101,6 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 		}
 		curr = curr->next;
 	}
-
 	//find the hit (hit logic = find smallest t: make separate function for norminette)
 	hit = NULL;
 	i = -1;
@@ -114,8 +114,16 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 	}
 	color = 0x000000;
 	if (hit)
-		color = 0xFF0000;
-	return (free(xslst), color);
+	{
+		color = 0xFF0000; //will change after light/shade.
+		//world normal
+		hit_point = ray_position(r, hit->t);//ray_position returns the intersection point in world space.
+		normal = normal_at(hit->obj, hit_point);
+		//color == world normal color
+		free(normal);//free?
+	}
+	free(xslst);
+	return (color);
 }
 
 void	render_loop2(t_data *data, t_object *s)

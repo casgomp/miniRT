@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 13:20:13 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/26 14:00:23 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ double	*multiply_scalar(double *tuple, double scalar)
 	result[0] = tuple[0] * scalar;
 	result[1] = tuple[1] * scalar;
 	result[2] = tuple[2] * scalar;
-	result[3] = tuple[3] * scalar;
+	//result[3] = tuple[3] * scalar;
+	result[3] = 0; //should be 0 because it's a vector and could mess the math otherwise
 	return (result);
 }
 

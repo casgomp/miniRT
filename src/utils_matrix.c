@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:16:55 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 19:29:08 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/26 16:25:51 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ double	**allocate_grid(int size)
 	return (grid);
 }
 
+//this function assumes a grid with NULL terminated rows.
+//Might cause SIGSEV when used
 int	grid_size(double **grid)
 {
 	int		rows;

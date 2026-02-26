@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 19:29:01 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/26 16:26:01 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ double		**allocate_grid(int size);
 void		free_grid(double **grid);
 void		free_matrix(t_matrix *matrix);
 double		**matrix_multiply(double **grid_1, double **grid_2);
-int			grid_size(double **grid);
+int			grid_size(double **grid);//might cause SIGSEV?
 double		**duplicate_grid(double **grid);
 double		**rotation_x(double r);
 double		**rotation_y(double r);
@@ -214,7 +214,7 @@ double		**translation(double *coord);
 
 //construct matrix
 double		**inverse(double **grid, int size);
-double		**tranpose_grid(double **tmtrx);
+double		**transpose_grid(double **tmtrx);
 t_matrix	construct_matrix(double **grid);
 double		**get_submatrix(double **mtrx, int size, int rowskip, int colskip);
 double		cofactor(double **mtrx, int size, int row, int col);
@@ -259,10 +259,8 @@ void			render_loop2(t_data *data, t_object *s);
 //utils
 t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
 double  *multiply_matrix_tuple(double **m, double *t);
-
-//lightshade
-double  *lightshade_test(t_sphere *s, double *p);
-double  *normal_at(t_sphere *s, double *p);
+double  *normal_at(t_object *object, double *world_point);
+double  *ray_position(t_ray r, double t);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,
