@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/26 16:25:58 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/27 16:28:53 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,9 +151,7 @@ int main(int argc, char **argv) //main Ch.5 v2 with transformation
 	(void)argv;
     if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);
-	
     mlx_do_sync(data.mlx_ptr);//unnecessary? (used for debugging: forces the window to appear on some systems)
-
 	s = malloc(sizeof(t_object));
 	if (!s)
 		return (1);
@@ -169,6 +167,7 @@ int main(int argc, char **argv) //main Ch.5 v2 with transformation
 
     mlx_loop(data.mlx_ptr);
 	free(s);
+
     return (0);
 }//*/
 
