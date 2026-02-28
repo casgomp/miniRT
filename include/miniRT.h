@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/27 16:23:14 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/28 16:11:34 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ typedef struct s_object
 	t_OBJECT_TYP		object_type;
 	double				**transform;
 	double				**inverse;
-	//t_material		material;
+	t_material			*material;
 	/*union
 	{
 		t_sphere		*sphere;
@@ -182,6 +182,21 @@ typedef struct s_ray
 	t_instersection_lst		*intersection_lst;
 }	t_ray;
 */
+
+typedef struct s_light
+{
+	double	*position;
+	double	*intensity;
+}	t_light;
+
+typedef struct t_material
+{
+	double	*color;
+	double	ambient;
+	double	diffuse;
+	double	specular;
+	double	shininess;
+}	t_material;
 
 //main
 int			main(int argc, char **argv);
@@ -252,8 +267,8 @@ void			render_loop(t_data *data, t_sphere *s);
 t_intersection	*intersection2(t_ray r, t_object *s);
 t_intersection	*intersect_list_append2(t_intersection *xs, 
 							t_intersection *xslst, int *count, int *capacity);
-int				get_pixel_color2(t_ray r, t_object *s);
-void			render_loop2(t_data *data, t_object *s);
+int				get_pixel_color2(t_ray r, t_object *s, t_light *light);
+void			render_loop2(t_data *data, t_object *s, t_light *light);
 
 //utils
 t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
@@ -261,6 +276,7 @@ double  *multiply_matrix_tuple(double **m, double *t);
 double  *normal_at(t_object *object, double *world_point);
 double  *ray_position(t_ray r, double t);
 double  *reflect(double *in, double *w_normal);
+void    *point_light(double  *intensity, double *position);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,

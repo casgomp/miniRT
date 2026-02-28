@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/27 18:34:49 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/28 20:03:52 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ t_intersection	*intersect_list_append2(t_intersection *xs,
 	return (xslst);
 }
 
-int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for every ray.
+int	get_pixel_color2(t_ray r, t_object *world, t_light *light)//this function gets called for every ray.
 {
 	t_intersection	*xs;
 	t_intersection	*xslst;
@@ -120,24 +120,31 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 		//world normal
 		hit_point = ray_position(r, hit->t);//ray_position returns the intersection point in world space.
 		w_normal = normal_at(hit->obj, hit_point);
-
-		//having w_normal now can get reflection vector
+		
+		/*//having w_normal now can get reflection vector
 		//should have in ray from parsing as light source? store in engine struct.
-		double	*in = allocate_tuple(1,-1,0,0);
+		double	*in = allocate_tuple(1,-1,0,0);//in is light vector
 		if (!in)
 			return(free(xslst), 1);
 		double	*reflectv = reflect(in, w_normal);
-		printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
-		//(void)reflectv;//get rid of debugging void
+		//printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
+		(void)reflectv;//get rid of this debugging void*/
 
-		//color == world normal color
+		double	*eyev = subtract_tuple(r.ray_origin, hit_point);
+		normalize_vector(eyev);
+		double *colord = lighting(hit->obj->material, light, &hit_point, eyev, w_normal);
+		color = 
+
 		free(w_normal);//free?
+		//free(in);
+		//free(reflectv);
 	}
 	free(xslst);
+	//convert color to int
 	return (color);
 }
 
-void	render_loop2(t_data *data, t_object *s)
+void	render_loop2(t_data *data, t_object *s, t_light *light)
 {
 	int				x;
 	int				y;
@@ -164,7 +171,7 @@ void	render_loop2(t_data *data, t_object *s)
 			r.ray_direction = subtract_tuple(target, r.ray_origin);
 			normalize_vector(r.ray_direction);
 
-			color = get_pixel_color2(r, s);
+			color = get_pixel_color2(r, s, light);
 			img_pix_put(&(data->img), x, y, color);
 
 			free(target);

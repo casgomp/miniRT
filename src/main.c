@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/27 16:28:53 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/28 18:43:00 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int main(int argc, char **argv) //main Ch.5
     return (0);
 }//*/
 
-int main(int argc, char **argv) //main Ch.5 v2 with transformation
+int main(int argc, char **argv) //main Ch.5 and Ch.6
 {
     t_data 		data;
 	t_object	*s;//eventually this would be world, a t_object linked list of all objects in the scene (i.e. in the world)
@@ -152,6 +152,34 @@ int main(int argc, char **argv) //main Ch.5 v2 with transformation
     if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);
     mlx_do_sync(data.mlx_ptr);//unnecessary? (used for debugging: forces the window to appear on some systems)
+
+	/*//test reflectv (delete after)
+	double	*in = allocate_tuple(0,-1,0,0);
+	double	*w_normal = allocate_tuple(sqrt(2)/2,sqrt(2)/2,0,0);
+	double	*reflectv = reflect(in, w_normal);
+	printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
+	free(in); free(w_normal); free(reflectv);
+	//*/
+	
+	//initialize light
+	t_light	*light;
+	light = malloc(sizeof(t_light));
+	if (!light)
+		return (1);//and free data, etc?
+	light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
+	light->position = allocate_tuple(-10,10,-10,1);
+
+	//initialize material
+	t_material	*m;
+	m = malloc(sizeof(t_material));
+	if (!m)
+		return (1);//and free data, etc?
+	m->color = allocate_tuple(1,0.2,1,0);//what color?make sure w=0 always for colors.
+	m->ambient = 0.1;
+	m->diffuse = 0.9;
+	m->specular = 0.9;
+	m->shininess = 200.0;//necessary?
+
 	s = malloc(sizeof(t_object));
 	if (!s)
 		return (1);
@@ -160,12 +188,18 @@ int main(int argc, char **argv) //main Ch.5 v2 with transformation
     s->transform = identity_mtrx(4);//eventually in parser (always initilize to identity , then multiply by tranformations if there are)
 	s->inverse = inverse(s->transform, 4);
 	s->object_type = 1;
+	s->material = m;
 
     printf("Starting render\n");
-    render_loop2(&data, s);
+    render_loop2(&data, s, light);
     printf("Render finished\n");
 
     mlx_loop(data.mlx_ptr);
+	
+	free(light->intensity);
+	free(light->position);
+	free(m->color);
+	free(s->material);
 	free(s);
 
     return (0);
