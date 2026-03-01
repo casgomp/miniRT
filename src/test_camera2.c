@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/28 20:03:52 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/01 14:39:58 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	get_pixel_color2(t_ray r, t_object *world, t_light *light)//this function ge
 		//world normal
 		hit_point = ray_position(r, hit->t);//ray_position returns the intersection point in world space.
 		w_normal = normal_at(hit->obj, hit_point);
-		
+
 		/*//having w_normal now can get reflection vector
 		//should have in ray from parsing as light source? store in engine struct.
 		double	*in = allocate_tuple(1,-1,0,0);//in is light vector
@@ -132,15 +132,14 @@ int	get_pixel_color2(t_ray r, t_object *world, t_light *light)//this function ge
 
 		double	*eyev = subtract_tuple(r.ray_origin, hit_point);
 		normalize_vector(eyev);
-		double *colord = lighting(hit->obj->material, light, &hit_point, eyev, w_normal);
-		color = 
-
+		double *colord = lighting(hit->obj->material, light, hit_point, eyev, w_normal);
+		//color = transform colord into int.
+		color = color_to_int(colord);
 		free(w_normal);//free?
 		//free(in);
 		//free(reflectv);
 	}
 	free(xslst);
-	//convert color to int
 	return (color);
 }
 

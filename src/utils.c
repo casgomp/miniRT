@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/02/28 18:55:16 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/01 14:39:56 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,10 @@ double  *reflect(double *in, double *w_normal)
 }
 
 //utils lighting
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv)
+double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv)//can only take 4 params
 {
     double  *effective_color;
-    double  *lightv_pre;
+    //double  *lightv_pre;
     double  *lightv;
     double  *lightv_neg;
     double  *ambient;
@@ -125,6 +125,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     double  factor;
     double  *result;
 
+    lightv_neg = allocate_tuple(0,0,0,0);
     effective_color = multiply_tuple_tuple(material->color, light->intensity);
     lightv = subtract_tuple(light->position, hit_point);
     normalize_vector(lightv);
@@ -159,4 +160,29 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     result = add_tuple(ambient,diffuse);
     result = add_tuple(result, specular);
     return (result);
+}
+
+int color_to_int(double *color_percent)
+{
+    int rgb;
+    int i;
+    int color;
+
+    //store individual colors in standard 255 value range and correct when overflow.
+    //use OR to put all rgb bits into color
+    rgb = 0;
+    color = 0;
+    i = -1;
+    while (++i < 3)
+    {
+        rgb = color_percent[i] * 255.99;
+        if (rgb > 255)
+            rgb = 255;
+        else if (rgb < 0)
+            rgb = 0;
+        if (i < 2)
+            rgb <<= (2 - i) * 8;
+        color |= rgb;
+    }
+    return (color);
 }

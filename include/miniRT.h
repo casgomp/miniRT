@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/28 16:11:34 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/01 14:40:02 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,15 @@ typedef struct s_sphere //probably won't need individual shape structs.
 	double	**transform;
 }	t_sphere;
 
+typedef struct t_material
+{
+	double	*color;
+	double	ambient;
+	double	diffuse;
+	double	specular;
+	double	shininess;
+}	t_material;
+
 typedef struct s_object
 {
 	int					object_id;
@@ -188,15 +197,6 @@ typedef struct s_light
 	double	*position;
 	double	*intensity;
 }	t_light;
-
-typedef struct t_material
-{
-	double	*color;
-	double	ambient;
-	double	diffuse;
-	double	specular;
-	double	shininess;
-}	t_material;
 
 //main
 int			main(int argc, char **argv);
@@ -276,7 +276,9 @@ double  *multiply_matrix_tuple(double **m, double *t);
 double  *normal_at(t_object *object, double *world_point);
 double  *ray_position(t_ray r, double t);
 double  *reflect(double *in, double *w_normal);
-void    *point_light(double  *intensity, double *position);
+//void    *point_light(double  *intensity, double *position);
+double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
+int 	color_to_int(double *color_percent);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,
