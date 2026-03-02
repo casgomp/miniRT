@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/26 16:26:01 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/02 20:40:04 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ double		dot_product_tuple(double *tuple_1, double *tuple_2);
 
 /*//test_camera
 t_intersection	*intersection(t_ray r, t_sphere *s);
-t_intersection	*intersect_list_append(t_intersection *xs, 
+t_intersection	*intersect_list_append(t_intersection *xs,
 							t_intersection *xslst, int *count, int *capacity);
 int				get_pixel_color(t_ray r, t_sphere *s);
 void			render_loop(t_data *data, t_sphere *s);
@@ -251,7 +251,7 @@ void			render_loop(t_data *data, t_sphere *s);
 
 //test_camera2
 t_intersection	*intersection2(t_ray r, t_object *s);
-t_intersection	*intersect_list_append2(t_intersection *xs, 
+t_intersection	*intersect_list_append2(t_intersection *xs,
 							t_intersection *xslst, int *count, int *capacity);
 int				get_pixel_color2(t_ray r, t_object *s);
 void			render_loop2(t_data *data, t_object *s);
@@ -270,5 +270,14 @@ double		**ray_sphere_points(double *ray_origin, double *ray_direction,
 double		*get_discriminant(double *ray_origin, double *ray_direction,
 				double *sphere_origin);
 double		*multiply_scalar(double *tuple, double scalar);
+
+// parsing
+int			parse_ambient(char **data);
+int			parse_camera(char **data);
+int			parse_light(char **data);
+int			print_error(int fd, const char *msg);
+int			parse_sphere(char **data);
+int			parse_plane(char **data);
+int			parse_cylinder(char **data);
 
 #endif

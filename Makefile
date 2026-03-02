@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
+#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/25 19:28:57 by pecastro         ###   ########.fr        #
+#    Updated: 2026/03/02 20:26:19 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ DFLAG = -g
 
 FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include
 LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
-SRC = $(addprefix src/, main.c \
+SRC_RENDER = $(addprefix src/, main.c \
 						lib_events.c \
 						transform_matrix.c \
 						transform_tuple.c \
@@ -33,8 +33,17 @@ SRC = $(addprefix src/, main.c \
 						utils.c \
 						lightshade.c \
 						rendering.c)
-
-OBJ = $(SRC:src/%.c=built/%.o)
+SRC_PARSING = $(addprefix parsing/, parsing.c \
+									parsing_utils.c \
+									parse_ambient.c \
+									parse_camera.c \
+									parse_light.c \
+									parse_sphere.c \
+									parse_plane.c \
+									parse_cylinder.c)
+SRC = 									$(SRC_RENDER) \
+										$(SRC_PARSING)
+OBJ = $(SRC:%.c=built/%.o)
 
 all: libft minilibx $(NAME)
 
@@ -55,7 +64,7 @@ all: libft minilibx $(NAME)
 $(NAME) : $(OBJ)
 	$(CC) $(OBJ) $(LFLAG) -o $(NAME)
 
-built/%.o: src/%.c include/miniRT.h
+built/%.o: %.c include/miniRT.h
 	@mkdir -p $(dir $@)
 	$(CC) $(FLAG) -c $< -o $@
 

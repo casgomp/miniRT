@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:27:04 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/16 11:15:17 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/28 18:51:12 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@ typedef struct s_list
 
 void		del(void *contend);
 int			ft_atoi(const char *nptr);
+double		ft_atof(const char *str);
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
 void		ft_free_array(char ***data);
 void		ft_free_ary_count(void **data, size_t count);
 void		ft_free_three_ary(void ***data, size_t count_i);
 int			ft_isalnum(int c);
+int			ft_isnumber(const char *str);
 int			ft_isalpha(int c);
 int			ft_isascii(int c);
 int			ft_isdigit(int c);
@@ -57,6 +59,7 @@ char		*ft_strjoin(char const *s1, char const *s2);
 size_t		ft_strlcat(char *dst, const char *src, size_t size);
 size_t		ft_strlcpy(char *dst, const char *src, size_t size);
 size_t		ft_strlen(const char *str);
+int			ft_lst_strsize(char **list);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 char		*ft_strnstr(const char *big, const char *little, size_t len);
 char		*ft_strrchr(const char *s, int c);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/26 16:25:58 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/27 21:41:53 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int main(int argc, char **argv) //main Ch.5
 	(void)argv;
     if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);
-	
+
     mlx_do_sync(data.mlx_ptr); //unnecessary? (forces the window to appear on some systems)
 
     t_sphere s;
@@ -142,7 +142,7 @@ int main(int argc, char **argv) //main Ch.5
     return (0);
 }//*/
 
-int main(int argc, char **argv) //main Ch.5 v2 with transformation
+/*int main(int argc, char **argv) //main Ch.5 v2 with transformation
 {
     t_data 		data;
 	t_object	*s;//eventually this would be world, a t_object linked list of all objects in the scene (i.e. in the world)
@@ -151,7 +151,7 @@ int main(int argc, char **argv) //main Ch.5 v2 with transformation
 	(void)argv;
     if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);
-	
+
     mlx_do_sync(data.mlx_ptr);//unnecessary? (used for debugging: forces the window to appear on some systems)
 
 	s = malloc(sizeof(t_object));
