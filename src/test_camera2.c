@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/01 14:39:58 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/03 17:58:13 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ t_intersection	*intersect_list_append2(t_intersection *xs,
 	return (xslst);
 }
 
-int	get_pixel_color2(t_ray r, t_object *world, t_light *light)//this function gets called for every ray.
+int	get_pixel_color2(t_ray r, t_object *objp, t_light *light)//this function gets called for every ray.
 {
 	t_intersection	*xs;
 	t_intersection	*xslst;
@@ -88,8 +88,8 @@ int	get_pixel_color2(t_ray r, t_object *world, t_light *light)//this function ge
 	capacity = 8;
 	xslst = malloc(sizeof(t_intersection) * capacity);
 	if (!xslst)
-		return (0x000000); //should probably create a macro for black color.
-	curr = world;
+		return (BLACK_PIXEL);
+	curr = objp;
 	while(curr)
 	{
 		xs = intersection2(r, curr);
@@ -97,7 +97,7 @@ int	get_pixel_color2(t_ray r, t_object *world, t_light *light)//this function ge
 		{
 			xslst = intersect_list_append2(xs, xslst, &xs_count, &capacity);
 			if (!xslst)
-				return (0x000000);
+				return (BLACK_PIXEL);
 		}
 		curr = curr->next;
 	}
@@ -113,7 +113,12 @@ int	get_pixel_color2(t_ray r, t_object *world, t_light *light)//this function ge
 				hit = &xslst[i];
 		}
 	}
-	color = 0x000000;
+
+	//debugging
+	if (xs_count == 4)
+		printf("xs_count = %d\n", xs_count);
+
+	color = BLACK_PIXEL;
 	if (hit)
 	{
 		color = 0xFF0000; //will change after light/shade.

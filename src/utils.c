@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/01 14:39:56 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/03 18:03:10 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,4 +185,32 @@ int color_to_int(double *color_percent)
         color |= rgb;
     }
     return (color);
+}
+
+//create list utils
+void	lstadd(t_object **lst, t_object *new)
+{
+	t_object	*last;
+
+	if (!lst || !new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	last = lstlast(*lst);
+	last -> next = new;
+}
+
+t_object	*lstlast(t_object *lst)
+{
+	t_object	*tmp;
+
+	if (!lst)
+		return (NULL);
+	tmp = lst;
+	while ((tmp -> next) != NULL)
+		tmp = tmp -> next;
+	return (tmp);
 }

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/01 14:40:02 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/03 18:03:11 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@
 # define ESC 0xff1b
 # define WIN_W 800 //800 is good size
 # define WIN_H 800
-# define GREEN_PIXEL 0xFF00
-# define RED_PIXEL 0xFF0000
+//# define GREEN_PIXEL 0xFF00
+//# define RED_PIXEL 0xFF0000
+# define BLACK_PIXEL 0X000
 
 typedef enum e_TUPLE_TYP
 {
@@ -198,6 +199,20 @@ typedef struct s_light
 	double	*intensity;
 }	t_light;
 
+typedef struct s_world
+{
+	t_object	*object;
+	t_light		*light;
+}	t_world;
+
+typedef struct s_camera
+{
+	double	hsize;
+	double	vsize;
+	double	field_of_view;
+	double	**transform;
+}	t_camera;
+
 //main
 int			main(int argc, char **argv);
 int			ft_minilibx_setup(t_data *data);
@@ -267,7 +282,7 @@ void			render_loop(t_data *data, t_sphere *s);
 t_intersection	*intersection2(t_ray r, t_object *s);
 t_intersection	*intersect_list_append2(t_intersection *xs, 
 							t_intersection *xslst, int *count, int *capacity);
-int				get_pixel_color2(t_ray r, t_object *s, t_light *light);
+int				get_pixel_color2(t_ray r, t_object *objp, t_light *light);
 void			render_loop2(t_data *data, t_object *s, t_light *light);
 
 //utils
@@ -279,6 +294,12 @@ double  *reflect(double *in, double *w_normal);
 //void    *point_light(double  *intensity, double *position);
 double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
 int 	color_to_int(double *color_percent);
+void	lstadd(t_object **lst, t_object *new);
+t_object	*lstlast(t_object *lst);
+
+//main ch.7 utils
+t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
+t_material	*init_material(double *color, double ambient, double diffuse, double specular, double shininess);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,
