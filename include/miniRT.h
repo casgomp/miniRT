@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/02 20:40:04 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/03 17:52:27 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ typedef enum e_OBJECT_TYP
 	SPHERE,
 	CYLINDER,
 	PLANE,
+	CAMERA,
+	LIGHT,
+	AMBIENT_LIGHT,
 }	t_OBJECT_TYP;
 
 typedef struct s_img
@@ -133,7 +136,9 @@ typedef struct s_object
 	t_OBJECT_TYP		object_type;
 	double				**transform;
 	double				**inverse;
-	//t_material		material;
+	int					*rgb;
+	double				brightness;
+	double				angle;
 	/*union
 	{
 		t_sphere		*sphere;
