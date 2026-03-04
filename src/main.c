@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 13:34:58 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 21:23:56 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,38 @@ int main(int argc, char **argv) //main Ch.7
 	(void)argv;
     if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);
+
+	//implementing view/camera
+
+	double	*from = allocate_tuple(0,0,0,1);
+	double	*to = allocate_tuple(0,0,-1,1);
+	double	*up = allocate_tuple(0,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform);
+
+	/* double	*from = allocate_tuple(0,0,0,1);
+	double	*to = allocate_tuple(0,0,1,1);
+	double	*up = allocate_tuple(0,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform);
+	double	*scaled = allocate_tuple(-1,1,-1,0);
+	double	**scaled_mtrx = scaling(scaled);
+	print_grid(scaled_mtrx); */
+
+	/* double	*from = allocate_tuple(0,0,8,1);
+	double	*to = allocate_tuple(0,0,0,1);
+	double	*up = allocate_tuple(0,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform);
+	double	*translated = allocate_tuple(0,0,-8,0);
+	double	**translated_mtrx = translation(translated);
+	print_grid(translated_mtrx); */
+
+	/* double	*from = allocate_tuple(1,3,2,1);
+	double	*to = allocate_tuple(4,-2,8,1);
+	double	*up = allocate_tuple(1,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform); */
 	
 	//initialize light
 	t_light	*light;

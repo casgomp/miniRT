@@ -6,7 +6,7 @@
 #    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/25 19:28:57 by pecastro         ###   ########.fr        #
+#    Updated: 2026/03/04 20:18:06 by pecastro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC = $(addprefix src/, main.c \
 						test_camera2.c \
 						utils.c \
 						lightshade.c \
+						implement_camera.c \
 						rendering.c)
 
 OBJ = $(SRC:src/%.c=built/%.o)

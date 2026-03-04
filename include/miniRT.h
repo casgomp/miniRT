@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 13:34:59 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 21:39:20 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,6 +316,9 @@ double	*shade_hit(t_world *world, t_comps *comps);
 //main ch.7 utils
 t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
 t_material	*init_material(double *color, double ambient, double diffuse, double specular, double shininess);
+
+//implement_camera
+double  **view_transform(double *from, double *to, double *up);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,

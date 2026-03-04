@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 13:34:57 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 21:39:17 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,9 +116,7 @@ double	*color_at(t_world *world, t_ray ray)
 				hit = &xslst[i];
 		}
 	}
-
-	//debugging
-	printf("xs_count = %d\n", xs_count);
+	//printf("xs_count = %d\n", xs_count);//debugging
 	colord = NULL;
 	if (hit)
 	{
