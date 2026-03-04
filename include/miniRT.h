@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/03 17:52:27 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/04 20:23:37 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,9 +280,13 @@ double		*multiply_scalar(double *tuple, double scalar);
 int			parse_ambient(char **data);
 int			parse_camera(char **data);
 int			parse_light(char **data);
-int			print_error(int fd, const char *msg);
 int			parse_sphere(char **data);
 int			parse_plane(char **data);
 int			parse_cylinder(char **data);
-
+// parsing_utils
+int			print_error(int fd, const char *msg);
+int			file_format_error(char *filename);
+double		*str_to_double(char *str, double i);
+int			*str_to_int(char *str, int i);
+t_object	*append_object_lst(t_object **lst, t_object *new);
 #endif

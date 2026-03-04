@@ -6,71 +6,14 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/03 20:48:14 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/04 22:22:00 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-int	file_format_error(char *filename)
-{
-	int		len;
 
-	if (!filename || filename[0] == '.')
-	{
-		write(2, "Error\nHidden files are not allowed\n", 35);
-		return (0);
-	}
-
-	len = ft_strlen(filename);
-	if (len < 3 || ft_strcmp(filename + len - 3, ".rt") != 0)
-	{
-		write(2, "Error\nfile format <filename>.rt\n", 32);
-		return (0);
-	}
-
-	return (1);
-}
-
-double	*str_to_double(char *str, double i)
-{
-	double	*coordinates;
-	char	**str_coordinates;
-
-	coordinates = malloc(4 * sizeof(double));
-	if (!coordinates)
-		return (perror(MALL_ERR), NULL);
-	str_coordinates = ft_split(str, ',');
-	if (!str_coordinates)
-		return (free(coordinates), perror(MALL_ERR), NULL);
-	coordinates[0] = ft_atof(str_coordinates[0]);
-	coordinates[1] = ft_atof(str_coordinates[1]);
-	coordinates[2] = ft_atof(str_coordinates[2]);
-	coordinates[3] = i;
-	ft_free_array(str_coordinates);
-	return (coordinates);
-}
-
-int	*str_to_int(char *str, int i)
-{
-	int		*coordinates;
-	char	**str_coordinates;
-
-	coordinates = malloc(4 * sizeof(int));
-	if (!coordinates)
-		return (perror(MALL_ERR), NULL);
-	str_coordinates = ft_split(str, ',');
-	if (!str_coordinates)
-		return (free(coordinates), perror(MALL_ERR), NULL);
-	coordinates[0] = ft_atoi(str_coordinates[0]);
-	coordinates[1] = ft_atoi(str_coordinates[1]);
-	coordinates[2] = ft_atoi(str_coordinates[2]);
-	coordinates[3] = i;
-	ft_free_array(str_coordinates);
-	return (coordinates);
-}
-
-t_object	*allocate_ambient(char **identifier, int i)
+/*t_object	*allocate_ambient(char **identifier, int i)
 {
 	t_object	*obj;
 	int			*rgb_vlaues;
@@ -181,27 +124,97 @@ t_object	*allocate_plane(char **indentifier, int i)
 	free(transform);
 	return (obj);
 }
-t_object *append_object_lst(char **identifier_line, t_object **lst)
-{
-	t_object		*new_node;
-	t_object		*tmp;
 
-	new_node = allocte_oject_data(obj_id, t, ray);
-	free (t);
-	if (!new_node)
+t_object	*allocate_sphere(char **identifier, int i)
+{
+	t_object	*obj;
+	double		*sphere_center;
+	double		**translate_matrix;
+	double		**scale_matrix;
+	double		**transform_matrix;
+	double		*raduis;
+	int			*rgb;
+
+	sphere_center = str_to_double(identifier[1], 1);
+	rgb = str_to_int(identifier[3], 0);
+	raduis = malloc(4 *sizeof(double));
+	if (!rgb || sphere_center || raduis)
 		return (NULL);
-	new_node->next = NULL;
-	if (*lst == NULL)
-	{
-		*lst = new_node;
-		return (new_node);
-	}
-	tmp = *lst;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_node;
-	return (new_node);
+	raduis[0] = ft_atof(identifier[2]);
+	raduis[1] = ft_atof(identifier[2]);
+	raduis[2] = ft_atof(identifier[2]);
+	raduis[3] = 1;
+	translate_matrix = tuple_to_matrix(sphere_center);
+	scale_matrix = scaling(raduis);
+	if (!translate_matrix || !scale_matrix)
+		return (free(sphere_center), free(rgb), free(raduis), NULL);
+	transform_matrix = matrix_multiply(transform_matrix, scale_matrix);
+	if (!transform_matrix)
+		return (free(sphere_center), free(rgb), free(raduis)
+			, free_matrix(translate_matrix), free_matrix(scale_matrix), NULL);
+	obj->object_id = i;
+	obj->angle = 0;
+	obj->brightness = 0;
+	obj->transform = transform_matrix;
+	obj->inverse = inverse(obj->transform, 4);
+	obj->rgb = rgb;
+	obj->object_type = SPHERE;
+	obj->next = NULL;
+	return (obj);
 }
+
+t_object	*allocate_cylinder(char **indentifier, int i)
+{
+	t_object	*obj;
+	int			*rgb;
+	double		*pos;
+	double		*vec;
+	double		**scale_matrix;
+	double		**translate_matrix;
+	double		**transform_matrix;
+	double		**rotate_x;
+	double		**rotate_y;
+	double		**rotate_z;
+
+
+	scale_matrix = identity_mtrx(4);
+	vec = str_to_double(indentifier[2], 0);
+	if (!scale_matrix || vec)
+		return (NULL);
+	scale_matrix[0][0] = ft_atof(indentifier[3]);
+	scale_matrix[1][1] = ft_atof(indentifier[3]);
+	scale_matrix[2][2] = ft_atof(indentifier[4]);
+	scale_matrix[3][3] = 1;
+	translate_matrix = tuple_to_matrix(str_to_double(indentifier[1], 1));
+	transform_matrix = matrix_multiply(translate_matrix, scale_matrix);
+	if (!transform_matrix || translate_matrix)
+		return (free_arr(scale_matrix), free(vec), NULL);
+	rotate_x = matrix_multiply(transform_matrix, rotation_x(acos(vec[0])));
+	rotate_y = matrix_multiply(rotate_x, rotation_y(acos(vec[1])));
+	rotate_z = matrix_multiply(rotate_y, rotation_z(acos(vec[2])));
+	if (!rotate_x || !rotate_y || rotate_z)
+		return (free_arr(scale_matrix), free(vec), free_matrix(transform_matrix)
+			, free_matrix(translate_matrix) , NULL);
+	transform_matrix = rotate_z;
+	obj->angle = 0;
+	obj->brightness = 0;
+	obj->transform = transform_matrix;
+	obj->inverse = inverse(transform_matrix, 4);
+	obj->object_type = CYLINDER;
+	obj->object_id = i;
+	obj->next = NULL;
+	obj->rgb = str_to_int(indentifier[5], 0);
+	if (!obj->inverse || !obj->rgb)
+		return (NULL);
+	free(vec);
+	free_matrix(scale_matrix);
+	free_matrix(transform_matrix);
+	free_matrix(translate_matrix);
+	free_matrix(rotate_x);
+	free_matrix(rotate_y);
+	return (obj);
+}*/
+
 
 int	identifier_check(char *identifier_line)
 {
@@ -252,16 +265,42 @@ int	identifier_check(char *identifier_line)
 	return (1);
 }
 
-int main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	if (argc > 2)
+	char	**rd_lines;
+	char	*line;
+	char	*path;
+	int		fd;
+	int		i;
+
+	if (argc != 2)
+		return (write(2, "Error\nenter one argument only\n", 30), 1);
+	if (!file_format_error(argv[1]))
+		return (1);
+	rd_lines = NULL;
+	path = ft_strjoin("scene/", argv[1]);
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (perror("open"), 1);
+	line = get_next_line(fd);
+	while (line)
 	{
-		write(2, "Error\nenter one argument only\n", 30);
-		return (1);
+		rd_lines = ft_append_str(rd_lines, line);
+		line = get_next_line(fd);
 	}
-	/*if(!file_format_error(argv[1]))
-		return (1);*/
-	if (!identifier_check(argv[1]))
-		return (1);
+	close(fd);
+	i = 0;
+	while (rd_lines && rd_lines[i])
+	{
+		if (identifier_check(rd_lines[i]))
+			return (free(path), ft_free_array(&rd_lines)
+				, close(fd), free(line), 1);
+		printf("%s", rd_lines[i]);
+		i ++;
+
+	}
 	printf("all good\n");
+	free(path);
+	ft_free_array(&rd_lines);
+	return (0);
 }

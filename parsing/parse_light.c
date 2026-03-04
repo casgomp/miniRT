@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:52:21 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/02 19:13:38 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/04 20:33:37 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,15 @@ static int	rgb_parse(char *rgb)
 		return (print_error(2, err_msg));
 	while (rgb_values[i])
 	{
-		if (ft_isnumber(rgb_values[i]))
-		{
-			if (ft_atoi(rgb_values[i]) > 255 || ft_atoi(rgb_values[i]) < 0)
-				return (ft_free_array(&rgb_values),
-					print_error(2, "RGB out of range ""0 to 255""\n"));
-			else
-				i ++;
-		}
-		else
+		if (!ft_isnumber(rgb_values[i]))
 			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB vlaue is not a number""\n"));
+				print_error(2, "RGB value is not a number\n"));
+		if (ft_atoi(rgb_values[i]) < 0 || ft_atoi(rgb_values[i]) > 255)
+			return (ft_free_array(&rgb_values),
+				print_error(2, "RGB out of range (0-255)\n"));
+		i++;
 	}
-	ft_free_array(&rgb_values);
-	return (1);
+	return (ft_free_array(&rgb_values), 1);
 }
 
 static int	check_light_pos(char *data)
