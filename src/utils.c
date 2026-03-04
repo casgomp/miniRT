@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/03 18:03:10 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 13:34:57 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ double  *reflect(double *in, double *w_normal)
 double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv)//can only take 4 params
 {
     double  *effective_color;
-    //double  *lightv_pre;
     double  *lightv;
     double  *lightv_neg;
     double  *ambient;
@@ -125,7 +124,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     double  factor;
     double  *result;
 
-    lightv_neg = allocate_tuple(0,0,0,0);
+    lightv_neg = allocate_tuple(-1,-1,-1,0);
     effective_color = multiply_tuple_tuple(material->color, light->intensity);
     lightv = subtract_tuple(light->position, hit_point);
     normalize_vector(lightv);
@@ -139,7 +138,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     else
     {
         diffuse = multiply_scalar(effective_color, material->diffuse * light_dot_normal);
-        lightv_neg = multiply_tuple_tuple(lightv, allocate_tuple(-1,-1,-1,0));
+        lightv_neg = multiply_tuple_tuple(lightv, lightv_neg);
         reflectv = reflect(lightv_neg, normalv);
         reflect_dot_eye = dot_product_tuple(reflectv, eyev);
         if (reflect_dot_eye <= 0)
@@ -168,6 +167,8 @@ int color_to_int(double *color_percent)
     int i;
     int color;
 
+    if (!color_percent)
+        return (0);
     //store individual colors in standard 255 value range and correct when overflow.
     //use OR to put all rgb bits into color
     rgb = 0;

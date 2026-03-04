@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/03 18:03:07 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 13:34:58 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,43 +258,25 @@ int main(int argc, char **argv) //main Ch.7
 	t_material *m1 = init_material(allocate_tuple(0.8,1.0,0.6,0), 0.1, 0.7, 0.2, 200.0);
 	if (!m1)
 		return (1); //and free data, etc...
-	/*t_material	*m;
-	m = malloc(sizeof(t_material));
-	if (!m)
-		return (1);//and free data, etc?
-	m->color = allocate_tuple(1,0.2,1,0);//what color?make sure w=0 always for colors.
-	m->ambient = 0.1;
-	m->diffuse = 0.9;
-	m->specular = 0.9;
-	m->shininess = 200.0;//necessary(yes)?where do we get this value from?*/
 
 	//initiliaze objects
 	//obj1
 	t_object	*obj1 = init_obj(identity_mtrx(4), 1, m1);
 	if (!obj1)
 		return (1); //and free data, materials, etc...
-	
 	//obj2
 	double	*scaling_vector = allocate_tuple(0.5,0.5,0.5,0);
 	double	**scaling_matrix = scaling(scaling_vector);//0 for vector?
-	//print_grid(scaling_matrix);
+
+	//print_grid(scaling_matrix);//too see that both print same thing since identity matrix is just multiplying by 1.
 	double	**transform_obj2 = matrix_multiply(identity_mtrx(4), scaling_matrix);
 	//print_grid(transform_obj2);
+
 	t_object	*obj2 = init_obj(transform_obj2, 1, m1);//m1 here for testing?
 	if (!obj2)
 		return (1); //and free data, materials, etc...
 	free(scaling_vector);
 	free(scaling_matrix);
-	/*
-	obj = malloc(sizeof(t_object));
-	if (!obj)
-		return (1);
-	//initialize object:
-	obj->next = NULL;
-    obj->transform = identity_mtrx(4);//eventually in parser (always initilize to identity, then multiply by tranformations if there are)
-	obj->inverse = inverse(obj->transform, 4);
-	obj->object_type = 1;
-	obj->material = m1;*/
 
 	//create object list
 	lstadd(&obj1, obj2);
@@ -307,7 +289,7 @@ int main(int argc, char **argv) //main Ch.7
 	w->object = obj1;
 
     printf("Starting render\n");
-    render_loop2(&data, obj1, light);
+	render_loop2(&data, w);
     printf("Render finished\n");
 
     mlx_loop(data.mlx_ptr);

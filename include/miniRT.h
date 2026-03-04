@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/03 18:03:11 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 13:34:59 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,17 @@ typedef struct s_camera
 	double	**transform;
 }	t_camera;
 
+typedef struct s_comps
+{
+	double		t;
+	t_object	*obj;
+	double		*point;
+	double		*eyev;
+	double		*normalv;
+	bool		inside;
+}	t_comps;
+
+
 //main
 int			main(int argc, char **argv);
 int			ft_minilibx_setup(t_data *data);
@@ -282,12 +293,15 @@ void			render_loop(t_data *data, t_sphere *s);
 t_intersection	*intersection2(t_ray r, t_object *s);
 t_intersection	*intersect_list_append2(t_intersection *xs, 
 							t_intersection *xslst, int *count, int *capacity);
-int				get_pixel_color2(t_ray r, t_object *objp, t_light *light);
-void			render_loop2(t_data *data, t_object *s, t_light *light);
+//int				get_pixel_color2(t_ray r, t_object *objp, t_light *light);
+double			*color_at(t_world *world, t_ray ray);
+//void			render_loop2(t_data *data, t_object *s, t_light *light);
+void			render_loop2(t_data *data, t_world *w);
 
 //utils
 t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
 double  *multiply_matrix_tuple(double **m, double *t);
+double  *multiply_tuple_tuple(double *t1, double *t2);
 double  *normal_at(t_object *object, double *world_point);
 double  *ray_position(t_ray r, double t);
 double  *reflect(double *in, double *w_normal);
@@ -296,6 +310,8 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
 int 	color_to_int(double *color_percent);
 void	lstadd(t_object **lst, t_object *new);
 t_object	*lstlast(t_object *lst);
+t_comps	*prepare_computations(t_intersection *intersection, t_ray ray);
+double	*shade_hit(t_world *world, t_comps *comps);
 
 //main ch.7 utils
 t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
