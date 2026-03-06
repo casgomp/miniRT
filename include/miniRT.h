@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 16:15:34 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 17:59:08 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <stdlib.h>
 # include <math.h>
 # include <string.h>
-#include <sys/time.h>
+# include <sys/time.h>
 
 # define RD_ERR "read file failure\n"
 # define MALL_ERR "memory allocation failure\n"
@@ -172,7 +172,6 @@ typedef struct s_intersection_lst
 	struct s_intersection_lst	*next;
 }	t_instersection_lst;
 
-
 typedef struct s_ray
 {
 	double					*ray_origin;
@@ -266,6 +265,7 @@ t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
 double  *multiply_matrix_tuple(double **m, double *t);
 double  *normal_at(t_object *object, double *world_point);
 double  *ray_position(t_ray r, double t);
+double  *reflect(double *in, double *w_normal);
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/26 16:25:56 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/02/27 18:34:49 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 	int				color;
 	t_object		*curr;
 	double			*hit_point;
-	double			*normal;
+	double			*w_normal;
 
 	//create intersection list for every object
 	xs_count = 0;
@@ -102,6 +102,7 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 		curr = curr->next;
 	}
 	//find the hit (hit logic = find smallest t: make separate function for norminette)
+	//eventually with a function that sorts in ascending order and then simply choosing the first
 	hit = NULL;
 	i = -1;
 	while (++i < xs_count)
@@ -118,9 +119,19 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 		color = 0xFF0000; //will change after light/shade.
 		//world normal
 		hit_point = ray_position(r, hit->t);//ray_position returns the intersection point in world space.
-		normal = normal_at(hit->obj, hit_point);
+		w_normal = normal_at(hit->obj, hit_point);
+
+		//having w_normal now can get reflection vector
+		//should have in ray from parsing as light source? store in engine struct.
+		double	*in = allocate_tuple(1,-1,0,0);
+		if (!in)
+			return(free(xslst), 1);
+		double	*reflectv = reflect(in, w_normal);
+		printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
+		//(void)reflectv;//get rid of debugging void
+
 		//color == world normal color
-		free(normal);//free?
+		free(w_normal);//free?
 	}
 	free(xslst);
 	return (color);
