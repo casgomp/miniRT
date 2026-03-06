@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:31 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/05 18:17:06 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 16:20:03 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,12 @@ int	file_format_error(char *filename)
 		write(2, "Error\nHidden files are not allowed\n", 35);
 		return (0);
 	}
-
 	len = ft_strlen(filename);
 	if (len < 3 || ft_strcmp(filename + len - 3, ".rt") != 0)
 	{
 		write(2, "Error\nfile format <filename>.rt\n", 32);
 		return (0);
 	}
-
 	return (1);
 }
 

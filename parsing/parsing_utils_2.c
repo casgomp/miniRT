@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 20:36:32 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 16:18:21 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 16:59:56 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,29 +67,49 @@ int	rgb_parse(char *rgb)
 	return (ft_free_array(&rgb_values), 1);
 }
 
+double	***compute_rotation(char *identifier_2)
+{
+	double		**x;
+	double		**y;
+	double		**z;
+	double		*vec;
+	double		***rotation_fest;
+
+	rotation_fest = malloc (3 * sizeof(double **));
+	if (!rotation_fest)
+		return (perror(MALL_ERR), NULL);
+	vec = str_to_double(identifier_2, 0);
+	if (!vec)
+		return (free(rotation_fest), NULL);
+	x = rotation_x(acos(vec[0]));
+	y = rotation_y(acos(vec[1]));
+	z = rotation_z(acos(vec[2]));
+	if (!x || !y || !z)
+		return (free(vec), free(rotation_fest), NULL);
+	rotation_fest[0] = x;
+	rotation_fest[1] = y;
+	rotation_fest[2] = z;
+	return (free(vec), rotation_fest);
+}
+
 double	**align_to_vec(char *identifier_2, double **matrix)
 {
 	double		**rotate_x;
 	double		**rotate_y;
 	double		**rotate_z;
-	double		**x;
-	double		**y;
-	double		**z;
-	double		*vec;
+	double		***rotation_fest;
 
-	vec = str_to_double(identifier_2, 0);
-	if (!vec)
+	rotation_fest = compute_rotation(identifier_2);
+	if (!rotation_fest)
 		return (NULL);
-	x = rotation_x(acos(vec[0]));
-	y = rotation_y(acos(vec[1]));
-	z = rotation_z(acos(vec[2]));
-	rotate_x = matrix_multiply(matrix, x);
-	rotate_y = matrix_multiply(rotate_x, y);
-	rotate_z = matrix_multiply(rotate_y, z);
+	rotate_x = matrix_multiply(matrix, rotation_fest[0]);
+	rotate_y = matrix_multiply(rotate_x, rotation_fest[1]);
+	rotate_z = matrix_multiply(rotate_y, rotation_fest[2]);
 	if (!rotate_x || !rotate_y || !rotate_z)
-		return (free(vec), NULL);
-	return (free(vec), free_grid(x), free_grid(y), free_grid(z)
-		, free_grid(rotate_x), free_grid(rotate_y), rotate_z);
+		return (NULL);
+	return (free_grid(rotation_fest[0]), free_grid(rotation_fest[1])
+		, free_grid(rotation_fest[2]), free_grid(rotate_x), free(rotation_fest)
+		, free_grid(rotate_y), rotate_z);
 }
 
 static const char	*object_type_to_string(t_OBJECT_TYP type)
