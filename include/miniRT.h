@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 20:23:37 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 16:15:34 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ double		determinant(double **grid, int size);
 double		*allocate_tuple(double x, double y, double z, double w);
 double		degrees_to_radians(double degrees);
 double		radians_to_degrees(double radians);
-double		**tuple_to_matrix(double *tuple);
+double		**tuple_to_matrix(double *tuple, int i);
 double		*matrix_to_tuple(double **grid);
 double		*rotate_tuple_x(double *tuple, double angle);
 double		*rotate_tuple_y(double *tuple, double angle);
@@ -277,16 +277,23 @@ double		*get_discriminant(double *ray_origin, double *ray_direction,
 double		*multiply_scalar(double *tuple, double scalar);
 
 // parsing
-int			parse_ambient(char **data);
-int			parse_camera(char **data);
-int			parse_light(char **data);
-int			parse_sphere(char **data);
-int			parse_plane(char **data);
-int			parse_cylinder(char **data);
+int			parse_ambient(char **data, t_object **lst, int i);
+int			parse_camera(char **data, t_object **lst, int id);
+int			parse_light(char **data, t_object **lst, int id);
+int			parse_sphere(char **data, t_object **lst, int id);
+int			parse_plane(char **data, t_object **lst, int id);
+int			parse_cylinder(char **data, t_object **lst, int id);
+t_object	*parse_input(char *input, t_object *lst);
+
 // parsing_utils
 int			print_error(int fd, const char *msg);
 int			file_format_error(char *filename);
 double		*str_to_double(char *str, double i);
 int			*str_to_int(char *str, int i);
+int			rgb_parse(char *rgb);
+int			is_normal_vec(char *vec_str);
+double		**align_to_vec(char *identifier_2, double **matrix);
+void		print_object_list(t_object *lst);
 t_object	*append_object_lst(t_object **lst, t_object *new);
+void		free_object_list(t_object *lst);
 #endif

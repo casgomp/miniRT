@@ -6,66 +6,11 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:06:17 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 20:46:49 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:27:12 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-static int	is_normal_vec(char *vec_str)
-{
-	char	**coordinates;
-	double	magnitude;
-	int		i;
-
-	i = 0;
-	coordinates = ft_split(vec_str, ',');
-	if (!coordinates)
-		return (perror(MALL_ERR), 0);
-	if (ft_lst_strsize(coordinates) != 3)
-		return (print_error(2, "plane dir misconfigured ex: <0.0, 0.0, 1.0>\n"));
-	while (coordinates[i])
-	{
-		if (ft_isnumber(coordinates[i]))
-			i ++;
-		else
-			return (ft_free_array(&coordinates),
-				print_error(2, "vector vlaue is not a number""\n"));
-	}
-	magnitude = sqrt(powf(ft_atof(coordinates[0]), 2)
-			+ powf(ft_atof(coordinates[1]), 2)
-			+ powf(ft_atof(coordinates[2]), 2));
-	if (magnitude > 1)
-		return (ft_free_array(&coordinates)
-			, print_error(2, "vecotor is not normaliszed\n"));
-	return (ft_free_array(&coordinates), 1);
-}
-
-static int	rgb_parse(char *rgb)
-{
-	char		**rgb_values;
-	char		*err_msg;
-	int			i;
-
-	i = 0;
-	rgb_values = ft_split(rgb, ',');
-	if (!rgb_values)
-		return (perror(MALL_ERR), 0);
-	err_msg = "RGB format misconfigured ex: ""255,255,255""\n";
-	if (ft_lst_strsize(rgb_values) != 3)
-		return (print_error(2, err_msg));
-	while (rgb_values[i])
-	{
-		if (!ft_isnumber(rgb_values[i]))
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB value is not a number\n"));
-		if (ft_atoi(rgb_values[i]) < 0 || ft_atoi(rgb_values[i]) > 255)
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB out of range (0-255)\n"));
-		i++;
-	}
-	return (ft_free_array(&rgb_values), 1);
-}
 
 static int	plane_pos(char *data)
 {
@@ -82,26 +27,68 @@ static int	plane_pos(char *data)
 		return (print_error(2, err_msg));
 	while (plane_pos[i])
 	{
-		if (ft_isnumber(plane_pos[i]))
-			i ++;
-		else
+		if (!ft_isnumber(plane_pos[i]))
 			return (ft_free_array(&plane_pos), print_error(2, err_msg));
+		i ++;
 	}
-	ft_free_array(&plane_pos);
-	return (1);
+	return (ft_free_array(&plane_pos), 1);
 }
 
-int	parse_plane(char **data)
+static double	**plane_transform(char *identifier_1, char *indentifier_2)
 {
-	char	*err_msg;
+	double		*pl_poistion;
+	double		**translate;
+	double		**transform_matrix;
+
+	pl_poistion = str_to_double(identifier_1, 1);
+	if (!pl_poistion)
+		return (NULL);
+	translate = translation(pl_poistion);
+	if (!translate)
+		return (free(pl_poistion), NULL);
+	transform_matrix = align_to_vec(indentifier_2, translate);
+	if (!transform_matrix)
+		return (free(pl_poistion), free_grid(translate), NULL);
+	return (free(pl_poistion), free_grid(translate), transform_matrix);
+}
+
+static t_object	*allocate_plane(char **indentifier, int id)
+{
+	t_object	*obj;
+	int			*rgb;
+
+	rgb = str_to_int(indentifier[3], 0);
+	if (!rgb)
+		return (NULL);
+	obj = ft_calloc(1, sizeof(t_object));
+	if (!obj)
+		return (free(rgb), NULL);
+	obj->angle = 0;
+	obj->brightness = 0;
+	obj->transform = plane_transform(indentifier[1], indentifier[2]);
+	if (!obj->transform)
+		return (free(rgb), free(obj), NULL);
+	obj->inverse = inverse(obj->transform, 4);
+	obj->object_type = PLANE;
+	obj->object_id = id;
+	obj->rgb = rgb;
+	obj->next = NULL;
+	return (obj);
+}
+
+int	parse_plane(char **data, t_object **lst, int id)
+{
+	char		*err_msg;
+	t_object	*new;
 
 	err_msg = "plane args misconfigured ex:\
 <position: x,y,z> <normal vector ex:[0.0,0.0,1.0]>\
 <RGB values ex: <255,255,255>\n";
 	if (ft_lst_strsize(data) != 4)
 		return (print_error(2, err_msg));
-	if (plane_pos(data[1]) && is_normal_vec(data[2]) && rgb_parse(data[3]))
-		return (1);
-	else
+	if (!plane_pos(data[1]) || !is_normal_vec(data[2]) || !rgb_parse(data[3]))
 		return (0);
+	new = allocate_plane(data, id);
+	*lst = append_object_lst(lst, new);
+	return (1);
 }

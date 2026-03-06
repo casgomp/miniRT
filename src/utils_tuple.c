@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_tuple.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 16:43:52 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/26 14:11:20 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/06 13:56:46 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,27 @@ double	radians_to_degrees(double radians)
 	return (radians * (180.0 / PI));
 }
 
-double	**tuple_to_matrix(double *tuple)
+double	**tuple_to_matrix(double *tuple, int i)
 {
 	double	**tuple_matrix;
 
 	tuple_matrix = allocate_grid(4);
 	if (!tuple_matrix)
 		return (NULL);
-	tuple_matrix[0][0] = tuple[0];
-	tuple_matrix[1][0] = tuple[1];
-	tuple_matrix[2][0] = tuple[2];
-	tuple_matrix[3][0] = tuple[3];
+	if (i == 0)
+	{
+		tuple_matrix[0][0] = tuple[0];
+		tuple_matrix[1][0] = tuple[1];
+		tuple_matrix[2][0] = tuple[2];
+		tuple_matrix[3][0] = tuple[3];
+	}
+	if (i == 1)
+	{
+		tuple_matrix[0][0] = tuple[0];
+		tuple_matrix[0][1] = tuple[1];
+		tuple_matrix[0][2] = tuple[2];
+		tuple_matrix[0][3] = tuple[3];
+	}
 	return (tuple_matrix);
 }
 

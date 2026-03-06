@@ -6,54 +6,51 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 14:05:59 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 20:32:35 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/05 20:39:01 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-static int	rgb_parse(char *rgb)
+t_object	*allocate_ambient(char **identifier, int id)
 {
-	char		**rgb_values;
-	char		*err_msg;
-	int			i;
+	t_object	*obj;
 
-	i = 0;
-	rgb_values = ft_split(rgb, ',');
-	if (!rgb_values)
-		return (perror(MALL_ERR), 0);
-	err_msg = "RGB format misconfigured ex: ""255,255,255""\n";
-	if (ft_lst_strsize(rgb_values) != 3)
-		return (print_error(2, err_msg));
-	while (rgb_values[i])
-	{
-		if (!ft_isnumber(rgb_values[i]))
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB value is not a number\n"));
-		if (ft_atoi(rgb_values[i]) < 0 || ft_atoi(rgb_values[i]) > 255)
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB out of range (0-255)\n"));
-		i++;
-	}
-	return (ft_free_array(&rgb_values), 1);
+	obj = ft_calloc(1, sizeof(t_object));
+	if (!obj)
+		return (perror(MALL_ERR), NULL);
+	obj->object_id = id;
+	obj->object_type = AMBIENT_LIGHT;
+	obj->brightness = ft_atof(identifier[1]);
+	obj->transform = NULL;
+	obj->angle = 0;
+	obj->rgb = str_to_int(identifier[2], 0);
+	if (!obj->rgb)
+		return (free(obj), NULL);
+	obj->inverse = NULL;
+	obj->next = NULL;
+	return (obj);
 }
 
-int	parse_ambient(char **data)
+int	parse_ambient(char **data, t_object **lst, int id)
 {
 	double		value;
-	int			i;
 	char		*err_msg_1;
 	char		*err_msg_2;
+	t_object	*new;
 
-	i = 0;
 	err_msg_1 = "ambient light value out of range ""0 <= vlaue <= 1"" \n";
 	err_msg_2 = "ambient light prams misconfigured <intensity> <RGB vlaue>\n";
 	if (ft_lst_strsize(data) != 3)
 		return (print_error(2, err_msg_2));
+	if (!ft_isnumber(data[1]))
+		return (print_error(2, "ambient value is not a number\n"));
 	value = ft_atof(data[1]);
 	if (value < 0.0 || value > 1.0)
 		return (print_error(2, err_msg_1));
 	if (!rgb_parse(data[2]))
 		return (0);
+	new = allocate_ambient(data, id);
+	*lst = append_object_lst(lst, new);
 	return (1);
 }

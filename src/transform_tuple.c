@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   transform_tuple.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 17:43:24 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 16:01:36 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:00:33 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ double	*rotate_tuple_x(double *tuple, double angle)
 	double	**transformed_matrix;
 	double	*result;
 
-	tuple_matrix = tuple_to_matrix(tuple);
+	tuple_matrix = tuple_to_matrix(tuple, 0);
 	rotation_matrix = rotation_x(angle);
 	transformed_matrix = matrix_multiply(rotation_matrix, tuple_matrix);
 	result = matrix_to_tuple(transformed_matrix);
@@ -38,7 +38,7 @@ double	*rotate_tuple_y(double *tuple, double angle)
 	double	**transformed_matrix;
 	double	*result;
 
-	tuple_matrix = tuple_to_matrix(tuple);
+	tuple_matrix = tuple_to_matrix(tuple, 0);
 	rotation_matrix = rotation_y(angle);
 	transformed_matrix = matrix_multiply(rotation_matrix, tuple_matrix);
 	result = matrix_to_tuple(transformed_matrix);
@@ -57,7 +57,7 @@ double	*rotate_tuple_z(double *tuple, double angle)
 	double	**transformed_matrix;
 	double	*result;
 
-	tuple_matrix = tuple_to_matrix(tuple);
+	tuple_matrix = tuple_to_matrix(tuple, 0);
 	rotation_matrix = rotation_z(angle);
 	transformed_matrix = matrix_multiply(rotation_matrix, tuple_matrix);
 	result = matrix_to_tuple(transformed_matrix);
@@ -76,7 +76,7 @@ double	*scale_tuple(double *tuple)
 	double	**transformed_matrix;
 	double	*result;
 
-	tuple_matrix = tuple_to_matrix(tuple);
+	tuple_matrix = tuple_to_matrix(tuple, 0);
 	scaling_matrix = scaling(tuple);
 	transformed_matrix = matrix_multiply(scaling_matrix, tuple_matrix);
 	result = matrix_to_tuple(transformed_matrix);
@@ -95,7 +95,7 @@ double	*translate_tuple(double *tuple)
 	double	**transformed_matrix;
 	double	*result;
 
-	tuple_matrix = tuple_to_matrix(tuple);
+	tuple_matrix = tuple_to_matrix(tuple, 0);
 	translation_matrix = translation(tuple);
 	transformed_matrix = matrix_multiply(translation_matrix, tuple_matrix);
 	result = matrix_to_tuple(transformed_matrix);

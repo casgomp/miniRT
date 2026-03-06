@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/02 20:26:19 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/05 20:37:14 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRC_RENDER = $(addprefix src/, main.c \
 						rendering.c)
 SRC_PARSING = $(addprefix parsing/, parsing.c \
 									parsing_utils.c \
+									parsing_utils_2.c \
 									parse_ambient.c \
 									parse_camera.c \
 									parse_light.c \

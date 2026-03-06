@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:27:04 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 21:01:43 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:18:58 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int			ft_strncmp(const char *s1, const char *s2, size_t n);
 char		*ft_strnstr(const char *big, const char *little, size_t len);
 char		*ft_strrchr(const char *s, int c);
 char		*ft_strtrim(char const *s1, char const *set);
+char		*ft_trim_newline(char *s);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 int			ft_tolower(int c);
 int			ft_toupper(int c);
@@ -100,5 +101,6 @@ int			ft_isquote(int c);
 
 //utils
 void		ft_swap(double *a, double *b);
+void		ft_free_double(double **arr, int rows);
 
 #endif

@@ -6,37 +6,11 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 19:06:53 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 20:34:01 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:48:10 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-static int	rgb_parse(char *rgb)
-{
-	char		**rgb_values;
-	char		*err_msg;
-	int			i;
-
-	i = 0;
-	rgb_values = ft_split(rgb, ',');
-	if (!rgb_values)
-		return (perror(MALL_ERR), 0);
-	err_msg = "RGB format misconfigured ex: ""255,255,255""\n";
-	if (ft_lst_strsize(rgb_values) != 3)
-		return (print_error(2, err_msg));
-	while (rgb_values[i])
-	{
-		if (!ft_isnumber(rgb_values[i]))
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB value is not a number\n"));
-		if (ft_atoi(rgb_values[i]) < 0 || ft_atoi(rgb_values[i]) > 255)
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB out of range (0-255)\n"));
-		i++;
-	}
-	return (ft_free_array(&rgb_values), 1);
-}
 
 static int	check_sphere_pos(char *data)
 {
@@ -62,9 +36,62 @@ static int	check_sphere_pos(char *data)
 	return (1);
 }
 
-int	parse_sphere(char **data)
+static double	**transform_sphere(char *identifier_1, char *identifier_2)
 {
-	char	*err_msg;
+	double		*sphere_center;
+	double		**translate;
+	double		**scale;
+	double		**transform;
+	double		*raduis;
+
+	sphere_center = str_to_double(identifier_1, 1);
+	raduis = malloc(4 * sizeof(double));
+	if (!sphere_center || ! raduis)
+		return (NULL);
+	raduis[0] = ft_atof(identifier_2);
+	raduis[1] = ft_atof(identifier_2);
+	raduis[2] = ft_atof(identifier_2);
+	raduis[3] = 1;
+	translate = translation(sphere_center);
+	scale = scaling(raduis);
+	if (!translate || !scale)
+		return (free(sphere_center), free(raduis), NULL);
+	transform = matrix_multiply(translate, scale);
+	if (!transform)
+		return (free(sphere_center), free(raduis), free_grid(translate)
+			, free_grid(scale), NULL);
+	return (free(sphere_center), free(raduis), free_grid(translate)
+		, free_grid(scale), transform);
+}
+
+static t_object	*allocate_sphere(char **identifier, int id)
+{
+	t_object	*obj;
+	int			*rgb;
+
+	obj = ft_calloc(1, sizeof(t_object));
+	if (!obj)
+		return (NULL);
+	rgb = str_to_int(identifier[3], 0);
+	if (!rgb)
+		return (free(obj), NULL);
+	obj->object_id = id;
+	obj->angle = 0;
+	obj->brightness = 0;
+	obj->transform = transform_sphere(identifier[1], identifier[2]);
+	if (!obj->transform)
+		return (free(obj), free(rgb), NULL);
+	obj->inverse = inverse(obj->transform, 4);
+	obj->rgb = rgb;
+	obj->object_type = SPHERE;
+	obj->next = NULL;
+	return (obj);
+}
+
+int	parse_sphere(char **data, t_object **lst, int id)
+{
+	char		*err_msg;
+	t_object	*new;
 
 	err_msg = "Sphere args misconfigured ex:\
 <position: x,y,z> <raduis [0.0 to 1.0]>\
@@ -77,5 +104,7 @@ int	parse_sphere(char **data)
 		return (print_error(2, "Raduis vlaue is not a number\n"));
 	if (!rgb_parse(data[3]))
 		return (0);
+	new = allocate_sphere(data, id);
+	*lst = append_object_lst(lst, new);
 	return (1);
 }

@@ -6,66 +6,11 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 20:45:45 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 14:15:32 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-static int	is_normal_vec(char *vec_str)
-{
-	char	**coordinates;
-	double	magnitude;
-	int		i;
-
-	i = 0;
-	coordinates = ft_split(vec_str, ',');
-	if (!coordinates)
-		return (perror(MALL_ERR), 0);
-	if (ft_lst_strsize(coordinates) != 3)
-		return (print_error(2, "cyl dir misconfigured ex: <0.0, 0.0, 1.0>\n"));
-	while (coordinates[i])
-	{
-		if (ft_isnumber(coordinates[i]))
-			i ++;
-		else
-			return (ft_free_array(&coordinates),
-				print_error(2, "vector vlaue is not a number""\n"));
-	}
-	magnitude = sqrt(powf(ft_atof(coordinates[0]), 2)
-			+ powf(ft_atof(coordinates[1]), 2)
-			+ powf(ft_atof(coordinates[2]), 2));
-	if (magnitude > 1)
-		return (ft_free_array(&coordinates)
-			, print_error(2, "vecotor is not normaliszed\n"));
-	return (ft_free_array(&coordinates), 1);
-}
-
-static int	rgb_parse(char *rgb)
-{
-	char		**rgb_values;
-	char		*err_msg;
-	int			i;
-
-	i = 0;
-	rgb_values = ft_split(rgb, ',');
-	if (!rgb_values)
-		return (perror(MALL_ERR), 0);
-	err_msg = "RGB format misconfigured ex: ""255,255,255""\n";
-	if (ft_lst_strsize(rgb_values) != 3)
-		return (print_error(2, err_msg));
-	while (rgb_values[i])
-	{
-		if (!ft_isnumber(rgb_values[i]))
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB value is not a number\n"));
-		if (ft_atoi(rgb_values[i]) < 0 || ft_atoi(rgb_values[i]) > 255)
-			return (ft_free_array(&rgb_values),
-				print_error(2, "RGB out of range (0-255)\n"));
-		i++;
-	}
-	return (ft_free_array(&rgb_values), 1);
-}
 
 static int	cylinder_base(char *data)
 {
@@ -91,9 +36,60 @@ static int	cylinder_base(char *data)
 	return (1);
 }
 
-int	parse_cylinder(char **data)
+static double	**cylinder_transform(char *identifier_1, char *identifier_2
+			, char *identifier_3, char *identifier_4)
 {
-	char	*err_msg;
+	double		*pos;
+	double		**scale;
+	double		**translate;
+	double		**transform;
+	double		**rotate;
+
+	pos = str_to_double(identifier_1, 1);
+	scale = identity_mtrx(4);
+	if (!scale || !pos)
+		return (free(pos), NULL);
+	scale[0][0] = ft_atof(identifier_3);
+	scale[1][1] = ft_atof(identifier_3);
+	scale[2][2] = ft_atof(identifier_4);
+	scale[3][3] = 1;
+	translate = translation(pos);
+	transform = matrix_multiply(translate, scale);
+	if (!transform || !translate)
+		return (free_grid(scale), free_grid(translate), free(pos), NULL);
+	rotate = align_to_vec(identifier_2, transform);
+	if (!rotate)
+		return (free_grid(scale), free_grid(translate),
+			free_grid(transform), free(pos), NULL);
+	return (free_grid(scale), free_grid(translate),
+		free_grid(transform), free(pos), rotate);
+}
+
+t_object	*allocate_cylinder(char **identifier, int id)
+{
+	t_object	*obj;
+
+	obj = ft_calloc(1, sizeof(t_object));
+	if (!obj)
+		return (NULL);
+	obj->angle = 0;
+	obj->brightness = 0;
+	obj->transform = cylinder_transform(identifier[1], identifier[2]
+			, identifier[3], identifier[4]);
+	obj->inverse = inverse(obj->transform, 4);
+	obj->object_type = CYLINDER;
+	obj->object_id = id;
+	obj->next = NULL;
+	obj->rgb = str_to_int(identifier[5], 0);
+	if (!obj->rgb)
+		return (NULL);
+	return (obj);
+}
+
+int	parse_cylinder(char **data, t_object **lst, int id)
+{
+	char		*err_msg;
+	t_object	*new;
 
 	err_msg = "cylinder args misconfigured ex:\
 <position: x,y,z> <normal vector ex:[0.0,0.0,1.0]>\
@@ -111,5 +107,7 @@ int	parse_cylinder(char **data)
 		return (print_error(2, "raduis or height are not numbers\n"));
 	if (!rgb_parse(data[5]))
 		return (0);
+	new = allocate_cylinder(data, id);
+	*lst = append_object_lst(lst, new);
 	return (1);
 }
