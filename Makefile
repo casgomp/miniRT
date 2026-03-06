@@ -6,9 +6,11 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/05 20:37:14 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/06 18:14:35 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+
 
 NAME = miniRT
 CC = cc
@@ -32,6 +34,7 @@ SRC_RENDER = $(addprefix src/, main.c \
 						test_camera2.c \
 						utils.c \
 						lightshade.c \
+						implement_camera.c \
 						rendering.c)
 SRC_PARSING = $(addprefix parsing/, parsing.c \
 									parsing_utils.c \

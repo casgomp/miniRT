@@ -6,22 +6,13 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/02/27 16:22:59 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 21:39:18 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-//utils ray tranformation
-t_ray   transform_ray(t_ray r, double **m)//double or a simple t_matrix works too.
-{
-    t_ray   new_ray;
-
-    new_ray.ray_origin = multiply_matrix_tuple(m, r.ray_origin);
-    new_ray.ray_direction = multiply_matrix_tuple(m, r.ray_direction);
-    return (new_ray);
-}
-
+//utils tuple
 double  *multiply_matrix_tuple(double **m, double *t)
 {
     double  *res;
@@ -41,6 +32,30 @@ double  *multiply_matrix_tuple(double **m, double *t)
     }
     b ++;
     return (res);
+}
+
+double  *multiply_tuple_tuple(double *t1, double *t2)
+{
+    double  *new;
+    int     i;
+
+    new = ft_calloc(4, sizeof(double));
+    if (!new)
+        return (NULL);
+    i = -1;
+    while (++i < 4)
+        new[i] = t1[i] * t2[i];
+    return (new);
+}
+
+//utils ray tranformation
+t_ray   transform_ray(t_ray r, double **m)//double or a simple t_matrix works too.
+{
+    t_ray   new_ray;
+
+    new_ray.ray_origin = multiply_matrix_tuple(m, r.ray_origin);
+    new_ray.ray_direction = multiply_matrix_tuple(m, r.ray_direction);
+    return (new_ray);
 }
 
 //utils world normal
@@ -92,4 +107,111 @@ double  *reflect(double *in, double *w_normal)
     vector = multiply_scalar(w_normal, scalar);
     reflectv = subtract_tuple(in, vector);
     return (reflectv);
+}
+
+//utils lighting
+double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv)//can only take 4 params
+{
+    double  *effective_color;
+    double  *lightv;
+    double  *lightv_neg;
+    double  *ambient;
+    double  *diffuse;
+    double  *specular;
+    double  light_dot_normal;
+    double  *reflectv;
+    double  reflect_dot_eye;
+    double  factor;
+    double  *result;
+
+    lightv_neg = allocate_tuple(-1,-1,-1,0);
+    effective_color = multiply_tuple_tuple(material->color, light->intensity);
+    lightv = subtract_tuple(light->position, hit_point);
+    normalize_vector(lightv);
+    ambient = multiply_scalar(effective_color, material->ambient);
+    light_dot_normal = dot_product_tuple(lightv, normalv);
+    if (light_dot_normal < 0)
+    {
+        diffuse = allocate_tuple(0,0,0,0);
+        specular = allocate_tuple(0,0,0,0);
+    }
+    else
+    {
+        diffuse = multiply_scalar(effective_color, material->diffuse * light_dot_normal);
+        lightv_neg = multiply_tuple_tuple(lightv, lightv_neg);
+        reflectv = reflect(lightv_neg, normalv);
+        reflect_dot_eye = dot_product_tuple(reflectv, eyev);
+        if (reflect_dot_eye <= 0)
+            specular = allocate_tuple(0,0,0,0);
+        else
+        {
+            factor = pow(reflect_dot_eye, material->shininess);//what to use for shininess;
+            specular = multiply_scalar(light->intensity, material->specular * factor);
+        }
+    }
+
+    free(effective_color);
+    free(lightv);
+    free(lightv_neg);
+    free(ambient);
+    //free all double* variables.
+
+    result = add_tuple(ambient,diffuse);
+    result = add_tuple(result, specular);
+    return (result);
+}
+
+int color_to_int(double *color_percent)
+{
+    int rgb;
+    int i;
+    int color;
+
+    if (!color_percent)
+        return (0);
+    //store individual colors in standard 255 value range and correct when overflow.
+    //use OR to put all rgb bits into color
+    rgb = 0;
+    color = 0;
+    i = -1;
+    while (++i < 3)
+    {
+        rgb = color_percent[i] * 255.99;
+        if (rgb > 255)
+            rgb = 255;
+        else if (rgb < 0)
+            rgb = 0;
+        if (i < 2)
+            rgb <<= (2 - i) * 8;
+        color |= rgb;
+    }
+    return (color);
+}
+
+//create list utils
+void	lstadd(t_object **lst, t_object *new)
+{
+	t_object	*last;
+
+	if (!lst || !new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	last = lstlast(*lst);
+	last -> next = new;
+}
+
+t_object	*lstlast(t_object *lst)
+{
+	t_object	*tmp;
+
+	if (!lst)
+		return (NULL);
+	tmp = lst;
+	while ((tmp -> next) != NULL)
+		tmp = tmp -> next;
+	return (tmp);
 }

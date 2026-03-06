@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/27 18:34:49 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/04 21:39:17 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ t_intersection	*intersect_list_append2(t_intersection *xs,
 	return (xslst);
 }
 
-int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for every ray.
+//int	get_pixel_color2(t_ray r, t_object *objp, t_light *light)//this function gets called for every ray.
+double	*color_at(t_world *world, t_ray ray)
 {
 	t_intersection	*xs;
 	t_intersection	*xslst;
@@ -78,26 +79,28 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 	int				xs_count;
 	int				capacity;
 	int				i;
-	int				color;
 	t_object		*curr;
-	double			*hit_point;
-	double			*w_normal;
+	//double			*hit_point;
+	//double			*w_normal;
+	t_comps			*comps;
+	double			*colord;
 
 	//create intersection list for every object
 	xs_count = 0;
 	capacity = 8;
 	xslst = malloc(sizeof(t_intersection) * capacity);
 	if (!xslst)
-		return (0x000000); //should probably create a macro for black color.
-	curr = world;
+		return (BLACK_PIXEL);
+	//curr = objp;
+	curr = world->object;
 	while(curr)
 	{
-		xs = intersection2(r, curr);
+		xs = intersection2(ray, curr);
 		if (xs)
 		{
 			xslst = intersect_list_append2(xs, xslst, &xs_count, &capacity);
 			if (!xslst)
-				return (0x000000);
+				return (BLACK_PIXEL);
 		}
 		curr = curr->next;
 	}
@@ -113,31 +116,40 @@ int	get_pixel_color2(t_ray r, t_object *world)//this function gets called for ev
 				hit = &xslst[i];
 		}
 	}
-	color = 0x000000;
+	//printf("xs_count = %d\n", xs_count);//debugging
+	colord = NULL;
 	if (hit)
 	{
-		color = 0xFF0000; //will change after light/shade.
-		//world normal
-		hit_point = ray_position(r, hit->t);//ray_position returns the intersection point in world space.
-		w_normal = normal_at(hit->obj, hit_point);
+		comps = prepare_computations(hit, ray);
+		colord = shade_hit(world, comps);
 
-		//having w_normal now can get reflection vector
+		//hit_point = ray_position(ray, hit->t);//ray_position returns the intersection point in world space.
+		//w_normal = normal_at(hit->obj, hit_point);
+
+		/*//having w_normal now can get reflection vector
 		//should have in ray from parsing as light source? store in engine struct.
-		double	*in = allocate_tuple(1,-1,0,0);
+		double	*in = allocate_tuple(1,-1,0,0);//in is light vector
 		if (!in)
 			return(free(xslst), 1);
 		double	*reflectv = reflect(in, w_normal);
-		printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
-		//(void)reflectv;//get rid of debugging void
+		//printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
+		(void)reflectv;//get rid of this debugging void*/
 
-		//color == world normal color
-		free(w_normal);//free?
+		//double	*eyev = subtract_tuple(r.ray_origin, hit_point);
+		//normalize_vector(eyev);
+		//double *colord = lighting(hit->obj->material, light, hit_point, eyev, w_normal);
+		//color = transform colord into int.
+		//color = color_to_int(colord);
+		//free(w_normal);//free?
+		//free(in);
+		//free(reflectv);
 	}
-	free(xslst);
-	return (color);
+	//free function for freeing arrays
+	free(xslst);//free each intersection, then free list
+	return (colord);
 }
 
-void	render_loop2(t_data *data, t_object *s)
+void	render_loop2(t_data *data, t_world *w)
 {
 	int				x;
 	int				y;
@@ -148,6 +160,7 @@ void	render_loop2(t_data *data, t_object *s)
 	const double	wall_size = 7.0;
 	double			pixel_size = wall_size / WIN_W;
 	double			*target;
+	double			*colord;
 	int				color;
 
 	r.ray_origin = allocate_tuple(0,0,-5,1); //camera origin (which is also the ray's origin)
@@ -164,7 +177,9 @@ void	render_loop2(t_data *data, t_object *s)
 			r.ray_direction = subtract_tuple(target, r.ray_origin);
 			normalize_vector(r.ray_direction);
 
-			color = get_pixel_color2(r, s);
+			//color = get_pixel_color2(r, w->object, w->light);
+			colord = color_at(w, r);
+			color = color_to_int(colord);
 			img_pix_put(&(data->img), x, y, color);
 
 			free(target);
@@ -174,3 +189,50 @@ void	render_loop2(t_data *data, t_object *s)
 	free(r.ray_origin);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 }
+
+t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
+{
+	t_comps			*comps;
+	double			*negative;
+
+	comps = malloc(sizeof(t_comps));
+	if (!comps)
+		return (NULL);
+	
+	comps->t = intersection->t;
+	comps->obj = intersection->obj;
+
+	negative = allocate_tuple(-1,-1,-1,0);
+	comps->point = ray_position(ray, comps->t);//point is the hit point
+	comps->eyev = multiply_tuple_tuple(ray.ray_direction, negative);
+	comps->normalv = normal_at(comps->obj, comps->point);
+
+	if (dot_product_tuple(comps->normalv, comps->eyev) < 0)
+	{
+		comps->inside = true;
+		comps->normalv = multiply_tuple_tuple(comps->normalv, negative);
+	}
+	else
+		comps->inside = false;
+
+	free(negative);
+
+	return (comps);
+}//*/
+
+double	*shade_hit(t_world *world, t_comps *comps)
+{
+	return (lighting(comps->obj->material, world->light, 
+		comps->point, comps->eyev, comps->normalv));
+}
+/*
+double	*color_at(t_world *world, t_ray ray)
+{
+	t_comps	*comps;
+	double	*color;
+
+	comps = prepare_computations(intersection, ray);
+	color = shade_hit(world, comps);
+
+	return (color);
+}*/

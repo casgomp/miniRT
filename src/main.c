@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 18:00:04 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 18:13:08 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,8 @@ int main(int argc, char **argv) //main Ch.5
     return (0);
 }//*/
 
-/*int main(int argc, char **argv) //main Ch.5 v2 with transformation
+/*
+int main(int argc, char **argv) //main Ch.5 and Ch.6
 {
     t_data 		data;
 	t_object	*s;//eventually this would be world, a t_object linked list of all objects in the scene (i.e. in the world)
@@ -152,6 +153,33 @@ int main(int argc, char **argv) //main Ch.5
     if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);
     mlx_do_sync(data.mlx_ptr);//unnecessary? (used for debugging: forces the window to appear on some systems)
+
+	//test reflectv (delete after)
+	//double	*in = allocate_tuple(0,-1,0,0);
+	//double	*w_normal = allocate_tuple(sqrt(2)/2,sqrt(2)/2,0,0);
+	//double	*reflectv = reflect(in, w_normal);
+	//printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
+	//free(in); free(w_normal); free(reflectv);
+
+	//initialize light
+	t_light	*light;
+	light = malloc(sizeof(t_light));
+	if (!light)
+		return (1);//and free data, etc?
+	light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
+	light->position = allocate_tuple(-10,10,-10,1);
+
+	//initialize material
+	t_material	*m;
+	m = malloc(sizeof(t_material));
+	if (!m)
+		return (1);//and free data, etc?
+	m->color = allocate_tuple(1,0.2,1,0);//what color?make sure w=0 always for colors.
+	m->ambient = 0.1;
+	m->diffuse = 0.9;
+	m->specular = 0.9;
+	m->shininess = 200.0;//necessary(yes)?where do we get this value from?
+
 	s = malloc(sizeof(t_object));
 	if (!s)
 		return (1);
@@ -160,13 +188,149 @@ int main(int argc, char **argv) //main Ch.5
     s->transform = identity_mtrx(4);//eventually in parser (always initilize to identity , then multiply by tranformations if there are)
 	s->inverse = inverse(s->transform, 4);
 	s->object_type = 1;
+	s->material = m;
 
     printf("Starting render\n");
-    render_loop2(&data, s);
+    render_loop2(&data, s, light);
     printf("Render finished\n");
 
     mlx_loop(data.mlx_ptr);
+
+	free(light->intensity);
+	free(light->position);
+	free(m->color);
+	free(s->material);
 	free(s);
+
+    return (0);
+}//*/
+
+t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m)
+{
+	t_object	*obj;
+
+	obj = malloc(sizeof(t_object));
+	if (!obj)
+		return (NULL);
+	obj->next = NULL;
+    obj->transform = transform; //(always initilize to identity, then multiply by tranformations if there are)
+	obj->inverse = inverse(obj->transform, 4);
+	obj->object_type = object_type;
+	obj->material = m;
+	return (obj);
+}
+
+t_material	*init_material(double *color, double ambient, double diffuse, double specular, double shininess)//temporary util to initialize material (eventually done in parsing)
+{
+	t_material	*m;
+
+	m = malloc(sizeof(t_material));
+	if (!m)
+		return (NULL);
+	m->color = color;//what color?make sure w=0 always for colors.
+	m->ambient = ambient;
+	m->diffuse = diffuse;
+	m->specular = specular;
+	m->shininess = shininess;//necessary(yes)?where do we get this value from?;
+	return (m);
+}
+
+int main(int argc, char **argv) //main Ch.7
+{
+    t_data 		data;
+	//t_object	*obj;//eventually this would be a t_object linked list of all objects in the scene
+	//t_world		*w;//world includes all objects, lights, etc. probably also camera?
+
+	(void)argc;
+	(void)argv;
+    if (ft_minilibx_setup(&data))
+		return (perror("minilibx_setup"), 1);
+
+	//implementing view/camera
+
+	double	*from = allocate_tuple(0,0,0,1);
+	double	*to = allocate_tuple(0,0,-1,1);
+	double	*up = allocate_tuple(0,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform);
+
+	/* double	*from = allocate_tuple(0,0,0,1);
+	double	*to = allocate_tuple(0,0,1,1);
+	double	*up = allocate_tuple(0,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform);
+	double	*scaled = allocate_tuple(-1,1,-1,0);
+	double	**scaled_mtrx = scaling(scaled);
+	print_grid(scaled_mtrx); */
+
+	/* double	*from = allocate_tuple(0,0,8,1);
+	double	*to = allocate_tuple(0,0,0,1);
+	double	*up = allocate_tuple(0,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform);
+	double	*translated = allocate_tuple(0,0,-8,0);
+	double	**translated_mtrx = translation(translated);
+	print_grid(translated_mtrx); */
+
+	/* double	*from = allocate_tuple(1,3,2,1);
+	double	*to = allocate_tuple(4,-2,8,1);
+	double	*up = allocate_tuple(1,1,0,1);
+	double	**transform = view_transform(from, to, up);
+	print_grid(transform); */
+
+	//initialize light
+	t_light	*light;
+	light = malloc(sizeof(t_light));
+	if (!light)
+		return (1);//and free data, etc?
+	light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
+	light->position = allocate_tuple(-10,10,-10,1);
+
+	//initialize materials
+	t_material *m1 = init_material(allocate_tuple(0.8,1.0,0.6,0), 0.1, 0.7, 0.2, 200.0);
+	if (!m1)
+		return (1); //and free data, etc...
+
+	//initiliaze objects
+	//obj1
+	t_object	*obj1 = init_obj(identity_mtrx(4), 1, m1);
+	if (!obj1)
+		return (1); //and free data, materials, etc...
+	//obj2
+	double	*scaling_vector = allocate_tuple(0.5,0.5,0.5,0);
+	double	**scaling_matrix = scaling(scaling_vector);//0 for vector?
+
+	//print_grid(scaling_matrix);//too see that both print same thing since identity matrix is just multiplying by 1.
+	double	**transform_obj2 = matrix_multiply(identity_mtrx(4), scaling_matrix);
+	//print_grid(transform_obj2);
+
+	t_object	*obj2 = init_obj(transform_obj2, 1, m1);//m1 here for testing?
+	if (!obj2)
+		return (1); //and free data, materials, etc...
+	free(scaling_vector);
+	free(scaling_matrix);
+
+	//create object list
+	lstadd(&obj1, obj2);
+
+	//initialize world
+	t_world	*w = malloc(sizeof(t_world));
+	if (!w)
+		return (1);//and free data, materials, objects, etc...
+	w->light = light;
+	w->object = obj1;
+
+    printf("Starting render\n");
+	render_loop2(&data, w);
+    printf("Render finished\n");
+
+    mlx_loop(data.mlx_ptr);
+
+	free(light->intensity);
+	free(light->position);
+	free(m1->color);
+	free(obj1->material);
+	free(obj1);
 
     return (0);
 }//*/
