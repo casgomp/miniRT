@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 18:06:41 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/06 19:55:50 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,10 @@ typedef struct s_object
 	t_OBJECT_TYP		object_type;
 	double				**transform;
 	double				**inverse;
-	//t_material		material;
+	double				angle;
+	int					*rgb;
+	double				brightness;
+	t_material			*material;
 	/*union
 	{
 		t_sphere		*sphere;
