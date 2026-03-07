@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 16:20:29 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:55:04 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,11 @@ t_object	*allocate_cylinder(char **identifier, int id)
 	obj->inverse = inverse(obj->transform, 4);
 	obj->object_type = CYLINDER;
 	obj->object_id = id;
+	obj->scale = allocate_tuple(ft_atof(identifier[3]),
+			ft_atof(identifier[3]), ft_atof(identifier[4]), 1);
 	obj->next = NULL;
 	obj->rgb = str_to_int(identifier[5], 0);
-	if (!obj->rgb)
+	if (!obj->rgb || !obj->scale)
 		return (NULL);
 	return (obj);
 }

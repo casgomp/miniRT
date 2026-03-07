@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:52:21 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 14:51:36 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:33:42 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static t_object	*allocate_light(char **identifier, int i)
 	obj->object_id = i;
 	obj->object_type = LIGHT;
 	obj->rgb = rgb;
+	obj->scale = NULL;
 	obj->transform = translation(light_pos);
 	if (!obj->transform)
 		return (free(light_pos), free(rgb), NULL);

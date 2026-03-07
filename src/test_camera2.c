@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_camera2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 21:39:17 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/07 18:36:44 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,70 @@
 
 t_intersection	*intersection2(t_ray r, t_object *objp)
 {
-	double			a;
-	double			b;
-	double			c;
-	double			discriminant;
-	double			*sphere_to_ray;
+	double			a = 0;
+	double			b = 0;
+	double			c = 0;
+	double			discriminant = 0;
 	t_ray			local_r;
 	t_intersection	*xs;
 
 	local_r = transform_ray(r, objp->inverse);
-	sphere_to_ray = local_r.ray_origin;
-	local_r.ray_direction[3] = 0;//important to set this to 0, otherwise the dot_product_tuple will return a wrong result.
-	sphere_to_ray[3] = 0;//important to set this to 0, otherwise the dot_product_tuple will return a wrong result.
-	a = dot_product_tuple(local_r.ray_direction, local_r.ray_direction);
-	b = 2 * dot_product_tuple(local_r.ray_direction, sphere_to_ray);
-	c = dot_product_tuple(sphere_to_ray, sphere_to_ray) - 1;
-	free(local_r.ray_origin);//free only local copies
-	free(local_r.ray_direction);//free only local copies
-	discriminant = pow(b, 2) - (4 * a * c);
-	if (discriminant < 0)
-		return (NULL);
-	xs = malloc(sizeof(t_intersection) * 2);//norminette too many variables...make function to create xs and store values.
+	xs = malloc(sizeof(t_intersection) * 2);
 	if (!xs)
 		return (NULL);
-	xs[0].t = (-b - sqrt(discriminant)) / (2 * a);
-	xs[1].t = (-b + sqrt(discriminant)) / (2 * a);
-	xs[0].obj = objp;
-	xs[1].obj = objp;
-	return (xs);
+	if (objp->object_type == SPHERE)
+	{
+		a = dot_product_tuple(local_r.ray_direction, local_r.ray_direction);
+		b = 2 * dot_product_tuple(local_r.ray_direction, local_r.ray_origin);
+		c = dot_product_tuple(local_r.ray_origin, local_r.ray_origin) - 1;
+		free(local_r.ray_origin);
+		free(local_r.ray_direction);
+		discriminant = pow(b, 2) - (4 * a * c);
+		if (discriminant < 0)
+			return (NULL);
+		xs[0].t = (-b - sqrt(discriminant)) / (2 * a);
+		xs[1].t = (-b + sqrt(discriminant)) / (2 * a);
+		xs[0].obj = objp;
+		xs[1].obj = objp;
+		return (xs);
+	}
+	else if (objp->object_type == PLANE)
+	{
+		if (local_r.ray_direction[1] == 0)
+			return (NULL);
+		else
+		{
+			xs[0].t = (-1 * (local_r.ray_origin[1])) / local_r.ray_direction[1];
+			xs[0].obj = objp;
+			xs[1] = (t_intersection){0};
+			return (xs);
+		}
+	}
+	else if (objp->object_type == CYLINDER)
+	{
+		a = powf(local_r.ray_direction[0], 2)
+			+ powf(local_r.ray_direction[2], 2);
+		b = (2 * local_r.ray_origin[0] * local_r.ray_direction[0])
+			+ (2 * local_r.ray_origin[2] * local_r.ray_direction[2]);
+		c = powf(local_r.ray_origin[0], 2) + powf(local_r.ray_origin[2], 2) - 1;
+		discriminant = pow(b, 2) - (4 * a * c);
+		if (discriminant < 0)
+			return (NULL);
+		xs[0].t = (-b - sqrt(discriminant)) / (2 * a);
+		xs[1].t = (-b + sqrt(discriminant)) / (2 * a);
+		if (xs[0].t > xs[1].t)
+			ft_swap(&xs[0].t, &xs[1].t);
+		double y0 = local_r.ray_origin[1] + (xs[0].t * local_r.ray_direction[1]);
+		if (y0 > (-1* ((objp->scale[2]) / 2)) && y0 < ((objp->scale[2]) / 2))
+			xs[0].obj = objp;
+		double y1 = local_r.ray_origin[1] + (xs[1].t * local_r.ray_direction[1]);
+		if (y1 > (-1* ((objp->scale[2]) / 2)) && y1 < ((objp->scale[2]) / 2))
+			xs[0].obj = objp;
+		return (xs);
+	}
 }
 
-t_intersection	*intersect_list_append2(t_intersection *xs, 
+t_intersection	*intersect_list_append2(t_intersection *xs,
 							t_intersection *xslst, int *count, int *capacity)
 {
 	t_intersection	*newptr;
@@ -198,7 +231,7 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 	comps = malloc(sizeof(t_comps));
 	if (!comps)
 		return (NULL);
-	
+
 	comps->t = intersection->t;
 	comps->obj = intersection->obj;
 
@@ -222,7 +255,7 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 
 double	*shade_hit(t_world *world, t_comps *comps)
 {
-	return (lighting(comps->obj->material, world->light, 
+	return (lighting(comps->obj->material, world->light,
 		comps->point, comps->eyev, comps->normalv));
 }
 /*

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 14:05:59 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/05 20:39:01 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:25:36 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_object	*allocate_ambient(char **identifier, int id)
 	obj->brightness = ft_atof(identifier[1]);
 	obj->transform = NULL;
 	obj->angle = 0;
+	obj->scale = NULL;
 	obj->rgb = str_to_int(identifier[2], 0);
 	if (!obj->rgb)
 		return (free(obj), NULL);

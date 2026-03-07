@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 19:55:50 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:24:36 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ typedef struct s_object
 	double				**transform;
 	double				**inverse;
 	double				angle;
+	double				*scale;
 	int					*rgb;
 	double				brightness;
 	t_material			*material;

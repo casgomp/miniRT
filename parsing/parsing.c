@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 20:00:58 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:44:56 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	free_object_list(t_object *lst)
 			free_grid(lst->inverse);
 		if (lst->rgb)
 			free(lst->rgb);
+		if (lst->scale)
+			free(lst->scale);
 		free(lst);
 		lst = tmp;
 	}

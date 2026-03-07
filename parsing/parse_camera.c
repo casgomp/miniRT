@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/06 14:27:31 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:25:55 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ t_object	*allocate_camera(char **identifier, int id)
 	obj->transform = transform_cam(identifier[1], identifier[2]);
 	obj->angle = ft_atof(identifier[3]);
 	obj->inverse = inverse(obj->transform, 4);
+	obj->scale = NULL;
 	obj->next = NULL;
 	return (obj);
 }
