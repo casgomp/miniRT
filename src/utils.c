@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/04 21:39:18 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:25:21 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,11 @@ double  *normal_at(t_object *object, double *world_point)
     
     local_point = multiply_matrix_tuple(object->inverse, world_point);
     local_normal = NULL;
-    if (object->object_type == 1)//SPHERE
+    if (object->object_type == SPHERE)
         local_normal = allocate_tuple(local_point[0], local_point[1], local_point[2], 0);
-    else if (object->object_type == 2)//CYLINDER
+    else if (object->object_type == CYLINDER)
         local_normal = allocate_tuple(local_point[0], 0, local_point[2], 0);
-    else if (object->object_type == 3)//PLANE
+    else if (object->object_type == PLANE)
         local_normal = allocate_tuple(0, 1, 0, 0);
     transposed_inverse = transpose_grid(object->inverse);
     world_normal = multiply_matrix_tuple(transposed_inverse, local_normal);

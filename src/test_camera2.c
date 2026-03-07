@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 21:39:17 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:49:11 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,44 +149,59 @@ double	*color_at(t_world *world, t_ray ray)
 	return (colord);
 }
 
-void	render_loop2(t_data *data, t_world *w)
+//void	render_loop2(t_data *data, t_world *w)
+void	render_loop2(t_data *data, t_world *w, t_camera *c)
 {
-	int				x;
-	int				y;
-	t_ray			r;
-	double			world_x;
+	double			x;
+	double			y;
+	t_ray			*r;
+	/* double			world_x;
 	double			world_y;
 	const double	wall_z = 10;
 	const double	wall_size = 7.0;
 	double			pixel_size = wall_size / WIN_W;
-	double			*target;
+	double			*target; */
 	double			*colord;
 	int				color;
 
-	r.ray_origin = allocate_tuple(0,0,-5,1); //camera origin (which is also the ray's origin)
-	y = -1;
-	while (++y < WIN_H)
+	printf("hsize=%f vsize=%f pixel_size=%f\n", c->hsize, c->vsize, c->pixel_size);
+    printf("half_width=%f half_height=%f\n", c->half_width, c->half_height);
+
+	//r.ray_origin = allocate_tuple(0,0,-5,1); //camera origin (which is also the ray's origin)
+	y = -1.0;
+	while (++y < c->vsize)
 	{
-		world_y = (wall_size / 2) - (pixel_size * y);
-		x = -1;
-		while (++x < WIN_W)
+		//world_y = (wall_size / 2) - (pixel_size * y);
+		x = -1.0;
+		while (++x < c->hsize)
 		{
-			world_x = -(wall_size / 2) + (pixel_size * x);
+			/* world_x = -(wall_size / 2) + (pixel_size * x);
 
 			target = allocate_tuple(world_x, world_y, wall_z, 1);
 			r.ray_direction = subtract_tuple(target, r.ray_origin);
-			normalize_vector(r.ray_direction);
+			normalize_vector(r.ray_direction); */
 
 			//color = get_pixel_color2(r, w->object, w->light);
-			colord = color_at(w, r);
+
+			r = ray_for_pixel(c, x, y);
+			if (x == c->hsize/2 && y == c->vsize/2) // center pixel debug
+                printf("center ray: origin=%f,%f,%f dir=%f,%f,%f\n",
+                    r->ray_origin[0], r->ray_origin[1], r->ray_origin[2],
+                    r->ray_direction[0], r->ray_direction[1], r->ray_direction[2]);
+			colord = color_at(w, *r);
+			if (x == c->hsize/2 && y == c->vsize/2)
+                printf("center color: %f,%f,%f\n", 
+                    colord ? colord[0] : -1,
+                    colord ? colord[1] : -1,
+                    colord ? colord[2] : -1);
 			color = color_to_int(colord);
 			img_pix_put(&(data->img), x, y, color);
 
-			free(target);
-			free(r.ray_direction);
+			/* free(target);
+			free(r.ray_direction); */
 		}
 	}
-	free(r.ray_origin);
+	//free(r.ray_origin);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 }
 

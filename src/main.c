@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 21:23:56 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/07 18:04:23 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,11 +248,17 @@ int main(int argc, char **argv) //main Ch.7
 
 	//implementing view/camera
 
-	double	*from = allocate_tuple(0,0,0,1);
-	double	*to = allocate_tuple(0,0,-1,1);
+	t_camera *c = camera(WIN_W,WIN_H,PI/3);
+	if (!c)
+		return (1);
+	pixel_size(c);
+	printf("pixel_size = %f\n", c->pixel_size);
+
+	double	*from = allocate_tuple(0,0,3,1);
+	double	*to = allocate_tuple(0,0,0,1);
 	double	*up = allocate_tuple(0,1,0,1);
-	double	**transform = view_transform(from, to, up);
-	print_grid(transform);
+	c->transform = view_transform(from, to, up);
+	print_grid(c->transform);
 
 	/* double	*from = allocate_tuple(0,0,0,1);
 	double	*to = allocate_tuple(0,0,1,1);
@@ -284,7 +290,7 @@ int main(int argc, char **argv) //main Ch.7
 	if (!light)
 		return (1);//and free data, etc?
 	light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
-	light->position = allocate_tuple(-10,10,-10,1);
+	light->position = allocate_tuple(200,5,-10,1);
 
 	//initialize materials
 	t_material *m1 = init_material(allocate_tuple(0.8,1.0,0.6,0), 0.1, 0.7, 0.2, 200.0);
@@ -293,7 +299,7 @@ int main(int argc, char **argv) //main Ch.7
 
 	//initiliaze objects
 	//obj1
-	t_object	*obj1 = init_obj(identity_mtrx(4), 1, m1);
+	t_object	*obj1 = init_obj(identity_mtrx(4), SPHERE, m1);
 	if (!obj1)
 		return (1); //and free data, materials, etc...
 	//obj2
@@ -304,11 +310,11 @@ int main(int argc, char **argv) //main Ch.7
 	double	**transform_obj2 = matrix_multiply(identity_mtrx(4), scaling_matrix);
 	//print_grid(transform_obj2);
 
-	t_object	*obj2 = init_obj(transform_obj2, 1, m1);//m1 here for testing?
+	t_object	*obj2 = init_obj(transform_obj2, SPHERE, m1);//m1 here for testing?
 	if (!obj2)
 		return (1); //and free data, materials, etc...
 	free(scaling_vector);
-	free(scaling_matrix);
+	free_grid(scaling_matrix);
 
 	//create object list
 	lstadd(&obj1, obj2);
@@ -321,7 +327,7 @@ int main(int argc, char **argv) //main Ch.7
 	w->object = obj1;
 
     printf("Starting render\n");
-	render_loop2(&data, w);
+	render_loop2(&data, w, c);
     printf("Render finished\n");
 
     mlx_loop(data.mlx_ptr);

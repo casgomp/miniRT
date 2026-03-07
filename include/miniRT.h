@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 21:39:20 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:25:24 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,9 @@ typedef struct s_camera
 	double	vsize;
 	double	field_of_view;
 	double	**transform;
+	double	pixel_size;
+	double	half_width;
+	double	half_height;
 }	t_camera;
 
 typedef struct s_comps
@@ -296,7 +299,8 @@ t_intersection	*intersect_list_append2(t_intersection *xs,
 //int				get_pixel_color2(t_ray r, t_object *objp, t_light *light);
 double			*color_at(t_world *world, t_ray ray);
 //void			render_loop2(t_data *data, t_object *s, t_light *light);
-void			render_loop2(t_data *data, t_world *w);
+//void			render_loop2(t_data *data, t_world *w);
+void			render_loop2(t_data *data, t_world *w, t_camera *c);
 
 //utils
 t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
@@ -318,7 +322,11 @@ t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
 t_material	*init_material(double *color, double ambient, double diffuse, double specular, double shininess);
 
 //implement_camera
-double  **view_transform(double *from, double *to, double *up);
+double  	**view_transform(double *from, double *to, double *up);
+t_camera    *camera(double hsize, double vsize, double field_of_view);
+void  		pixel_size(t_camera *c);
+t_ray		*ray_for_pixel(t_camera *c, double px, double py);
+
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,
