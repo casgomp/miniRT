@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:49:11 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/08 12:18:57 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,17 +184,21 @@ void	render_loop2(t_data *data, t_world *w, t_camera *c)
 			//color = get_pixel_color2(r, w->object, w->light);
 
 			r = ray_for_pixel(c, x, y);
+
 			if (x == c->hsize/2 && y == c->vsize/2) // center pixel debug
                 printf("center ray: origin=%f,%f,%f dir=%f,%f,%f\n",
                     r->ray_origin[0], r->ray_origin[1], r->ray_origin[2],
                     r->ray_direction[0], r->ray_direction[1], r->ray_direction[2]);
+			
 			colord = color_at(w, *r);
-			if (x == c->hsize/2 && y == c->vsize/2)
+			
+			if (x == c->hsize/2 && y == c->vsize/2)//debugging
                 printf("center color: %f,%f,%f\n", 
                     colord ? colord[0] : -1,
                     colord ? colord[1] : -1,
                     colord ? colord[2] : -1);
-			color = color_to_int(colord);
+			
+					color = color_to_int(colord);
 			img_pix_put(&(data->img), x, y, color);
 
 			/* free(target);

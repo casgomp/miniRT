@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:25:24 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/08 12:18:47 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,9 +308,7 @@ double  *multiply_matrix_tuple(double **m, double *t);
 double  *multiply_tuple_tuple(double *t1, double *t2);
 double  *normal_at(t_object *object, double *world_point);
 double  *ray_position(t_ray r, double t);
-double  *reflect(double *in, double *w_normal);
 //void    *point_light(double  *intensity, double *position);
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
 int 	color_to_int(double *color_percent);
 void	lstadd(t_object **lst, t_object *new);
 t_object	*lstlast(t_object *lst);
@@ -327,6 +325,9 @@ t_camera    *camera(double hsize, double vsize, double field_of_view);
 void  		pixel_size(t_camera *c);
 t_ray		*ray_for_pixel(t_camera *c, double px, double py);
 
+//lightshade
+double  *reflect(double *in, double *w_normal);
+double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,
