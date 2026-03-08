@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 12:17:30 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/08 16:39:03 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void	grid_cpy(double **dst, double src[100][100], int size)
+/*void	grid_cpy(double **dst, double src[100][100], int size)
 {
 	int i = 0;
 	int j = 0;
@@ -27,7 +27,7 @@ void	grid_cpy(double **dst, double src[100][100], int size)
 		}
 		i ++;
 	}
-}
+}*/
 
 t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m)
 {
