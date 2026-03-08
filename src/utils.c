@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/07 17:25:21 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/08 19:32:52 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ double  *normal_at(t_object *object, double *world_point)
     double  *local_normal;
     double  **transposed_inverse;
     double  *world_normal;
-    
+
     local_point = multiply_matrix_tuple(object->inverse, world_point);
     local_normal = NULL;
     if (object->object_type == SPHERE)
@@ -93,72 +93,6 @@ double  *normal_at(t_object *object, double *world_point)
     free(local_normal);
     free_grid(transposed_inverse);
     return (world_normal);
-}
-
-//utils reflect
-double  *reflect(double *in, double *w_normal)
-{
-    double  scalar;
-    double  *vector;
-    double  *reflectv;
-
-    //in - normal * 2 * dot(in, normal)
-    scalar = 2 * dot_product_tuple(in, w_normal);
-    vector = multiply_scalar(w_normal, scalar);
-    reflectv = subtract_tuple(in, vector);
-    return (reflectv);
-}
-
-//utils lighting
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv)//can only take 4 params
-{
-    double  *effective_color;
-    double  *lightv;
-    double  *lightv_neg;
-    double  *ambient;
-    double  *diffuse;
-    double  *specular;
-    double  light_dot_normal;
-    double  *reflectv;
-    double  reflect_dot_eye;
-    double  factor;
-    double  *result;
-
-    lightv_neg = allocate_tuple(-1,-1,-1,0);
-    effective_color = multiply_tuple_tuple(material->color, light->intensity);
-    lightv = subtract_tuple(light->position, hit_point);
-    normalize_vector(lightv);
-    ambient = multiply_scalar(effective_color, material->ambient);
-    light_dot_normal = dot_product_tuple(lightv, normalv);
-    if (light_dot_normal < 0)
-    {
-        diffuse = allocate_tuple(0,0,0,0);
-        specular = allocate_tuple(0,0,0,0);
-    }
-    else
-    {
-        diffuse = multiply_scalar(effective_color, material->diffuse * light_dot_normal);
-        lightv_neg = multiply_tuple_tuple(lightv, lightv_neg);
-        reflectv = reflect(lightv_neg, normalv);
-        reflect_dot_eye = dot_product_tuple(reflectv, eyev);
-        if (reflect_dot_eye <= 0)
-            specular = allocate_tuple(0,0,0,0);
-        else
-        {
-            factor = pow(reflect_dot_eye, material->shininess);//what to use for shininess;
-            specular = multiply_scalar(light->intensity, material->specular * factor);
-        }
-    }
-
-    free(effective_color);
-    free(lightv);
-    free(lightv_neg);
-    free(ambient);
-    //free all double* variables.
-
-    result = add_tuple(ambient,diffuse);
-    result = add_tuple(result, specular);
-    return (result);
 }
 
 int color_to_int(double *color_percent)
@@ -186,6 +120,16 @@ int color_to_int(double *color_percent)
         color |= rgb;
     }
     return (color);
+}
+
+void	remap_rgb(int r, int g, int b, double *color)
+{
+	if (!color)
+		return ;
+
+	color[0] = r / 255.0;
+	color[1] = g / 255.0;
+	color[2] = b / 255.0;
 }
 
 //create list utils

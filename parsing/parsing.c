@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 12:17:53 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/08 17:06:08 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ t_object	*parse_input(char *input, t_object *lst)
 	return (close(fd), ft_free_array(&rd_lines), lst);
 }
 
-int	main(int argc, char **argv)
+/*int	main(int argc, char **argv)
 {
 	t_object		*lst;
 
@@ -103,4 +103,4 @@ int	main(int argc, char **argv)
 	print_object_list(lst);
 	free_object_list(lst);
 	return (0);
-}
+}*/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 15:03:00 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/08 19:32:25 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,7 @@ typedef struct s_matrix
 	double	**inverse;
 	double	determinant;
 }	t_matrix;
-/*
-typedef struct s_matrix
-{
-	int		size;
-	double	m[4][4];
-}	t_matrix;//simplified version to avoid memory leaks
-*/
+
 
 typedef struct s_tuple
 {
@@ -151,12 +145,6 @@ typedef struct s_object
 	int					*rgb;
 	double				brightness;
 	t_material			*material;
-	/*union
-	{
-		t_sphere		*sphere;
-		t_plane			*plane;
-		t_cylinder		*cylinder;
-	}	u_obj;*/
 	struct s_object		*next;
 }	t_object;
 
@@ -191,14 +179,6 @@ typedef struct s_ray
 	t_instersection_lst		*intersection_lst;
 }	t_ray;
 
-/*
-typedef struct s_ray
-{
-	t_tuple					*ray_origin;
-	t_tuple					*ray_direction;
-	t_instersection_lst		*intersection_lst;
-}	t_ray;
-*/
 
 typedef struct s_light
 {
@@ -315,10 +295,9 @@ double  *multiply_matrix_tuple(double **m, double *t);
 double  *multiply_tuple_tuple(double *t1, double *t2);
 double  *normal_at(t_object *object, double *world_point);
 double  *ray_position(t_ray r, double t);
-double  *reflect(double *in, double *w_normal);
 //void    *point_light(double  *intensity, double *position);
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
 int 	color_to_int(double *color_percent);
+void remap_rgb(int r, int g, int b, double *color);
 void	lstadd(t_object **lst, t_object *new);
 t_object	*lstlast(t_object *lst);
 t_comps	*prepare_computations(t_intersection *intersection, t_ray ray);
@@ -334,6 +313,9 @@ t_camera    *camera(double hsize, double vsize, double field_of_view);
 void  		pixel_size(t_camera *c);
 t_ray		*ray_for_pixel(t_camera *c, double px, double py);
 
+//lightshade
+double  *reflect(double *in, double *w_normal);
+double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,

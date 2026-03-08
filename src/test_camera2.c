@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_camera2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 12:08:04 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/08 18:38:03 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ t_intersection	*intersection2(t_ray r, t_object *objp)
 			xs[0].obj = objp;
 		return (xs);
 	}
+	else
+		return (NULL);
 }
 
 t_intersection	*intersect_list_append2(t_intersection *xs,
@@ -113,8 +115,6 @@ double	*color_at(t_world *world, t_ray ray)
 	int				capacity;
 	int				i;
 	t_object		*curr;
-	//double			*hit_point;
-	//double			*w_normal;
 	t_comps			*comps;
 	double			*colord;
 
@@ -149,35 +149,12 @@ double	*color_at(t_world *world, t_ray ray)
 				hit = &xslst[i];
 		}
 	}
-	//printf("xs_count = %d\n", xs_count);//debugging
 	colord = NULL;
 	if (hit)
 	{
 		comps = prepare_computations(hit, ray);
 		colord = shade_hit(world, comps);
-
-		//hit_point = ray_position(ray, hit->t);//ray_position returns the intersection point in world space.
-		//w_normal = normal_at(hit->obj, hit_point);
-
-		/*//having w_normal now can get reflection vector
-		//should have in ray from parsing as light source? store in engine struct.
-		double	*in = allocate_tuple(1,-1,0,0);//in is light vector
-		if (!in)
-			return(free(xslst), 1);
-		double	*reflectv = reflect(in, w_normal);
-		//printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
-		(void)reflectv;//get rid of this debugging void*/
-
-		//double	*eyev = subtract_tuple(r.ray_origin, hit_point);
-		//normalize_vector(eyev);
-		//double *colord = lighting(hit->obj->material, light, hit_point, eyev, w_normal);
-		//color = transform colord into int.
-		//color = color_to_int(colord);
-		//free(w_normal);//free?
-		//free(in);
-		//free(reflectv);
 	}
-	//free function for freeing arrays
 	free(xslst);//free each intersection, then free list
 	return (colord);
 }
@@ -188,53 +165,37 @@ void	render_loop2(t_data *data, t_world *w, t_camera *c)
 	double			x;
 	double			y;
 	t_ray			*r;
-	/* double			world_x;
-	double			world_y;
-	const double	wall_z = 10;
-	const double	wall_size = 7.0;
-	double			pixel_size = wall_size / WIN_W;
-	double			*target; */
 	double			*colord;
 	int				color;
 
 	printf("hsize=%f vsize=%f pixel_size=%f\n", c->hsize, c->vsize, c->pixel_size);
     printf("half_width=%f half_height=%f\n", c->half_width, c->half_height);
-
-	//r.ray_origin = allocate_tuple(0,0,-5,1); //camera origin (which is also the ray's origin)
 	y = -1.0;
 	while (++y < c->vsize)
 	{
-		//world_y = (wall_size / 2) - (pixel_size * y);
 		x = -1.0;
 		while (++x < c->hsize)
 		{
-			/* world_x = -(wall_size / 2) + (pixel_size * x);
-
-			target = allocate_tuple(world_x, world_y, wall_z, 1);
-			r.ray_direction = subtract_tuple(target, r.ray_origin);
-			normalize_vector(r.ray_direction); */
-
-			//color = get_pixel_color2(r, w->object, w->light);
 
 			r = ray_for_pixel(c, x, y);
+
 			if (x == c->hsize/2 && y == c->vsize/2) // center pixel debug
                 printf("center ray: origin=%f,%f,%f dir=%f,%f,%f\n",
                     r->ray_origin[0], r->ray_origin[1], r->ray_origin[2],
                     r->ray_direction[0], r->ray_direction[1], r->ray_direction[2]);
+
 			colord = color_at(w, *r);
 			if (x == c->hsize/2 && y == c->vsize/2)
-                printf("center color: %f,%f,%f\n",
-                    colord ? colord[0] : -1,
-                    colord ? colord[1] : -1,
-                    colord ? colord[2] : -1);
-			color = color_to_int(colord);
+				printf("center color: %f,%f,%f\n",
+					colord ? colord[0] : -1,
+					colord ? colord[1] : -1,
+					colord ? colord[2] : -1);
+
+					color = color_to_int(colord);
 			img_pix_put(&(data->img), x, y, color);
 
-			/* free(target);
-			free(r.ray_direction); */
 		}
 	}
-	//free(r.ray_origin);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 }
 
@@ -251,7 +212,7 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 	comps->obj = intersection->obj;
 
 	negative = allocate_tuple(-1,-1,-1,0);
-	comps->point = ray_position(ray, comps->t);//point is the hit point
+	comps->point = ray_position(ray, comps->t);
 	comps->eyev = multiply_tuple_tuple(ray.ray_direction, negative);
 	comps->normalv = normal_at(comps->obj, comps->point);
 
@@ -273,14 +234,3 @@ double	*shade_hit(t_world *world, t_comps *comps)
 	return (lighting(comps->obj->material, world->light,
 		comps->point, comps->eyev, comps->normalv));
 }
-/*
-double	*color_at(t_world *world, t_ray ray)
-{
-	t_comps	*comps;
-	double	*color;
-
-	comps = prepare_computations(intersection, ray);
-	color = shade_hit(world, comps);
-
-	return (color);
-}*/
