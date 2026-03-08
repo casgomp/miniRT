@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
+#    By: aabdella <aabdella@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/07 17:58:14 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/08 15:02:36 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,7 @@ SRC = 									$(SRC_RENDER) \
 										$(SRC_PARSING)
 OBJ = $(SRC:%.c=built/%.o)
 
-all: libft minilibx $(NAME)
+all: libft  $(NAME)
 
 	@printf "\n\
 	███╗   ███╗██╗███╗   ██╗██╗██████╗ ████████╗ \n\
@@ -84,7 +84,6 @@ minilibx:
 clean:
 	rm -f $(OBJ)
 	$(MAKE) -C lib/Libft_all clean
-	$(MAKE) -C minilibx-linux clean
 
 fclean: clean
 	rm -f $(NAME)
