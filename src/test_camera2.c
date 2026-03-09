@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 12:18:57 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 15:16:46 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,23 +70,71 @@ t_intersection	*intersect_list_append2(t_intersection *xs,
 	return (xslst);
 }
 
+void	sort_intersections(t_intersection *xs, int *count)
+{
+	int	i;
+	int	j;
+
+	t_intersection	temp;
+
+	i = 0;
+	while (i < (*count) - 1)
+	{
+		j = 0;
+		while (j < (*count) - i - 1)
+		{
+			if (xs[j].t > xs[j + 1].t)
+			{
+				temp = xs[j];
+				xs[j] = xs[j + 1];
+				xs[j + 1] = temp;
+			}
+			j ++;
+		}
+		i ++;
+	}
+}
+
+t_intersection	*intersect_world(t_world *world, t_ray ray, int *count)
+{
+	t_intersection	*xs;
+	t_intersection	*xslst;
+	int				capacity;
+	t_object		*curr;
+
+	*count = 0;
+	capacity = 8;
+	xslst = malloc(sizeof(t_intersection) * capacity);
+	if (!xslst)
+		return (NULL);
+	curr = world->object;
+	while(curr)
+	{
+		xs = intersection2(ray, curr);
+		if (xs)
+		{
+			xslst = intersect_list_append2(xs, xslst, count, &capacity);
+			if (!xslst)
+				return (NULL);
+		}
+		curr = curr->next;
+	}
+	sort_intersections(xslst, count);
+	return(xslst);
+}
+
 //int	get_pixel_color2(t_ray r, t_object *objp, t_light *light)//this function gets called for every ray.
 double	*color_at(t_world *world, t_ray ray)
 {
 	t_intersection	*xs;
-	t_intersection	*xslst;
 	t_intersection	*hit;
-	int				xs_count;
-	int				capacity;
+	int				count;
 	int				i;
-	t_object		*curr;
-	//double			*hit_point;
-	//double			*w_normal;
 	t_comps			*comps;
 	double			*colord;
 
 	//create intersection list for every object
-	xs_count = 0;
+	/*xs_count = 0;
 	capacity = 8;
 	xslst = malloc(sizeof(t_intersection) * capacity);
 	if (!xslst)
@@ -103,17 +151,22 @@ double	*color_at(t_world *world, t_ray ray)
 				return (BLACK_PIXEL);
 		}
 		curr = curr->next;
-	}
+	} */
 	//find the hit (hit logic = find smallest t: make separate function for norminette)
 	//eventually with a function that sorts in ascending order and then simply choosing the first
+	
+	xs = intersect_world(world, ray, &count);
+	if (!xs)
+		return (BLACK_PIXEL);
+	
 	hit = NULL;
 	i = -1;
-	while (++i < xs_count)
+	while (++i < count)
 	{
-		if (xslst[i].t > 0.0001)
+		if (xs[i].t > 0.0001)
 		{
-			if (!hit || xslst[i].t < hit->t)
-				hit = &xslst[i];
+			hit = &xs[i];
+			break ;
 		}
 	}
 	//printf("xs_count = %d\n", xs_count);//debugging
@@ -122,30 +175,9 @@ double	*color_at(t_world *world, t_ray ray)
 	{
 		comps = prepare_computations(hit, ray);
 		colord = shade_hit(world, comps);
-
-		//hit_point = ray_position(ray, hit->t);//ray_position returns the intersection point in world space.
-		//w_normal = normal_at(hit->obj, hit_point);
-
-		/*//having w_normal now can get reflection vector
-		//should have in ray from parsing as light source? store in engine struct.
-		double	*in = allocate_tuple(1,-1,0,0);//in is light vector
-		if (!in)
-			return(free(xslst), 1);
-		double	*reflectv = reflect(in, w_normal);
-		//printf("reflectv = %f,%f,%f,%f\n", reflectv[0],reflectv[1],reflectv[2],reflectv[3]);
-		(void)reflectv;//get rid of this debugging void*/
-
-		//double	*eyev = subtract_tuple(r.ray_origin, hit_point);
-		//normalize_vector(eyev);
-		//double *colord = lighting(hit->obj->material, light, hit_point, eyev, w_normal);
-		//color = transform colord into int.
-		//color = color_to_int(colord);
-		//free(w_normal);//free?
-		//free(in);
-		//free(reflectv);
 	}
 	//free function for freeing arrays
-	free(xslst);//free each intersection, then free list
+	free(xs);//free each intersection, then free list
 	return (colord);
 }
 
@@ -241,17 +273,12 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 
 double	*shade_hit(t_world *world, t_comps *comps)
 {
-	return (lighting(comps->obj->material, world->light, 
-		comps->point, comps->eyev, comps->normalv));
+		bool	in_shadow = false;
+		return (lighting(comps->obj->material, world->light, 
+		comps->point, comps->eyev, comps->normalv, in_shadow));
+
+		//test ch.8
+		/* bool	in_shadow = true;
+		return (lighting(comps->obj->material, world->light, 
+		comps->point, allocate_tuple(0,0,-1,0), allocate_tuple(0,0,-1,0), in_shadow)); */
 }
-/*
-double	*color_at(t_world *world, t_ray ray)
-{
-	t_comps	*comps;
-	double	*color;
-
-	comps = prepare_computations(intersection, ray);
-	color = shade_hit(world, comps);
-
-	return (color);
-}*/

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/08 12:34:32 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 15:16:49 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ double  *reflect(double *in, double *w_normal)
 }
 
 //utils lighting
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv)//can only take 4 params
+double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow)//can only take 4 params
 {
     double  *effective_color;
     double  *lightv;
@@ -61,11 +61,17 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     double  factor;
     double  *result;
 
-    lightv_neg = allocate_tuple(-1,-1,-1,0);
     effective_color = multiply_tuple_tuple(material->color, light->intensity);
+    ambient = multiply_scalar(effective_color, material->ambient);
+    if (in_shadow)
+    {
+        free(effective_color);
+        printf("color = (%f,%f,%f\n)", ambient[0],ambient[1],ambient[2]);
+        return(ambient);
+    }
+    lightv_neg = allocate_tuple(-1,-1,-1,0);//better create a general negative tuple to avoid memory leaks later
     lightv = subtract_tuple(light->position, hit_point);
     normalize_vector(lightv);
-    ambient = multiply_scalar(effective_color, material->ambient);
     light_dot_normal = dot_product_tuple(lightv, normalv);
     if (light_dot_normal < 0)
     {
@@ -97,3 +103,10 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     result = add_tuple(result, specular);
     return (result);
 }
+
+/* 
+bool    is_shadowed(world, point)
+{
+    ;
+}
+ */

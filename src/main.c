@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 12:19:01 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 15:16:42 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,8 @@ t_material	*init_material(double *color, double ambient, double diffuse, double 
 	return (m);
 }
 
-int main(int argc, char **argv) //main Ch.7
+
+/* int main(int argc, char **argv) //main Ch.7
 {
     t_data 		data;
 	//t_object	*obj;//eventually this would be a t_object linked list of all objects in the scene
@@ -244,7 +245,7 @@ int main(int argc, char **argv) //main Ch.7
 	(void)argc;
 	(void)argv;
     if (ft_minilibx_setup(&data))
-		return (perror("minilibx_setup"), 1);
+		return (perror("minilibx_setup"), 1); */
 
 	//implementing view/camera
 
@@ -296,7 +297,7 @@ int main(int argc, char **argv) //main Ch.7
 	lstadd(&obj1, obj2);
  */
 
-	//initiliaze objects for "putting it all together"
+/* 	//initiliaze objects for "putting it all together"
 	//floor
 	double	*scaling_vector = allocate_tuple(10,0.01,10,0);
 	double	**scaling_matrix = scaling(scaling_vector);//
@@ -423,6 +424,143 @@ int main(int argc, char **argv) //main Ch.7
 
     return (0);
 }//*/
+
+
+int main(int argc, char **argv) //main Ch.8
+{
+    t_data 		data;
+
+	(void)argc;
+	(void)argv;
+    if (ft_minilibx_setup(&data))
+		return (perror("minilibx_setup"), 1);
+
+	 //initiliaze objects for "putting it all together"
+	//floor
+	double	*scaling_vector = allocate_tuple(10,0.01,10,0);
+	double	**scaling_matrix = scaling(scaling_vector);
+	double	**transform_floor = matrix_multiply(identity_mtrx(4), scaling_matrix);
+	t_material *materialfoor = init_material(allocate_tuple(1,0.9,0.9,0), 0.1, 0.7, 0, 200.0);
+	t_object	*floor = init_obj(transform_floor, SPHERE, materialfoor);
+	free(scaling_vector);
+	free_grid(scaling_matrix);
+	//leftwall
+	double	*translation_vector = allocate_tuple(0,0,5,0);
+	double	**translation_matrix = translation(translation_vector);
+	double	**rotation_y_matrix = rotation_y(-(PI/4));
+	double	**rotation_x_matrix = rotation_x((PI/2));
+	scaling_vector = allocate_tuple(10,0.01,10,0);
+	scaling_matrix = scaling(scaling_vector);
+	double **tmp1 = matrix_multiply(rotation_x_matrix, scaling_matrix);
+	double **tmp2 = matrix_multiply(rotation_y_matrix, tmp1);
+	double **transform_left_wall = matrix_multiply(translation_matrix, tmp2);
+	t_object	*left_wall = init_obj(transform_left_wall, SPHERE, materialfoor);
+	free(tmp1);
+	free(tmp2);
+	free(scaling_vector);
+	free_grid(scaling_matrix);
+	free(translation_vector);
+	free_grid(translation_matrix);
+	free_grid(rotation_y_matrix);
+	free_grid(rotation_x_matrix);
+	//rightwall
+	translation_vector = allocate_tuple(0,0,5,0);
+	translation_matrix = translation(translation_vector);
+	rotation_y_matrix = rotation_y(PI/4);
+	rotation_x_matrix = rotation_x((PI/2));
+	scaling_vector = allocate_tuple(10,0.01,10,0);
+	scaling_matrix = scaling(scaling_vector);
+	tmp1 = matrix_multiply(rotation_x_matrix, scaling_matrix);
+	tmp2 = matrix_multiply(rotation_y_matrix, tmp1);
+	double **transform_right_wall = matrix_multiply(translation_matrix, tmp2);
+	t_object	*right_wall = init_obj(transform_right_wall, SPHERE, materialfoor);
+	free(tmp1);
+	free(tmp2);
+	free(scaling_vector);
+	free_grid(scaling_matrix);
+	free(translation_vector);
+	free_grid(translation_matrix);
+	free_grid(rotation_y_matrix);
+	free_grid(rotation_x_matrix);
+	//middlesphere
+	translation_vector = allocate_tuple(-0.5,1,0.5,0);
+	translation_matrix = translation(translation_vector);
+	double	**transform_middle = matrix_multiply(identity_mtrx(4), translation_matrix);
+	t_material *materialmiddle = init_material(allocate_tuple(0.1,1,0.5,0), 0.1, 0.7, 0.3, 200.0);
+	t_object	*middle = init_obj(transform_middle, SPHERE, materialmiddle);
+	free(translation_vector);
+	free_grid(translation_matrix);
+	//rightsphere
+	translation_vector = allocate_tuple(1.5,0.5,-0.5,0);
+	translation_matrix = translation(translation_vector);
+	scaling_vector = allocate_tuple(0.5,0.5,0.5,0);
+	scaling_matrix = scaling(scaling_vector);
+	double	**transform_right = matrix_multiply(translation_matrix, scaling_matrix);
+	t_material *materialright = init_material(allocate_tuple(0.5,1,0.1,0), 0.1, 0.7, 0.3, 200.0);
+	t_object	*right = init_obj(transform_right, SPHERE, materialright);
+	free(scaling_vector);
+	free_grid(scaling_matrix);
+	free(translation_vector);
+	free_grid(translation_matrix);
+	//leftsphere
+	translation_vector = allocate_tuple(-1.5,0.33,-0.75,0);
+	translation_matrix = translation(translation_vector);
+	scaling_vector = allocate_tuple(0.33,0.33,0.33,0);
+	scaling_matrix = scaling(scaling_vector);
+	double	**transform_left = matrix_multiply(translation_matrix, scaling_matrix);
+	t_material *materialleft = init_material(allocate_tuple(1,0.8,0.1,0), 0.1, 0.7, 0.3, 200.0);
+	t_object	*left = init_obj(transform_left, SPHERE, materialleft);
+	free(scaling_vector);
+	free_grid(scaling_matrix);
+	free(translation_vector);
+	free_grid(translation_matrix);
+	//create object list
+	lstadd(&floor, left_wall);
+	lstadd(&floor, right_wall);
+	lstadd(&floor, middle);
+	lstadd(&floor, right);
+	lstadd(&floor, left);
+	//initialize light
+	t_light	*light;
+	light = malloc(sizeof(t_light));
+	if (!light)
+		return (1);//and free data, etc?
+	light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
+	light->position = allocate_tuple(-10,10,-10,1);
+	//light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
+	//light->position = allocate_tuple(0,0,-10,1);
+	//initialize world
+	t_world	*w = malloc(sizeof(t_world));
+	if (!w)
+		return (1);//and free data, materials, objects, etc...
+	w->light = light;
+	w->object = floor;
+	//w->object = obj1;
+
+	//camera
+	t_camera *c = camera(WIN_W,WIN_H,PI/3);
+	if (!c)
+		return (1);
+	pixel_size(c);
+	printf("pixel_size = %f\n", c->pixel_size);
+
+	double	*from = allocate_tuple(0,1.5,-5,1);
+	double	*to = allocate_tuple(0,1,0,1);
+	double	*up = allocate_tuple(0,1,0,1);
+	c->transform = view_transform(from, to, up);
+	print_grid(c->transform);
+
+    printf("Starting render\n");
+	render_loop2(&data, w, c);
+    printf("Render finished\n");
+
+    mlx_loop(data.mlx_ptr);
+	
+	free(light->intensity);
+	free(light->position);
+
+    return (0);
+}
 
 /*
 int	main(int argc, char **argv)

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 12:18:47 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 15:16:43 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,7 +327,7 @@ t_ray		*ray_for_pixel(t_camera *c, double px, double py);
 
 //lightshade
 double  *reflect(double *in, double *w_normal);
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
+double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
 
 //construct intersections
 double		*ray_sphere_intersection(double *ray_origin,
