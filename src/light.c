@@ -1,52 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lightshade.c                                       :+:      :+:    :+:   */
+/*   light.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/09 15:16:49 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 19:02:28 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-/* //no need for this function, since in object space, the point of intersection is already the normal.
-double  *normal_at(t_sphere *s, double *p) //p = eventually same function calculates also other objects
-{
-    double  *vector;
-
-    vector = subtract_tuple(p, s->center);
-    return (vector);
-}//*/
-
-/*//no need for this function, since in object space, the point of intersection is already the normal.
-double  *lightshade_test(t_sphere *s, double *p) //p = eventually same function calculates also other objects
-{
-    double  *normal;
-    
-    normal = normal_at(s, p);
-    normalize_vector(normal);
-    return (normal);
-}//*/
-
-
-//utils reflect
 double  *reflect(double *in, double *w_normal)
 {
     double  scalar;
     double  *vector;
     double  *reflectv;
 
-    //in - normal * 2 * dot(in, normal)
     scalar = 2 * dot_product_tuple(in, w_normal);
     vector = multiply_scalar(w_normal, scalar);
     reflectv = subtract_tuple(in, vector);
     return (reflectv);
 }
 
-//utils lighting
 double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow)//can only take 4 params
 {
     double  *effective_color;
@@ -104,9 +81,68 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     return (result);
 }
 
-/* 
-bool    is_shadowed(world, point)
+double  *normal_at(t_object *object, double *world_point)
 {
-    ;
+    double  *local_point;
+    double  *local_normal;
+    double  **transposed_inverse;
+    double  *world_normal;
+    
+    local_point = multiply_matrix_tuple(object->inverse, world_point);
+    local_normal = NULL;
+    if (object->object_type == SPHERE)
+        local_normal = allocate_tuple(local_point[0], local_point[1], local_point[2], 0);
+    else if (object->object_type == CYLINDER)
+        local_normal = allocate_tuple(local_point[0], 0, local_point[2], 0);
+    else if (object->object_type == PLANE)
+        local_normal = allocate_tuple(0, 1, 0, 0);
+    transposed_inverse = transpose_grid(object->inverse);
+    world_normal = multiply_matrix_tuple(transposed_inverse, local_normal);
+    world_normal[3] = 0;//must do this little trick (see p.82)
+    normalize_vector(world_normal);
+    free(local_point);
+    free(local_normal);
+    free_grid(transposed_inverse);
+    return (world_normal);
 }
- */
+
+double  *ray_position(t_ray r, double t)
+{
+    double  *scaled_dir;
+    double  *pos;
+
+    scaled_dir = multiply_scalar(r.ray_direction, t);
+    pos = add_tuple(r.ray_origin, scaled_dir);
+    free (scaled_dir);
+    return (pos);
+}
+
+t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
+{
+	t_comps			*comps;
+	double			*negative;
+
+	comps = malloc(sizeof(t_comps));
+	if (!comps)
+		return (NULL);
+	
+	comps->t = intersection->t;
+	comps->obj = intersection->obj;
+
+	negative = allocate_tuple(-1,-1,-1,0);
+	comps->point = ray_position(ray, comps->t);//point is the hit point
+	comps->eyev = multiply_tuple_tuple(ray.ray_direction, negative);
+	comps->normalv = normal_at(comps->obj, comps->point);
+
+	if (dot_product_tuple(comps->normalv, comps->eyev) < 0)
+	{
+		comps->inside = true;
+		comps->normalv = multiply_tuple_tuple(comps->normalv, negative);
+	}
+	else
+		comps->inside = false;
+
+	free(negative);
+
+	return (comps);
+}//*/

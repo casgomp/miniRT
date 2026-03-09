@@ -6,28 +6,12 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/09 15:16:42 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 19:02:31 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-void	grid_cpy(double **dst, double src[100][100], int size)
-{
-	int i = 0;
-	int j = 0;
-
-	while (i < size)
-	{
-		j = 0;
-		while (j < size)
-		{
-			dst[i][j] = src[i][j];
-			j ++;
-		}
-		i ++;
-	}
-}
 /*
 int	main(int argc, char **argv)
 {
@@ -61,8 +45,8 @@ int	main(int argc, char **argv)
 								};
 	grid_1 = allocate_grid(size);
 	grid_2 = allocate_grid(size);
-	grid_cpy(grid_1, test_grid_1, size);
-	grid_cpy(grid_2, test_grid_2, size);
+	//grid_cpy(grid_1, test_grid_1, size);
+	//grid_cpy(grid_2, test_grid_2, size);
 	tuple = allocate_tuple(5.5, 6.25, 3.33, 0);
 	matrix = construct_matrix(grid_1);
 	print_grid(matrix.grid);
@@ -256,7 +240,7 @@ t_material	*init_material(double *color, double ambient, double diffuse, double 
 	printf("pixel_size = %f\n", c->pixel_size);
 
 	double	*from = allocate_tuple(0,0,3,1);
-	double	*to = allocate_tuple(0,0,0,1);
+	double	*to = allocate_tuple(0,0,0,1);void	normalize_vector(double *vector)
 	double	*up = allocate_tuple(0,1,0,1);
 	c->transform = view_transform(from, to, up);
 	print_grid(c->transform); */
@@ -425,7 +409,6 @@ t_material	*init_material(double *color, double ambient, double diffuse, double 
     return (0);
 }//*/
 
-
 int main(int argc, char **argv) //main Ch.8
 {
     t_data 		data;
@@ -444,6 +427,7 @@ int main(int argc, char **argv) //main Ch.8
 	t_object	*floor = init_obj(transform_floor, SPHERE, materialfoor);
 	free(scaling_vector);
 	free_grid(scaling_matrix);
+
 	//leftwall
 	double	*translation_vector = allocate_tuple(0,0,5,0);
 	double	**translation_matrix = translation(translation_vector);
@@ -463,6 +447,7 @@ int main(int argc, char **argv) //main Ch.8
 	free_grid(translation_matrix);
 	free_grid(rotation_y_matrix);
 	free_grid(rotation_x_matrix);
+
 	//rightwall
 	translation_vector = allocate_tuple(0,0,5,0);
 	translation_matrix = translation(translation_vector);
@@ -482,6 +467,7 @@ int main(int argc, char **argv) //main Ch.8
 	free_grid(translation_matrix);
 	free_grid(rotation_y_matrix);
 	free_grid(rotation_x_matrix);
+
 	//middlesphere
 	translation_vector = allocate_tuple(-0.5,1,0.5,0);
 	translation_matrix = translation(translation_vector);
@@ -490,6 +476,7 @@ int main(int argc, char **argv) //main Ch.8
 	t_object	*middle = init_obj(transform_middle, SPHERE, materialmiddle);
 	free(translation_vector);
 	free_grid(translation_matrix);
+
 	//rightsphere
 	translation_vector = allocate_tuple(1.5,0.5,-0.5,0);
 	translation_matrix = translation(translation_vector);
@@ -502,6 +489,7 @@ int main(int argc, char **argv) //main Ch.8
 	free_grid(scaling_matrix);
 	free(translation_vector);
 	free_grid(translation_matrix);
+
 	//leftsphere
 	translation_vector = allocate_tuple(-1.5,0.33,-0.75,0);
 	translation_matrix = translation(translation_vector);
@@ -514,12 +502,14 @@ int main(int argc, char **argv) //main Ch.8
 	free_grid(scaling_matrix);
 	free(translation_vector);
 	free_grid(translation_matrix);
+
 	//create object list
 	lstadd(&floor, left_wall);
 	lstadd(&floor, right_wall);
 	lstadd(&floor, middle);
 	lstadd(&floor, right);
 	lstadd(&floor, left);
+
 	//initialize light
 	t_light	*light;
 	light = malloc(sizeof(t_light));
@@ -527,15 +517,11 @@ int main(int argc, char **argv) //main Ch.8
 		return (1);//and free data, etc?
 	light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
 	light->position = allocate_tuple(-10,10,-10,1);
-	//light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
-	//light->position = allocate_tuple(0,0,-10,1);
-	//initialize world
 	t_world	*w = malloc(sizeof(t_world));
 	if (!w)
 		return (1);//and free data, materials, objects, etc...
 	w->light = light;
 	w->object = floor;
-	//w->object = obj1;
 
 	//camera
 	t_camera *c = camera(WIN_W,WIN_H,PI/3);
@@ -551,7 +537,7 @@ int main(int argc, char **argv) //main Ch.8
 	print_grid(c->transform);
 
     printf("Starting render\n");
-	render_loop2(&data, w, c);
+	render_loop(&data, w, c);
     printf("Render finished\n");
 
     mlx_loop(data.mlx_ptr);
@@ -560,7 +546,29 @@ int main(int argc, char **argv) //main Ch.8
 	free(light->position);
 
     return (0);
-}
+} 
+
+/* int main(int argc, char **argv) //main Ch.8
+{
+    t_data 		data;
+	t_world		world;
+
+	(void)argc;
+	(void)argv;
+    if (ft_minilibx_setup(&data))
+		return (perror("minilibx_setup"), 1);
+
+	//parse function
+	world = parse_input(argv[1]);
+
+    printf("Starting render\n");
+	render_loop(&data, world);
+    printf("Render finished\n");
+
+    mlx_loop(data.mlx_ptr);
+
+    return (0);
+} */
 
 /*
 int	main(int argc, char **argv)
@@ -584,22 +592,3 @@ int	main(int argc, char **argv)
 	free(normal);
 	return (1);
 }//*/
-
-int	ft_minilibx_setup(t_data *data)
-{
-	data->error_msg = NULL;
-	data->exit_code = 0;
-	data->mlx_ptr = mlx_init();
-	if (!data->mlx_ptr)
-		terminate(data, 1, MLX_ERR);
-	data->win_ptr = mlx_new_window(data->mlx_ptr, WIN_W, WIN_H, "miniRT");
-	if (!data->win_ptr)
-		terminate(data, 1, MLX_ERR);
-	data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIN_W, WIN_H);
-	data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp,
-			&data->img.line_len, &data->img.endian);
-	//mlx_loop_hook(data->mlx_ptr, &render, data); //use only for animations
-	mlx_hook(data->win_ptr, 17, 0, handle_destroy_notify, data);
-	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, handle_keypress, data);
-	return (0);
-}

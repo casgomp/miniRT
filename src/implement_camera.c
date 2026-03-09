@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 19:57:26 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/09 15:16:48 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 19:02:29 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ t_ray  *ray_for_pixel(t_camera *c, double px, double py)
     pixel = multiply_matrix_tuple(inv_transform, point_w);
     point = allocate_tuple(0,0,0,1);//w=1
     r->ray_origin = multiply_matrix_tuple(inv_transform, point);
+    printf("rayorigin = %f,%f,%f\n", r->ray_origin[0], r->ray_origin[1],r->ray_origin[2]);
     r->ray_direction = subtract_tuple(pixel, r->ray_origin);
     normalize_vector(r->ray_direction);
 
