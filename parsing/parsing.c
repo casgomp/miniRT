@@ -6,30 +6,30 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 17:06:08 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:03:12 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-static int	parse_identifier(char **data, t_object **lst, int id)
+static int	parse_identifier(char **data, t_world **scene, int id)
 {
 	if (ft_strcmp(data[0], "A") == 0)
-		return (parse_ambient(data, lst, id));
+		return (parse_ambient(data, scene, id));
 	if (ft_strcmp(data[0], "C") == 0)
-		return (parse_camera(data, lst, id));
+		return (parse_camera(data, scene, id));
 	if (ft_strcmp(data[0], "L") == 0)
-		return (parse_light(data, lst, id));
+		return (parse_light(data, scene, id));
 	if (ft_strcmp(data[0], "sp") == 0)
-		return (parse_sphere(data, lst, id));
+		return (parse_sphere(data, scene, id));
 	if (ft_strcmp(data[0], "pl") == 0)
-		return (parse_plane(data, lst, id));
+		return (parse_plane(data, scene, id));
 	if (ft_strcmp(data[0], "cy") == 0)
-		return (parse_cylinder(data, lst, id));
+		return (parse_cylinder(data, scene, id));
 	return (print_error(2, "wrong or missing identifier\n"), 0);
 }
 
-static int	identifier_check(char *identifier_line, t_object **lst, int id)
+static int	identifier_check(char *identifier_line, t_world **scene, int id)
 {
 	char	**identifier_data;
 	int		res;
@@ -37,32 +37,12 @@ static int	identifier_check(char *identifier_line, t_object **lst, int id)
 	identifier_data = ft_split(identifier_line, ' ');
 	if (!identifier_data)
 		return (perror(MALL_ERR), 0);
-	res = parse_identifier(identifier_data, lst, id);
+	res = parse_identifier(identifier_data, scene, id);
 	ft_free_array(&identifier_data);
 	return (res);
 }
 
-void	free_object_list(t_object *lst)
-{
-	t_object	*tmp;
-
-	while (lst)
-	{
-		tmp = lst->next;
-		if (lst->transform)
-			free_grid(lst->transform);
-		if (lst->inverse)
-			free_grid(lst->inverse);
-		if (lst->rgb)
-			free(lst->rgb);
-		if (lst->scale)
-			free(lst->scale);
-		free(lst);
-		lst = tmp;
-	}
-}
-
-t_object	*parse_input(char *input, t_object *lst)
+t_world	*parse_input(char *input, t_world *scene)
 {
 	char		**rd_lines;
 	char		*line;
@@ -82,25 +62,28 @@ t_object	*parse_input(char *input, t_object *lst)
 	i = 0;
 	while (rd_lines && rd_lines[i])
 	{
-		if (!identifier_check(rd_lines[i], &lst, i))
+		if (!identifier_check(rd_lines[i], &scene, i))
 			return (ft_free_array(&rd_lines)
 				, close(fd), free(line), NULL);
 		i ++;
 	}
-	return (close(fd), ft_free_array(&rd_lines), lst);
+	return (close(fd), ft_free_array(&rd_lines), scene);
 }
 
-/*int	main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_object		*lst;
+	t_world		*scene;
 
 	if (argc != 2)
 		return (write(2, "Error\nenter one argument only\n", 30), 1);
 	if (!file_format_error(argv[1]))
 		return (1);
-	lst = NULL;
-	lst = parse_input(argv[1], lst);
-	print_object_list(lst);
-	free_object_list(lst);
+	scene = ft_calloc(1, sizeof(t_world));
+	if (!scene)
+		return (1);
+	scene = parse_input(argv[1], scene);
+	print_world(scene);
+	free_world(scene);
+	free(scene);
 	return (0);
-}*/
+}

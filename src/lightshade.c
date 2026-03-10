@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lightshade.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/08 12:34:32 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/09 19:29:09 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ double  *normal_at(t_sphere *s, double *p) //p = eventually same function calcul
 double  *lightshade_test(t_sphere *s, double *p) //p = eventually same function calculates also other objects
 {
     double  *normal;
-    
+
     normal = normal_at(s, p);
     normalize_vector(normal);
     return (normal);
@@ -62,7 +62,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     double  *result;
 
     lightv_neg = allocate_tuple(-1,-1,-1,0);
-    effective_color = multiply_tuple_tuple(material->color, light->intensity);
+    effective_color = multiply_tuple_tuple(material->color, lightv_neg);
     lightv = subtract_tuple(light->position, hit_point);
     normalize_vector(lightv);
     ambient = multiply_scalar(effective_color, material->ambient);
@@ -83,7 +83,8 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
         else
         {
             factor = pow(reflect_dot_eye, material->shininess);//what to use for shininess;
-            specular = multiply_scalar(light->intensity, material->specular * factor);
+
+			specular = multiply_scalar(lightv_neg, material->specular * factor);
         }
     }
 

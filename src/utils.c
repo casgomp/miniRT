@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/08 19:32:52 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/09 12:25:11 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,16 +120,6 @@ int color_to_int(double *color_percent)
         color |= rgb;
     }
     return (color);
-}
-
-void	remap_rgb(int r, int g, int b, double *color)
-{
-	if (!color)
-		return ;
-
-	color[0] = r / 255.0;
-	color[1] = g / 255.0;
-	color[2] = b / 255.0;
 }
 
 //create list utils

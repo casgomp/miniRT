@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:06:17 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:34:19 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:09:10 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ static double	**plane_transform(char *identifier_1, char *indentifier_2)
 static t_object	*allocate_plane(char **indentifier, int id)
 {
 	t_object	*obj;
-	int			*rgb;
+	double		*rgb;
 
-	rgb = str_to_int(indentifier[3], 0);
+	rgb = str_to_rgb(indentifier[3], 0);
 	if (!rgb)
 		return (NULL);
 	obj = ft_calloc(1, sizeof(t_object));
@@ -72,12 +72,31 @@ static t_object	*allocate_plane(char **indentifier, int id)
 	obj->object_type = PLANE;
 	obj->object_id = id;
 	obj->rgb = rgb;
+	obj->material = init_material(rgb, 0.0, 0.0, 0.1);
 	obj->scale = NULL;
 	obj->next = NULL;
 	return (obj);
 }
 
-int	parse_plane(char **data, t_object **lst, int id)
+static t_object	*append_object_lst(t_world **scene, t_object *new)
+{
+	t_object	*tmp;
+
+	if (!new)
+		return ((*scene)->object);
+	if (!(*scene)->object)
+	{
+		(*scene)->object = new;
+		return ((*scene)->object);
+	}
+	tmp = (*scene)->object;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return ((*scene)->object);
+}
+
+int	parse_plane(char **data, t_world **scene, int id)
 {
 	char		*err_msg;
 	t_object	*new;
@@ -90,6 +109,6 @@ int	parse_plane(char **data, t_object **lst, int id)
 	if (!plane_pos(data[1]) || !is_normal_vec(data[2]) || !rgb_parse(data[3]))
 		return (0);
 	new = allocate_plane(data, id);
-	*lst = append_object_lst(lst, new);
+	(*scene)->object = append_object_lst(scene, new);
 	return (1);
 }

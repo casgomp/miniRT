@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:55:04 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:10:18 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static double	**cylinder_transform(char *identifier_1, char *identifier_2
 		free_grid(transform), free(pos), rotate);
 }
 
-t_object	*allocate_cylinder(char **identifier, int id)
+static t_object	*allocate_cylinder(char **identifier, int id)
 {
 	t_object	*obj;
 
@@ -82,13 +82,32 @@ t_object	*allocate_cylinder(char **identifier, int id)
 	obj->scale = allocate_tuple(ft_atof(identifier[3]),
 			ft_atof(identifier[3]), ft_atof(identifier[4]), 1);
 	obj->next = NULL;
-	obj->rgb = str_to_int(identifier[5], 0);
+	obj->rgb = str_to_rgb(identifier[5], 0);
 	if (!obj->rgb || !obj->scale)
 		return (NULL);
+	obj->material = init_material(obj->rgb, 0.0, 0.5, 0.7);
 	return (obj);
 }
 
-int	parse_cylinder(char **data, t_object **lst, int id)
+static t_object	*append_object_lst(t_world **scene, t_object *new)
+{
+	t_object	*tmp;
+
+	if (!new)
+		return ((*scene)->object);
+	if (!(*scene)->object)
+	{
+		(*scene)->object = new;
+		return ((*scene)->object);
+	}
+	tmp = (*scene)->object;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return ((*scene)->object);
+}
+
+int	parse_cylinder(char **data, t_world **scene, int id)
 {
 	char		*err_msg;
 	t_object	*new;
@@ -110,6 +129,6 @@ int	parse_cylinder(char **data, t_object **lst, int id)
 	if (!rgb_parse(data[5]))
 		return (0);
 	new = allocate_cylinder(data, id);
-	*lst = append_object_lst(lst, new);
+	(*scene)->object = append_object_lst(scene, new);
 	return (1);
 }

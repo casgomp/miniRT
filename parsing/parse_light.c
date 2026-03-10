@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:52:21 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:33:42 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:08:47 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,37 +36,50 @@ static int	check_light_pos(char *data)
 	return (1);
 }
 
-static t_object	*allocate_light(char **identifier, int i)
+static t_light	*allocate_light(char **identifier, int i)
 {
-	t_object	*obj;
+	t_light		*light;
 	double		*light_pos;
-	int			*rgb;
+	double		*rgb;
 
-	obj = ft_calloc(1, sizeof(t_object));
-	if (!obj)
+	light = ft_calloc(1, sizeof(t_light));
+	if (!light)
 		return (perror(MALL_ERR), NULL);
 	light_pos = str_to_double(identifier[1], 1);
-	rgb = str_to_int(identifier[3], 0);
+	rgb = str_to_rgb(identifier[3], 0);
 	if (!light_pos || !rgb)
 		return (NULL);
-	obj->angle = 0;
-	obj->brightness = ft_atof(identifier[2]);
-	obj->object_id = i;
-	obj->object_type = LIGHT;
-	obj->rgb = rgb;
-	obj->scale = NULL;
-	obj->transform = translation(light_pos);
-	if (!obj->transform)
-		return (free(light_pos), free(rgb), NULL);
-	obj->inverse = inverse(obj->transform, 4);
-	obj->next = NULL;
-	return (free(light_pos), obj);
+	light->id = i;
+	light->intensity = ft_atof(identifier[2]);
+	light->position = light_pos;
+	light->rgb = rgb;
+	light->type = LIGHT;
+	light->next = NULL;
+	return (light);
 }
 
-int	parse_light(char **data, t_object **lst, int id)
+static t_light	*append_light_lst(t_world **scene, t_light *new)
+{
+	t_light	*tmp;
+
+	if (!new)
+		return ((*scene)->light);
+	if (!(*scene)->light)
+	{
+		(*scene)->light = new;
+		return ((*scene)->light);
+	}
+	tmp = (*scene)->light;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return ((*scene)->light);
+}
+
+int	parse_light(char **data, t_world **scene, int id)
 {
 	char		*err_msg;
-	t_object	*new;
+	t_light		*new;
 
 	err_msg = "Light args misconfigured ex:\
 <position: x,y,z> <intensity [0.0 to 1.0]>\
@@ -82,6 +95,6 @@ int	parse_light(char **data, t_object **lst, int id)
 	if (!rgb_parse(data[3]))
 		return (0);
 	new = allocate_light(data, id);
-	*lst = append_object_lst(lst, new);
+	(*scene)->light = append_light_lst(scene, new);
 	return (1);
 }

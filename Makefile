@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aabdella <aabdella@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/08 15:02:36 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/10 13:04:18 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,8 @@ SRC_PARSING = $(addprefix parsing/, parsing.c \
 									parse_light.c \
 									parse_sphere.c \
 									parse_plane.c \
+									free_scene.c \
+									print_lists.c \
 									parse_cylinder.c)
 SRC = 									$(SRC_RENDER) \
 										$(SRC_PARSING)

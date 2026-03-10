@@ -6,39 +6,53 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 14:05:59 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:25:36 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:07:28 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-t_object	*allocate_ambient(char **identifier, int id)
+static t_light	*allocate_ambient(char **identifier, int id)
 {
-	t_object	*obj;
+	t_light		*ambient;
 
-	obj = ft_calloc(1, sizeof(t_object));
-	if (!obj)
+	ambient = ft_calloc(1, sizeof(t_light));
+	if (!ambient)
 		return (perror(MALL_ERR), NULL);
-	obj->object_id = id;
-	obj->object_type = AMBIENT_LIGHT;
-	obj->brightness = ft_atof(identifier[1]);
-	obj->transform = NULL;
-	obj->angle = 0;
-	obj->scale = NULL;
-	obj->rgb = str_to_int(identifier[2], 0);
-	if (!obj->rgb)
-		return (free(obj), NULL);
-	obj->inverse = NULL;
-	obj->next = NULL;
-	return (obj);
+	ambient->id = id;
+	ambient->type = AMBIENT_LIGHT;
+	ambient->intensity = ft_atof(identifier[1]);
+	ambient->rgb = str_to_rgb(identifier[2], 0);
+	if (!ambient->rgb)
+		return (free(ambient), NULL);
+	ambient->next = NULL;
+	return (ambient);
 }
 
-int	parse_ambient(char **data, t_object **lst, int id)
+static t_light	*append_light_lst(t_world **scene, t_light *new)
+{
+	t_light	*tmp;
+
+	if (!new)
+		return ((*scene)->light);
+	if (!(*scene)->light)
+	{
+		(*scene)->light = new;
+		return ((*scene)->light);
+	}
+	tmp = (*scene)->light;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return ((*scene)->light);
+}
+
+int	parse_ambient(char **data, t_world **scene, int id)
 {
 	double		value;
 	char		*err_msg_1;
 	char		*err_msg_2;
-	t_object	*new;
+	t_light		*new;
 
 	err_msg_1 = "ambient light value out of range ""0 <= vlaue <= 1"" \n";
 	err_msg_2 = "ambient light prams misconfigured <intensity> <RGB vlaue>\n";
@@ -52,6 +66,6 @@ int	parse_ambient(char **data, t_object **lst, int id)
 	if (!rgb_parse(data[2]))
 		return (0);
 	new = allocate_ambient(data, id);
-	*lst = append_object_lst(lst, new);
+	(*scene)->light = append_light_lst(scene, new);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 20:36:32 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:56:52 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:12:20 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,47 +110,4 @@ double	**align_to_vec(char *identifier_2, double **matrix)
 	return (free_grid(rotation_fest[0]), free_grid(rotation_fest[1])
 		, free_grid(rotation_fest[2]), free_grid(rotate_x), free(rotation_fest)
 		, free_grid(rotate_y), rotate_z);
-}
-
-static const char	*object_type_to_string(t_OBJECT_TYP type)
-{
-	if (type == SPHERE)
-		return ("SPHERE");
-	else if (type == CYLINDER)
-		return ("CYLINDER");
-	else if (type == PLANE)
-		return ("PLANE");
-	else if (type == CAMERA)
-		return ("CAMERA");
-	else if (type == LIGHT)
-		return ("LIGHT");
-	else if (type == AMBIENT_LIGHT)
-		return ("AMBIENT_LIGHT");
-	return ("UNKNOWN");
-}
-
-void	print_object_list(t_object *lst)
-{
-	while (lst)
-	{
-		printf("--------------- OBJECT ---------------\n");
-		printf("ID: %d\n", lst->object_id);
-		printf("Type: %s\n", object_type_to_string(lst->object_type));
-		printf("RGB: ");
-		if (lst->rgb)
-			printf("%d %d %d\n", lst->rgb[0], lst->rgb[1], lst->rgb[2]);
-		else
-			printf("(null)\n");
-		printf("Brightness: %f\n", lst->brightness);
-		printf("Angle: %f\n", lst->angle);
-		printf("Transform matrix:\n");
-		if (lst->scale)
-			printf("scale: %f, %f, %f, \n", lst->scale[0],
-				lst->scale[1], lst->scale[2]);
-		print_grid(lst->transform);
-		printf("Inverse matrix:\n");
-		print_grid(lst->inverse);
-		printf("--------------------------------------\n\n");
-		lst = lst->next;
-	}
 }

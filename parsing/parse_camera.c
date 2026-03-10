@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 17:25:55 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:10:11 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,29 +54,57 @@ static double	**transform_cam(char *identifier_1, char *identifier_2)
 	return (free(cam_pos), free_grid(translate), transform_matrix);
 }
 
-t_object	*allocate_camera(char **identifier, int id)
+static t_camera	*allocate_camera(char **identifier, int id)
 {
-	t_object	*obj;
+	t_camera	*cam;
+	double		half_view;
+	double		aspect;
 
-	obj = ft_calloc(1, sizeof(t_object));
-	if (!obj)
+	cam = ft_calloc(1, sizeof(t_camera));
+	if (!cam)
 		return (perror(MALL_ERR), NULL);
-	obj->rgb = NULL;
-	obj->object_id = id;
-	obj->object_type = CAMERA;
-	obj->brightness = 0;
-	obj->transform = transform_cam(identifier[1], identifier[2]);
-	obj->angle = ft_atof(identifier[3]);
-	obj->inverse = inverse(obj->transform, 4);
-	obj->scale = NULL;
-	obj->next = NULL;
-	return (obj);
+	cam->field_of_view = ft_atof(identifier[3]);
+	cam->id = id;
+	cam->hsize = WIN_W;
+	cam->vsize = WIN_H;
+	cam->type = CAMERA;
+	cam->next = NULL;
+	cam->transform = transform_cam(identifier[1], identifier[2]);
+	cam->inverse = inverse(cam->transform, 4);
+	if (!cam->inverse || !cam->transform)
+		return (free(cam), NULL);
+	half_view = tan(cam->field_of_view / 2);
+	aspect = cam->hsize / cam->vsize;
+	if (aspect < 1)
+		aspect = 1 / aspect;
+	cam->half_width = half_view;
+	cam->half_height = half_view / aspect;
+	cam->pixel_size = (cam->half_width * 2) / cam->hsize;
+	return (cam);
 }
 
-int	parse_camera(char **data, t_object **lst, int id)
+static t_camera	*append_cam_lst(t_world **scene, t_camera *new)
+{
+	t_camera	*tmp;
+
+	if (!new)
+		return ((*scene)->camera);
+	if (!(*scene)->camera)
+	{
+		(*scene)->camera = new;
+		return ((*scene)->camera);
+	}
+	tmp = (*scene)->camera;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return ((*scene)->camera);
+}
+
+int	parse_camera(char **data, t_world **lst, int id)
 {
 	char		*err_msg;
-	t_object	*new;
+	t_camera	*new;
 
 	err_msg = "Camer args misconfigured ex:\
 <position: x,y,z> <normal vector: 0.0, 0.0, 1.0>\
@@ -90,6 +118,6 @@ int	parse_camera(char **data, t_object **lst, int id)
 	if (ft_atof(data[3]) < 0.0 || ft_atof(data[3]) > 180.0)
 		return (print_error(2, "field of view out of range\n"));
 	new = allocate_camera(data, id);
-	*lst = append_object_lst(lst, new);
+	(*lst)->camera = append_cam_lst(lst, new);
 	return (1);
 }

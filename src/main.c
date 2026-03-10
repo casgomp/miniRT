@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 18:39:55 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/09 19:26:01 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m)
 	return (obj);
 }
 
-t_material	*init_material(double *color, double ambient, double diffuse, double specular, double shininess)//temporary util to initialize material (eventually done in parsing)
+t_material	*init_material(double *color, double ambient, double specular, double shininess)//temporary util to initialize material (eventually done in parsing)
 {
 	t_material	*m;
 
@@ -55,13 +55,13 @@ t_material	*init_material(double *color, double ambient, double diffuse, double 
 
 	m->color = color;//what color?make sure w=0 always for colors.
 	m->ambient = ambient;
-	m->diffuse = diffuse;
+	m->diffuse = 1.0;
 	m->specular = specular;
 	m->shininess = shininess;//necessary(yes)?where do we get this value from?;
 	return (m);
 }
 
-int	main(int argc, char **argv)
+/*int	main(int argc, char **argv)
 {
 	t_data		data;
 	t_object	*lst;
@@ -102,17 +102,17 @@ int	main(int argc, char **argv)
 	c->transform = view_transform(from, to, up);
 	print_grid(c->transform);
 
-    printf("Starting render\n");
+	printf("Starting render\n");
 	render_loop2(&data, w, c);
-    printf("Render finished\n");
+	printf("Render finished\n");
 
-    mlx_loop(data.mlx_ptr);
+	mlx_loop(data.mlx_ptr);
 
 	free(light->intensity);
 	free(light->position);
 
     return (0);
-}//*/
+}*/
 
 
 int	ft_minilibx_setup(t_data *data)

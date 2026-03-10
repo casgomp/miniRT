@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 18:38:03 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/09 12:15:29 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,6 @@ double	*color_at(t_world *world, t_ray ray)
 		}
 		curr = curr->next;
 	}
-	//find the hit (hit logic = find smallest t: make separate function for norminette)
-	//eventually with a function that sorts in ascending order and then simply choosing the first
 	hit = NULL;
 	i = -1;
 	while (++i < xs_count)
@@ -227,7 +225,7 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 	free(negative);
 
 	return (comps);
-}//*/
+}
 
 double	*shade_hit(t_world *world, t_comps *comps)
 {

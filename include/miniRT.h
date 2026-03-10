@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/08 19:32:25 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 13:13:41 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ typedef struct s_object
 	double				**inverse;
 	double				angle;
 	double				*scale;
-	int					*rgb;
+	double				*rgb;
 	double				brightness;
 	t_material			*material;
 	struct s_object		*next;
@@ -182,25 +182,27 @@ typedef struct s_ray
 
 typedef struct s_light
 {
-	double	*position;
-	double	*intensity;
+	int						id;
+	t_OBJECT_TYP			type;
+	double					*position;
+	double					intensity;
+	double					*rgb;
+	struct s_light			*next;
 }	t_light;
-
-typedef struct s_world
-{
-	t_object	*object;
-	t_light		*light;
-}	t_world;
 
 typedef struct s_camera
 {
-	double	hsize;
-	double	vsize;
-	double	field_of_view;
-	double	**transform;
-	double	pixel_size;
-	double	half_width;
-	double	half_height;
+	int					id;
+	t_OBJECT_TYP		type;
+	double				hsize;
+	double				vsize;
+	double				field_of_view;
+	double				**transform;
+	double				**inverse;
+	double				pixel_size;
+	double				half_width;
+	double				half_height;
+	struct s_camera		*next;
 }	t_camera;
 
 typedef struct s_comps
@@ -213,6 +215,12 @@ typedef struct s_comps
 	bool		inside;
 }	t_comps;
 
+typedef struct s_world
+{
+	t_object	*object;
+	t_light		*light;
+	t_camera	*camera;
+}	t_world;
 
 //main
 int			main(int argc, char **argv);
@@ -305,7 +313,7 @@ double	*shade_hit(t_world *world, t_comps *comps);
 
 //main ch.7 utils
 t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
-t_material	*init_material(double *color, double ambient, double diffuse, double specular, double shininess);
+t_material	*init_material(double *color, double ambient, double specular, double shininess);
 
 //implement_camera
 double  	**view_transform(double *from, double *to, double *up);
@@ -327,23 +335,23 @@ double		*get_discriminant(double *ray_origin, double *ray_direction,
 double		*multiply_scalar(double *tuple, double scalar);
 
 // parsing
-int			parse_ambient(char **data, t_object **lst, int i);
-int			parse_camera(char **data, t_object **lst, int id);
-int			parse_light(char **data, t_object **lst, int id);
-int			parse_sphere(char **data, t_object **lst, int id);
-int			parse_plane(char **data, t_object **lst, int id);
-int			parse_cylinder(char **data, t_object **lst, int id);
-t_object	*parse_input(char *input, t_object *lst);
+int			parse_ambient(char **data, t_world **lst, int i);
+int			parse_camera(char **data, t_world **lst, int id);
+int			parse_light(char **data, t_world **lst, int id);
+int			parse_sphere(char **data, t_world **lst, int id);
+int			parse_plane(char **data, t_world **lst, int id);
+int			parse_cylinder(char **data, t_world **lst, int id);
+t_world		*parse_input(char *input, t_world *scene);
 
 // parsing_utils
 int			print_error(int fd, const char *msg);
 int			file_format_error(char *filename);
 double		*str_to_double(char *str, double i);
-int			*str_to_int(char *str, int i);
+double		*str_to_rgb(char *str, double i);
 int			rgb_parse(char *rgb);
 int			is_normal_vec(char *vec_str);
 double		**align_to_vec(char *identifier_2, double **matrix);
 void		print_object_list(t_object *lst);
-t_object	*append_object_lst(t_object **lst, t_object *new);
-void		free_object_list(t_object *lst);
+void		print_world(t_world *world);
+void		free_world(t_world *scene);
 #endif
