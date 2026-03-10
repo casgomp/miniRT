@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/09 19:02:28 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/10 09:11:29 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,4 +145,4 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 	free(negative);
 
 	return (comps);
-}//*/
+}

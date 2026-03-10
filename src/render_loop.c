@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/09 19:02:31 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/10 09:11:36 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ double	*color_at(t_world *world, t_ray ray)
 	xs = intersect_world(world, ray, &count);
 	if (!xs)
 		return (BLACK_PIXEL);
-	
 	hit = NULL;
 	i = -1;
 	while (++i < count)
