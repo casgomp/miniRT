@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   implement_camera.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 19:57:26 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/08 12:02:49 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:26:04 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ double  **view_transform(double *from, double *to, double *up)//what parameter d
     double  **translate;
     double  **transform;
     int     i;
-    
+
     forward = subtract_tuple(to, from);
     normalize_vector(forward);
     normalize_vector(up);

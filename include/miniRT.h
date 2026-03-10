@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:13:41 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:17:38 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ typedef struct s_light
 	int						id;
 	t_OBJECT_TYP			type;
 	double					*position;
-	double					intensity;
+	double					*intensity;
 	double					*rgb;
 	struct s_light			*next;
 }	t_light;
@@ -223,40 +223,60 @@ typedef struct s_world
 }	t_world;
 
 //main
-int			main(int argc, char **argv);
-int			ft_minilibx_setup(t_data *data);
+int				main(int argc, char **argv);
+//main ch.7 utils
+t_object		*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
+t_material		*init_material(double *color, double ambient, double specular, double shininess);
 
-//lib_events
-int			handle_destroy_notify(void *param);
-int			handle_keypress(int keysym, void *param);
+//render_loop
+double			*color_at(t_world *world, t_ray ray);
+void			render_loop(t_data *data, t_world *w, t_camera *c);
 
-//rendering
-int			render(t_data *data);
-int			render_rect(t_data *data, t_rect rect);
-void		img_pix_put(t_img *img, int x, int y, int color);
-void		terminate(t_data *data, int exit_code, char *error_msg);
+//intersections
+t_ray			transform_ray(t_ray r, double **m);//double or a simple t_matrix works too.
+t_intersection	*intersection(t_ray r, t_object *objp);
+t_intersection	*intersect_list_append(t_intersection *xs,
+							t_intersection *xslst, int *count, int *capacity);
+void			sort_intersections(t_intersection *xs, int *count);
+t_intersection	*intersect_world(t_world *world, t_ray ray, int *count);
+
+//implement_camera
+double  		**view_transform(double *from, double *to, double *up);
+t_camera    	*camera(double hsize, double vsize, double field_of_view);
+void  			pixel_size(t_camera *c);
+t_ray			*ray_for_pixel(t_camera *c, double px, double py);
+
+//light
+double  		*reflect(double *in, double *w_normal);
+double  		*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
+double  		*normal_at(t_object *object, double *world_point);
+double  		*ray_position(t_ray r, double t);
+t_comps			*prepare_computations(t_intersection *intersection, t_ray ray);
+
+//shade
+double			*shade_hit(t_world *world, t_comps *comps);
 
 //matrix utils
-void		print_grid(double **grid);
-double		**allocate_grid(int size);
-void		free_grid(double **grid);
-void		free_matrix(t_matrix *matrix);
-double		**matrix_multiply(double **grid_1, double **grid_2);
-int			grid_size(double **grid);//might cause SIGSEV?
-double		**duplicate_grid(double **grid);
-double		**rotation_x(double r);
-double		**rotation_y(double r);
-double		**rotation_z(double r);
-double		**scaling(double *coord);
-double		**translation(double *coord);
+void			print_grid(double **grid);
+double			**allocate_grid(int size);
+void			free_grid(double **grid);
+void			free_matrix(t_matrix *matrix);
+double			**matrix_multiply(double **grid_1, double **grid_2);
+int				grid_size(double **grid);//might cause SIGSEV?
+double			**duplicate_grid(double **grid);
+double			**rotation_x(double r);
+double			**rotation_y(double r);
+double			**rotation_z(double r);
+double			**scaling(double *coord);
+double			**translation(double *coord);
 
 //construct matrix
-double		**inverse(double **grid, int size);
-double		**transpose_grid(double **tmtrx);
-t_matrix	construct_matrix(double **grid);
-double		**get_submatrix(double **mtrx, int size, int rowskip, int colskip);
-double		cofactor(double **mtrx, int size, int row, int col);
-double		**identity_mtrx(int size);
+double			**inverse(double **grid, int size);
+double			**transpose_grid(double **tmtrx);
+t_matrix		construct_matrix(double **grid);
+double			**get_submatrix(double **mtrx, int size, int rowskip, int colskip);
+double			cofactor(double **mtrx, int size, int row, int col);
+double			**identity_mtrx(int size);
 
 //tuples
 t_tuple		construct_tuple(double x, double y, double z, double w);
@@ -305,7 +325,6 @@ double  *normal_at(t_object *object, double *world_point);
 double  *ray_position(t_ray r, double t);
 //void    *point_light(double  *intensity, double *position);
 int 	color_to_int(double *color_percent);
-void remap_rgb(int r, int g, int b, double *color);
 void	lstadd(t_object **lst, t_object *new);
 t_object	*lstlast(t_object *lst);
 t_comps	*prepare_computations(t_intersection *intersection, t_ray ray);
@@ -313,8 +332,6 @@ double	*shade_hit(t_world *world, t_comps *comps);
 
 //main ch.7 utils
 t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
-t_material	*init_material(double *color, double ambient, double specular, double shininess);
-
 //implement_camera
 double  	**view_transform(double *from, double *to, double *up);
 t_camera    *camera(double hsize, double vsize, double field_of_view);
@@ -323,16 +340,24 @@ t_ray		*ray_for_pixel(t_camera *c, double px, double py);
 
 //lightshade
 double  *reflect(double *in, double *w_normal);
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv);//can only take 4 params
-
 //construct intersections
-double		*ray_sphere_intersection(double *ray_origin,
-				double *ray_direction, double *sphere_center);
-double		**ray_sphere_points(double *ray_origin, double *ray_direction,
-				double *t);
-double		*get_discriminant(double *ray_origin, double *ray_direction,
-				double *sphere_origin);
-double		*multiply_scalar(double *tuple, double scalar);
+double			*ray_sphere_intersection(double *ray_origin,
+					double *ray_direction, double *sphere_center);
+double			**ray_sphere_points(double *ray_origin, double *ray_direction,
+					double *t);
+double			*get_discriminant(double *ray_origin, double *ray_direction,
+					double *sphere_origin);
+double			*multiply_scalar(double *tuple, double scalar);
+
+//cleanup
+void			free_matrix(t_matrix *matrix);
+
+//minilibx
+int				ft_minilibx_setup(t_data *data);
+void			img_pix_put(t_img *img, int x, int y, int color);
+int				handle_destroy_notify(void *param);
+int				handle_keypress(int keysym, void *param);
+void			terminate(t_data *data, int exit_code, char *error_msg);
 
 // parsing
 int			parse_ambient(char **data, t_world **lst, int i);

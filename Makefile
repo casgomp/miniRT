@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/10 13:04:18 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/10 14:08:44 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,11 @@ DFLAG = -g
 FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include
 LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
 SRC_RENDER = $(addprefix src/, main.c \
-						lib_events.c \
+						render_loop.c \
+						intersections.c \
+						implement_camera.c \
+						light.c \
+						shade.c \
 						transform_matrix.c \
 						transform_tuple.c \
 						utils_matrix.c \
@@ -30,12 +34,9 @@ SRC_RENDER = $(addprefix src/, main.c \
 						line_line_intersection.c \
 						ray_sphere_intersection.c \
 						ray_tracing_utils.c\
-						test_camera.c \
-						test_camera2.c \
 						utils.c \
-						lightshade.c \
-						implement_camera.c \
-						rendering.c)
+						cleanup.c \
+						minilibx.c)
 SRC_PARSING = $(addprefix parsing/, parsing.c \
 									parsing_utils.c \
 									parsing_utils_2.c \

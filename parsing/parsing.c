@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:03:12 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:21:42 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ t_world	*parse_input(char *input, t_world *scene)
 	return (close(fd), ft_free_array(&rd_lines), scene);
 }
 
-int	main(int argc, char **argv)
+/*int	main(int argc, char **argv)
 {
 	t_world		*scene;
 
@@ -86,4 +86,4 @@ int	main(int argc, char **argv)
 	free_world(scene);
 	free(scene);
 	return (0);
-}
+}*/

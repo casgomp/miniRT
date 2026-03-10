@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 12:59:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:04:00 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:21:17 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static void	free_light_list(t_light *lst)
 			free(lst->position);
 		if (lst->rgb)
 			free(lst->rgb);
+		if (lst->intensity)
+			free(lst->intensity);
 		free(lst);
 		lst = tmp;
 	}
