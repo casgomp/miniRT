@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_camera.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:10:11 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:08:20 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,28 @@ static int	check_cam_pos(char *data)
 
 static double	**transform_cam(char *identifier_1, char *identifier_2)
 {
-	double	*cam_pos;
+	/* double	*cam_pos;
 	double	**translate;
-	double	**transform_matrix;
+	double	**transform_matrix; */
+	double	*from;
+	double	*dir;
+	double	*up;
+	double	*to;
+	double	**transform;
 
-	cam_pos = str_to_double(identifier_1, 1);
+	from = str_to_double(identifier_1, 1);
+	dir = str_to_double(identifier_2, 1);
+	up = allocate_tuple(0, 1, 0, 0);
+	to = add_tuple(from, dir);
+	transform =  view_transform(from, to, up);
+	free(from);
+	free(dir);
+	free(up);
+	free(to);
+	printf("DEBUG: From: %f, %f, %f | To: %f, %f, %f\n", from[0], from[1], from[2], to[0], to[1], to[2]);
+	return (transform);
+
+/* 	cam_pos = str_to_double(identifier_1, 1);
 	if (!cam_pos)
 		return (NULL);
 	translate = translation(cam_pos);
@@ -51,19 +68,21 @@ static double	**transform_cam(char *identifier_1, char *identifier_2)
 	transform_matrix = align_to_vec(identifier_2, translate);
 	if (!transform_matrix)
 		return (free(cam_pos), free_grid(translate), NULL);
-	return (free(cam_pos), free_grid(translate), transform_matrix);
+	return (free(cam_pos), free_grid(translate), transform_matrix); */
 }
 
 static t_camera	*allocate_camera(char **identifier, int id)
 {
 	t_camera	*cam;
+	double		fov_degrees;
 	double		half_view;
 	double		aspect;
 
 	cam = ft_calloc(1, sizeof(t_camera));
 	if (!cam)
 		return (perror(MALL_ERR), NULL);
-	cam->field_of_view = ft_atof(identifier[3]);
+	fov_degrees = ft_atof(identifier[3]);
+	cam->field_of_view = fov_degrees * (PI / 180);//must convert to radians because tan function from math library expects radians
 	cam->id = id;
 	cam->hsize = WIN_W;
 	cam->vsize = WIN_H;
@@ -119,5 +138,6 @@ int	parse_camera(char **data, t_world **lst, int id)
 		return (print_error(2, "field of view out of range\n"));
 	new = allocate_camera(data, id);
 	(*lst)->camera = append_cam_lst(lst, new);
+	printf("DEBUG: data[1] = %s\n", data[1]);
 	return (1);
 }

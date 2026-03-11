@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 19:57:26 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/10 09:11:31 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:08:27 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ double  **view_transform(double *from, double *to, double *up)//what parameter d
     int     i;
     
     forward = subtract_tuple(to, from);
+    //add function to check if magnitude < 0.00001 to prevent division by zero.
     normalize_vector(forward);
     normalize_vector(up);
     left = cross_product(forward, up);
@@ -55,6 +56,8 @@ double  **view_transform(double *from, double *to, double *up)//what parameter d
     free(negative);
     free_grid(translate);
 
+    printf("implemenet_camera, transform = \n");
+    print_grid(transform);
     return (transform);
 }
 
@@ -112,11 +115,12 @@ t_ray  *ray_for_pixel(t_camera *c, double px, double py)
     world_x = c->half_width - xoffset;
     world_y = c->half_height - yoffset;
     inv_transform = inverse(c->transform, 4);
+    if (!inv_transform)
+        return (NULL);
     point_w = allocate_tuple(world_x, world_y, -1, 1);//w=1
     pixel = multiply_matrix_tuple(inv_transform, point_w);
     point = allocate_tuple(0,0,0,1);//w=1
     r->ray_origin = multiply_matrix_tuple(inv_transform, point);
-    printf("rayorigin = %f,%f,%f\n", r->ray_origin[0], r->ray_origin[1],r->ray_origin[2]);
     r->ray_direction = subtract_tuple(pixel, r->ray_origin);
     normalize_vector(r->ray_direction);
 

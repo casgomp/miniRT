@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 11:17:18 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:08:38 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,7 +230,8 @@ t_material		*init_material(double *color, double ambient, double specular, doubl
 
 //render_loop
 double			*color_at(t_world *world, t_ray ray);
-void			render_loop(t_data *data, t_world *w, t_camera *c);
+//void			render_loop(t_data *data, t_world *w, t_camera *c);
+void			render_loop(t_data *data, t_world *scene);
 
 //intersections
 t_ray			transform_ray(t_ray r, double **m);//double or a simple t_matrix works too.

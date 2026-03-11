@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/10 09:11:29 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:08:28 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     double  factor;
     double  *result;
 
+    printf("light = %p and light->position = %p and comps->point = %p\n", (void *)light, (void *)light->position, (void *)hit_point);
     effective_color = multiply_tuple_tuple(material->color, light->intensity);
     ambient = multiply_scalar(effective_color, material->ambient);
     if (in_shadow)
     {
         free(effective_color);
-        printf("color = (%f,%f,%f\n)", ambient[0],ambient[1],ambient[2]);
         return(ambient);
     }
     lightv_neg = allocate_tuple(-1,-1,-1,0);//better create a general negative tuple to avoid memory leaks later

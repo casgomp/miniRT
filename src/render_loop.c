@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 09:11:36 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:08:32 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ double	*color_at(t_world *world, t_ray ray)
 	return (colord);
 }
 
-void	render_loop(t_data *data, t_world *w, t_camera *c)
+//void	render_loop(t_data *data, t_world *w, t_camera *c)
+void	render_loop(t_data *data, t_world *scene)
 {
 	double			x;
 	double			y;
@@ -53,18 +54,19 @@ void	render_loop(t_data *data, t_world *w, t_camera *c)
 	double			*colord;
 	int				color;
 
-	printf("hsize=%f vsize=%f pixel_size=%f\n", c->hsize, c->vsize, c->pixel_size);
-    printf("half_width=%f half_height=%f\n", c->half_width, c->half_height);
-
 	y = -1.0;
-	while (++y < c->vsize)
+	//while (++y < c->vsize)
+	while (++y < scene->camera->vsize)
 	{
 		x = -1.0;
-		while (++x < c->hsize)
+		//while (++x < c->hsize)
+		while (++x < scene->camera->hsize)
 		{
-			r = ray_for_pixel(c, x, y);
+			//r = ray_for_pixel(c, x, y);
+			r = ray_for_pixel(scene->camera, x, y);
 			
-			colord = color_at(w, *r);
+			//colord = color_at(w, *r);
+			colord = color_at(scene, *r);
 			color = color_to_int(colord);
 			img_pix_put(&(data->img), x, y, color);
 		}
