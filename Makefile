@@ -3,12 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
+#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/10 09:06:57 by pecastro         ###   ########.fr        #
+#    Updated: 2026/03/10 14:08:44 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+
 
 NAME = miniRT
 CC = cc
@@ -16,7 +18,7 @@ DFLAG = -g
 
 FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include
 LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
-SRC = $(addprefix src/, main.c \
+SRC_RENDER = $(addprefix src/, main.c \
 						render_loop.c \
 						intersections.c \
 						implement_camera.c \
@@ -35,10 +37,22 @@ SRC = $(addprefix src/, main.c \
 						utils.c \
 						cleanup.c \
 						minilibx.c)
+SRC_PARSING = $(addprefix parsing/, parsing.c \
+									parsing_utils.c \
+									parsing_utils_2.c \
+									parse_ambient.c \
+									parse_camera.c \
+									parse_light.c \
+									parse_sphere.c \
+									parse_plane.c \
+									free_scene.c \
+									print_lists.c \
+									parse_cylinder.c)
+SRC = 									$(SRC_RENDER) \
+										$(SRC_PARSING)
+OBJ = $(SRC:%.c=built/%.o)
 
-OBJ = $(SRC:src/%.c=built/%.o)
-
-all: libft minilibx $(NAME)
+all: libft  $(NAME)
 
 	@printf "\n\
 	███╗   ███╗██╗███╗   ██╗██╗██████╗ ████████╗ \n\
@@ -57,7 +71,7 @@ all: libft minilibx $(NAME)
 $(NAME) : $(OBJ)
 	$(CC) $(OBJ) $(LFLAG) -o $(NAME)
 
-built/%.o: src/%.c include/miniRT.h
+built/%.o: %.c include/miniRT.h
 	@mkdir -p $(dir $@)
 	$(CC) $(FLAG) -c $< -o $@
 
@@ -73,7 +87,6 @@ minilibx:
 clean:
 	rm -f $(OBJ)
 	$(MAKE) -C lib/Libft_all clean
-	$(MAKE) -C minilibx-linux clean
 
 fclean: clean
 	rm -f $(NAME)

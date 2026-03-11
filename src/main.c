@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 09:11:42 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/11 10:45:39 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m)
 	return (obj);
 }
 
-t_material	*init_material(double *color, double ambient, double diffuse, double specular, double shininess)//temporary util to initialize material (eventually done in parsing)
+t_material	*init_material(double *color, double ambient, double specular, double shininess)//temporary util to initialize material (eventually done in parsing)
 {
 	t_material	*m;
 
@@ -213,7 +213,7 @@ t_material	*init_material(double *color, double ambient, double diffuse, double 
 		return (NULL);
 	m->color = color;//what color?make sure w=0 always for colors.
 	m->ambient = ambient;
-	m->diffuse = diffuse;
+	m->diffuse = 0.7;
 	m->specular = specular;
 	m->shininess = shininess;//necessary(yes)?where do we get this value from?;
 	return (m);
@@ -423,7 +423,7 @@ int main(int argc, char **argv) //main Ch.8
 	double	*scaling_vector = allocate_tuple(10,0.01,10,0);
 	double	**scaling_matrix = scaling(scaling_vector);
 	double	**transform_floor = matrix_multiply(identity_mtrx(4), scaling_matrix);
-	t_material *materialfoor = init_material(allocate_tuple(1,0.9,0.9,0), 0.1, 0.7, 0, 200.0);
+	t_material *materialfoor = init_material(allocate_tuple(1,0.9,0.9,0), 0.1, 0, 200.0);
 	t_object	*floor = init_obj(transform_floor, SPHERE, materialfoor);
 	free(scaling_vector);
 	free_grid(scaling_matrix);
@@ -472,7 +472,7 @@ int main(int argc, char **argv) //main Ch.8
 	translation_vector = allocate_tuple(-0.5,1,0.5,0);
 	translation_matrix = translation(translation_vector);
 	double	**transform_middle = matrix_multiply(identity_mtrx(4), translation_matrix);
-	t_material *materialmiddle = init_material(allocate_tuple(0.1,1,0.5,0), 0.1, 0.7, 0.3, 200.0);
+	t_material *materialmiddle = init_material(allocate_tuple(0.1,1,0.5,0), 0.1, 0.3, 200.0);
 	t_object	*middle = init_obj(transform_middle, SPHERE, materialmiddle);
 	free(translation_vector);
 	free_grid(translation_matrix);
@@ -483,7 +483,7 @@ int main(int argc, char **argv) //main Ch.8
 	scaling_vector = allocate_tuple(0.5,0.5,0.5,0);
 	scaling_matrix = scaling(scaling_vector);
 	double	**transform_right = matrix_multiply(translation_matrix, scaling_matrix);
-	t_material *materialright = init_material(allocate_tuple(0.5,1,0.1,0), 0.1, 0.7, 0.3, 200.0);
+	t_material *materialright = init_material(allocate_tuple(0.5,1,0.1,0), 0.1, 0.3, 200.0);
 	t_object	*right = init_obj(transform_right, SPHERE, materialright);
 	free(scaling_vector);
 	free_grid(scaling_matrix);
@@ -496,7 +496,7 @@ int main(int argc, char **argv) //main Ch.8
 	scaling_vector = allocate_tuple(0.33,0.33,0.33,0);
 	scaling_matrix = scaling(scaling_vector);
 	double	**transform_left = matrix_multiply(translation_matrix, scaling_matrix);
-	t_material *materialleft = init_material(allocate_tuple(1,0.8,0.1,0), 0.1, 0.7, 0.3, 200.0);
+	t_material *materialleft = init_material(allocate_tuple(1,0.8,0.1,0), 0.1, 0.3, 200.0);
 	t_object	*left = init_obj(transform_left, SPHERE, materialleft);
 	free(scaling_vector);
 	free_grid(scaling_matrix);
