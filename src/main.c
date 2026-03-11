@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 14:24:51 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/11 16:36:14 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,10 +197,15 @@ t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m)
 	if (!obj)
 		return (NULL);
 	obj->next = NULL;
-    obj->transform = transform; //(always initilize to identity, then multiply by tranformations if there are)
-	obj->inverse = inverse(obj->transform, 4);
+	obj->transform = transform;
+	obj->inverse = inverse(transform, 4);
 	obj->object_type = object_type;
 	obj->material = m;
+	obj->object_id = 5;
+	obj->angle = 0;
+	obj->brightness = 0;
+	obj->scale = allocate_tuple(0.5, 5 ,0.5, 1);
+	obj->rgb = NULL;
 	return (obj);
 }
 
@@ -369,7 +374,7 @@ t_material	*init_material(double *color, double ambient, double specular, double
 	lstadd(&floor, left);
 	//initialize light
 	t_light	*light;
-	light = malloc(sizeof(t_light));
+	light = malloc(sizeof(t_light));	printf("%i, %i\n", grid_size(scaling_matrix), grid_size(transform_floor));
 	if (!light)
 		return (1);//and free data, etc?
 	light->intensity = allocate_tuple(1,1,1,0);//this is just a color multiplier (so not a dot nor a vector)
@@ -493,19 +498,42 @@ int main(int argc, char **argv) //main Ch.8
 	scaling_vector = allocate_tuple(0.33,0.33,0.33,0);
 	scaling_matrix = scaling(scaling_vector);
 	double	**transform_left = matrix_multiply(translation_matrix, scaling_matrix);
-	t_material *materialleft = init_material(allocate_tuple(1,0.8,0.1,0), 0.1, 0.3, 200.0);
+	t_material *materialleft = init_material(allocate_tuple(0.0, 0.0, 1,0), 0.1, 0.3, 200.0);
 	t_object	*left = init_obj(transform_left, SPHERE, materialleft);
 	free(scaling_vector);
 	free_grid(scaling_matrix);
 	free(translation_vector);
 	free_grid(translation_matrix);
 
-	//create object list
+	//cylinder
+	translation_vector = allocate_tuple(0.2, 0.3,-0.5, 0);
+	translation_matrix = translation(translation_vector);
+	scaling_vector = allocate_tuple(0.5, 5, 0.5,0);
+	scaling_matrix = scaling(scaling_vector);
+	double	**transform_top = matrix_multiply(translation_matrix, scaling_matrix);
+	t_material *materialtop = init_material(allocate_tuple(0.9, 0.1, 0.1,0), 0.1, 0.3, 200.0);
+	t_object	*top = init_obj(transform_top, CYLINDER, materialtop);
+	free(scaling_vector);
+	free_grid(scaling_matrix);
+	free(translation_vector);
+	free_grid(translation_matrix);
+
+	//plane
+	translation_vector = allocate_tuple(0.2, 0,-0.5, 0);
+	translation_matrix = translation(translation_vector);
+	t_material *material_plane = init_material(allocate_tuple(1, 0.55, 0.0,0), 0.1, 0.3, 200.0);
+	t_object	*plane = init_obj(translation_matrix, PLANE, material_plane);
+	free(translation_vector);
+
+
+	lstadd(&floor, top);
+	lstadd(&floor, plane);
 	lstadd(&floor, left_wall);
 	lstadd(&floor, right_wall);
 	lstadd(&floor, middle);
 	lstadd(&floor, right);
 	lstadd(&floor, left);
+	floor = floor->next;
 
 	//initialize light
 	t_light	*light;
@@ -527,11 +555,10 @@ int main(int argc, char **argv) //main Ch.8
 	pixel_size(c);
 	printf("pixel_size = %f\n", c->pixel_size);
 
-	double	*from = allocate_tuple(0,1.5,-5,1);
+	double	*from = allocate_tuple(-3,3,-5,1);
 	double	*to = allocate_tuple(0,1,0,1);
 	double	*up = allocate_tuple(0,1,0,1);
 	c->transform = view_transform(from, to, up);
-	print_grid(c->transform);
 
     printf("Starting render\n");
 	render_loop(&data, w, c);

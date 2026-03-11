@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_loop.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/09 19:02:31 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/11 14:39:09 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ double	*color_at(t_world *world, t_ray ray)
 	int				i;
 	t_comps			*comps;
 	double			*colord;
-	
+
 	xs = intersect_world(world, ray, &count);
 	if (!xs)
 		return (BLACK_PIXEL);
-	
+
 	hit = NULL;
 	i = -1;
 	while (++i < count)
 	{
-		if (xs[i].t > 0.0001)
+		if (xs[i].t > EPSILON && xs[i].obj)
 		{
 			hit = &xs[i];
 			break ;
@@ -54,9 +54,6 @@ void	render_loop(t_data *data, t_world *w, t_camera *c)
 	double			*colord;
 	int				color;
 
-	printf("hsize=%f vsize=%f pixel_size=%f\n", c->hsize, c->vsize, c->pixel_size);
-    printf("half_width=%f half_height=%f\n", c->half_width, c->half_height);
-
 	y = -1.0;
 	while (++y < c->vsize)
 	{
@@ -64,7 +61,7 @@ void	render_loop(t_data *data, t_world *w, t_camera *c)
 		while (++x < c->hsize)
 		{
 			r = ray_for_pixel(c, x, y);
-			
+
 			colord = color_at(w, *r);
 			color = color_to_int(colord);
 			img_pix_put(&(data->img), x, y, color);

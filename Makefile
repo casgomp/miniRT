@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/10 14:08:44 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/11 19:56:50 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,8 @@ LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
 SRC_RENDER = $(addprefix src/, main.c \
 						render_loop.c \
 						intersections.c \
+						intersect_cylinder_utils.c \
+						intersect_objects.c \
 						implement_camera.c \
 						light.c \
 						shade.c \

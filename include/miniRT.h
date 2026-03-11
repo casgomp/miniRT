@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 14:17:38 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/11 19:55:02 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@
 # define PI 3.14159265358979323846
 # define ESC 0xff1b
 # define WIN_W 800 //800 is good size
-# define WIN_H 800
+# define WIN_H 450
+# define EPSILON 1e-6
 //# define GREEN_PIXEL 0xFF00
 //# define RED_PIXEL 0xFF0000
 # define BLACK_PIXEL 0X000
@@ -308,9 +309,19 @@ void			render_loop(t_data *data, t_sphere *s);
 //*/
 
 //test_camera2
-t_intersection	*intersection2(t_ray r, t_object *s);
+t_intersection	*intersection(t_ray r, t_object *s);
 t_intersection	*intersect_list_append2(t_intersection *xs,
-							t_intersection *xslst, int *count, int *capacity);
+					t_intersection *xslst, int *count, int *capacity);
+void			intersection_caps(t_intersection *xs, t_object *cyl,
+					double *ray_origin, double *ray_dir);
+void			truncate_cylinder(double *origin, double *dir,
+					t_object *cyl, t_intersection *xs);
+t_intersection	*intersection_cylinder(t_intersection *xs, t_object *cyl,
+					double *ray_origin, double *ray_dir);
+t_intersection	*intersection_plane(t_intersection *xs, t_object *plane,
+					double *ray_origin, double *ray_dir);
+t_intersection	*intersection_sphere(t_intersection *xs, t_object *sphere,
+					double *ray_origin, double *ray_dir);
 //int				get_pixel_color2(t_ray r, t_object *objp, t_light *light);
 double			*color_at(t_world *world, t_ray ray);
 //void			render_loop2(t_data *data, t_object *s, t_light *light);
