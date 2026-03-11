@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:27:04 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/16 11:15:17 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/11 11:05:37 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,7 @@ int			ft_isquote(int c);
 
 //utils
 void		ft_swap(double *a, double *b);
+char		*ft_trim_newline(char *s);
+char		**ft_append_str(char **arr, char *new_str);
 
 #endif
