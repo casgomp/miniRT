@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
+#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:27:10 by aabdella          #+#    #+#              #
-#    Updated: 2026/02/21 14:46:16 by pecastro         ###   ########.fr        #
+#    Updated: 2026/03/05 18:19:19 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC_FT = $(addprefix ft_, $(addsuffix .c, isquote atol_flow atoll atol read_pipe strcmp free_three_ary free_ary_count free_array isalpha isdigit isalnum isascii isprint isspace strlen memset bzero memcpy memmove strlcpy strlcat toupper tolower strchr strcmp strrchr strncmp memchr memcmp strnstr atoi calloc strdup substr strjoin strtrim split itoa strmapi striteri putchar_fd putstr_fd putendl_fd putnbr_fd printf putstr_p putnum_p puthex_p swap))
+SRC_FT = $(addprefix ft_, $(addsuffix .c, isquote atol_flow atoll atol read_pipe strcmp free_three_ary free_ary_count free_array isalpha free_double isdigit isalnum isascii isprint isspace trim_newline strlen memset bzero memcpy memmove append_str strlcpy strlcat toupper tolower strchr strcmp isnumber strrchr strncmp memchr memcmp strnstr lst_strsize atoi atof calloc strdup substr strjoin strtrim split itoa strmapi striteri putchar_fd putstr_fd putendl_fd putnbr_fd printf putstr_p putnum_p puthex_p swap))
 
 SRC_OTHER = get_next_line.c
 
