@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_plane.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:06:17 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:09:10 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/12 16:14:09 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ static t_object	*allocate_plane(char **indentifier, int id)
 	obj->object_type = PLANE;
 	obj->object_id = id;
 	obj->rgb = rgb;
-	obj->material = init_material(rgb, 0.0, 0.0, 0.1);
+	//obj->material = init_material(rgb, 0.0, 0.0, 0.1);
+	obj->material = init_material(rgb, 0.1, 0.7, 200.0);
 	obj->scale = NULL;
 	obj->next = NULL;
 	return (obj);

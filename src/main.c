@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 20:08:36 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/12 16:21:46 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,14 @@ t_material	*init_material(double *color, double ambient, double specular, double
 	if (!scene)
 		return (1);
 	scene = parse_input(argv[1], scene);
-	print_world(scene);
+
+	//print_world(scene);
 	
 
 	//init camera view tranform etc;
 
 	//camera
-	pixel_size(scene->camera);
+	//pixel_size(scene->camera);
 	/* double	*from = allocate_tuple(0,1.5,-5,1);
 	double	*to = allocate_tuple(0,1,0,1);
 	double	*up = allocate_tuple(0,1,0,1); */
@@ -82,7 +83,7 @@ t_material	*init_material(double *color, double ambient, double specular, double
 	//init ambient;
 	//render_loop(&data, w, c);
 	render_loop(&data, scene);
-	
+	mlx_loop(data.mlx_ptr);
 	free_world(scene);
 	free(scene);
 	return (0);
@@ -236,5 +237,5 @@ int main(int argc, char **argv) //main Ch.8
 	free(ide_mtrx);
 
     return (0);
-} 
+}
 //*/

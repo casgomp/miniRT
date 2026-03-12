@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cylinder.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:10:18 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/12 16:17:00 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ static t_object	*allocate_cylinder(char **identifier, int id)
 	obj->rgb = str_to_rgb(identifier[5], 0);
 	if (!obj->rgb || !obj->scale)
 		return (NULL);
-	obj->material = init_material(obj->rgb, 0.0, 0.5, 0.7);
+	//obj->material = init_material(obj->rgb, 0.0, 0.5, 0.7);
+	obj->material = init_material(obj->rgb, 0.1, 0.7, 200.0);
 	return (obj);
 }
 

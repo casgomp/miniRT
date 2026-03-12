@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 20:08:38 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/12 13:21:47 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,7 @@ typedef struct s_comps
 typedef struct s_world
 {
 	t_object	*object;
+	t_light		*ambient;
 	t_light		*light;
 	t_camera	*camera;
 }	t_world;

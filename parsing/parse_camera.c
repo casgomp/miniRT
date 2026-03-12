@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 20:08:20 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/12 14:57:12 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ static t_camera	*allocate_camera(char **identifier, int id)
 {
 	t_camera	*cam;
 	double		fov_degrees;
-	double		half_view;
-	double		aspect;
+	//double		half_view;
+	//double		aspect;
 
 	cam = ft_calloc(1, sizeof(t_camera));
 	if (!cam)
@@ -92,13 +92,14 @@ static t_camera	*allocate_camera(char **identifier, int id)
 	cam->inverse = inverse(cam->transform, 4);
 	if (!cam->inverse || !cam->transform)
 		return (free(cam), NULL);
-	half_view = tan(cam->field_of_view / 2);
+	pixel_size(cam);
+	/* half_view = tan(cam->field_of_view / 2);//broken logic
 	aspect = cam->hsize / cam->vsize;
 	if (aspect < 1)
 		aspect = 1 / aspect;
 	cam->half_width = half_view;
 	cam->half_height = half_view / aspect;
-	cam->pixel_size = (cam->half_width * 2) / cam->hsize;
+	cam->pixel_size = (cam->half_width * 2) / cam->hsize; */
 	return (cam);
 }
 
@@ -138,6 +139,5 @@ int	parse_camera(char **data, t_world **lst, int id)
 		return (print_error(2, "field of view out of range\n"));
 	new = allocate_camera(data, id);
 	(*lst)->camera = append_cam_lst(lst, new);
-	printf("DEBUG: data[1] = %s\n", data[1]);
 	return (1);
 }

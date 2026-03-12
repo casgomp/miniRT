@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 19:06:53 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 13:10:02 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/12 16:13:53 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ static t_object	*allocate_sphere(char **identifier, int id)
 		return (free(obj), free(rgb), NULL);
 	obj->inverse = inverse(obj->transform, 4);
 	obj->rgb = rgb;
-	obj->material = init_material(rgb, 0.0, 0.0, 0.1);
+	//obj->material = init_material(rgb, 0.0, 0.0, 0.1);
+	obj->material = init_material(rgb, 0.1, 0.7, 200.0);//keep fixed specular and shininess.
 	obj->object_type = SPHERE;
 	obj->next = NULL;
 	return (obj);
