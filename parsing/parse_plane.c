@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:06:17 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:09:10 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 15:10:33 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ static t_object	*allocate_plane(char **indentifier, int id)
 	obj = ft_calloc(1, sizeof(t_object));
 	if (!obj)
 		return (free(rgb), NULL);
-	obj->angle = 0;
-	obj->brightness = 0;
 	obj->transform = plane_transform(indentifier[1], indentifier[2]);
 	if (!obj->transform)
 		return (free(rgb), free(obj), NULL);
@@ -72,7 +70,8 @@ static t_object	*allocate_plane(char **indentifier, int id)
 	obj->object_type = PLANE;
 	obj->object_id = id;
 	obj->rgb = rgb;
-	obj->material = init_material(rgb, 0.0, 0.0, 0.1);
+	//obj->material = init_material(rgb, 0.0, 0.0, 0.1);
+	obj->material = init_material(rgb, 0.1, 0.7, 200.0);
 	obj->scale = NULL;
 	obj->next = NULL;
 	return (obj);

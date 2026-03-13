@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 14:39:09 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 15:04:26 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ double	*color_at(t_world *world, t_ray ray)
 	return (colord);
 }
 
-void	render_loop(t_data *data, t_world *w, t_camera *c)
+//void	render_loop(t_data *data, t_world *w, t_camera *c)
+void	render_loop(t_data *data, t_world *scene)
 {
 	double			x;
 	double			y;
@@ -55,14 +56,18 @@ void	render_loop(t_data *data, t_world *w, t_camera *c)
 	int				color;
 
 	y = -1.0;
-	while (++y < c->vsize)
+	//while (++y < c->vsize)
+	while (++y < scene->camera->vsize)
 	{
 		x = -1.0;
-		while (++x < c->hsize)
+		//while (++x < c->hsize)
+		while (++x < scene->camera->hsize)
 		{
-			r = ray_for_pixel(c, x, y);
+			//r = ray_for_pixel(c, x, y);
+			r = ray_for_pixel(scene->camera, x, y);
 
-			colord = color_at(w, *r);
+			//colord = color_at(w, *r);
+			colord = color_at(scene, *r);
 			color = color_to_int(colord);
 			img_pix_put(&(data->img), x, y, color);
 		}

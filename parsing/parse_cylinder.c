@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:10:18 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 21:07:16 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,31 @@ static int	cylinder_base(char *data)
 	return (1);
 }
 
-static double	**cylinder_transform(char *identifier_1, char *identifier_2
-			, char *identifier_3, char *identifier_4)
+static double	**cylinder_transform(char *pos_id,
+								char *dir_id,
+								char *radius_id,
+								char *height_id)
 {
-	double		*pos;
-	double		**scale;
-	double		**translate;
-	double		**transform;
-	double		**rotate;
+	double *pos;
+	double **scale;
+	double **rotate;
+	double **translate;
+	double **tmp;
+	double **transform;
 
-	pos = str_to_double(identifier_1, 1);
+	pos = str_to_double(pos_id, 1);
+	if (!pos)
+		return (NULL);
 	scale = identity_mtrx(4);
-	if (!scale || !pos)
-		return (free(pos), NULL);
-	scale[0][0] = ft_atof(identifier_3);
-	scale[1][1] = ft_atof(identifier_3);
-	scale[2][2] = ft_atof(identifier_4);
-	scale[3][3] = 1;
+	scale[0][0] = ft_atof(radius_id);
+	scale[1][1] = ft_atof(height_id) / 2.0;
+	scale[2][2] = ft_atof(radius_id);
+	rotate = align_to_vec(dir_id, identity_mtrx(4));
 	translate = translation(pos);
-	transform = matrix_multiply(translate, scale);
-	if (!transform || !translate)
-		return (free_grid(scale), free_grid(translate), free(pos), NULL);
-	rotate = align_to_vec(identifier_2, transform);
-	if (!rotate)
-		return (free_grid(scale), free_grid(translate),
-			free_grid(transform), free(pos), NULL);
-	return (free_grid(scale), free_grid(translate),
-		free_grid(transform), free(pos), rotate);
+	tmp = matrix_multiply(rotate, scale);
+	transform = matrix_multiply(translate, tmp);
+	return (free_grid(scale), free_grid(rotate), free_grid(translate)
+		, free_grid(tmp), free(pos), transform);
 }
 
 static t_object	*allocate_cylinder(char **identifier, int id)
@@ -72,20 +70,18 @@ static t_object	*allocate_cylinder(char **identifier, int id)
 	obj = ft_calloc(1, sizeof(t_object));
 	if (!obj)
 		return (NULL);
-	obj->angle = 0;
-	obj->brightness = 0;
 	obj->transform = cylinder_transform(identifier[1], identifier[2],
 			identifier[3], identifier[4]);
 	obj->inverse = inverse(obj->transform, 4);
 	obj->object_type = CYLINDER;
 	obj->object_id = id;
 	obj->scale = allocate_tuple(ft_atof(identifier[3]),
-			ft_atof(identifier[3]), ft_atof(identifier[4]), 1);
+			ft_atof(identifier[4]), ft_atof(identifier[3]), 1);
 	obj->next = NULL;
 	obj->rgb = str_to_rgb(identifier[5], 0);
 	if (!obj->rgb || !obj->scale)
 		return (NULL);
-	obj->material = init_material(obj->rgb, 0.0, 0.5, 0.7);
+	obj->material = init_material(obj->rgb, 0.1, 0.7, 200.0);
 	return (obj);
 }
 

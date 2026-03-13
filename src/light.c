@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/10 13:29:26 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 20:32:06 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     if (in_shadow)
     {
         free(effective_color);
-        printf("color = (%f,%f,%f\n)", ambient[0],ambient[1],ambient[2]);
         return(ambient);
     }
     lightv_neg = allocate_tuple(-1,-1,-1,0);//better create a general negative tuple to avoid memory leaks later
@@ -93,8 +92,18 @@ double  *normal_at(t_object *object, double *world_point)
     local_normal = NULL;
     if (object->object_type == SPHERE)
         local_normal = allocate_tuple(local_point[0], local_point[1], local_point[2], 0);
-    else if (object->object_type == CYLINDER)
-        local_normal = allocate_tuple(local_point[0], 0, local_point[2], 0);
+	else if (object->object_type == CYLINDER)
+	{
+		double dist = local_point[0] * local_point[0]
+					+ local_point[2] * local_point[2];
+
+		if (dist < 1 && local_point[1] >= object->scale[1] / 2 - EPSILON)
+			local_normal = allocate_tuple(0, 1, 0, 0);
+		else if (dist < 1 && local_point[1] <= (-object->scale[1] / 2) + EPSILON)
+			local_normal = allocate_tuple(0, -1, 0, 0);
+		else
+			local_normal = allocate_tuple(local_point[0], 0, local_point[2], 0);
+	}
     else if (object->object_type == PLANE)
         local_normal = allocate_tuple(0, 1, 0, 0);
     transposed_inverse = transpose_grid(object->inverse);
@@ -146,4 +155,4 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 	free(negative);
 
 	return (comps);
-}//*/
+}

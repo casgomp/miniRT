@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 12:59:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 14:21:17 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 14:38:06 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	free_object_list(t_object *lst)
 		if (lst->scale)
 			free(lst->scale);
 		if (lst->material)
-			free(lst->material);
+			free(lst->material);//material is a t_material with material->rgb is allocated, so first must free rgb
 		free(lst);
 		lst = tmp;
 	}

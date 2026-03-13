@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 19:06:53 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:09:26 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 17:40:40 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ static t_object	*allocate_sphere(char **identifier, int id)
 	if (!rgb)
 		return (free(obj), NULL);
 	obj->object_id = id;
-	obj->angle = 0;
-	obj->brightness = 0;
 	obj->scale = allocate_tuple(ft_atof(identifier[2]),
 			ft_atof(identifier[2]), ft_atof(identifier[2]), 1);
 	obj->transform = transform_sphere(identifier[1], identifier[2]);
@@ -85,7 +83,7 @@ static t_object	*allocate_sphere(char **identifier, int id)
 		return (free(obj), free(rgb), NULL);
 	obj->inverse = inverse(obj->transform, 4);
 	obj->rgb = rgb;
-	obj->material = init_material(rgb, 0.0, 0.0, 0.1);
+	obj->material = init_material(rgb, 0.1, 0.7, 200.0);
 	obj->object_type = SPHERE;
 	obj->next = NULL;
 	return (obj);

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 19:06:24 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 19:56:10 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 20:35:34 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	intersect_cap_min(t_intersection *xs, t_object *cyl,
 	double	t;
 	double	check;
 
-	min = -cyl->scale[2] / 2;
+	min = -cyl->scale[1] / 2;
 	t = (min - ray_origin[1]) / ray_dir[1];
 	check = cap_check(ray_origin, ray_dir, t);
 	if (check <= 1)
@@ -56,7 +56,7 @@ void	intersect_cap_max(t_intersection *xs, t_object *cyl,
 	double	t;
 	double	check;
 
-	max = cyl->scale[2] / 2;
+	max = cyl->scale[1] / 2;
 	t = (max - ray_origin[1]) / ray_dir[1];
 	check = cap_check(ray_origin, ray_dir, t);
 	if (check <= 1)
@@ -93,8 +93,8 @@ void	truncate_cylinder(double *origin, double *dir,
 
 	y0 = origin[1] + xs[0].t * dir[1];
 	y1 = origin[1] + xs[1].t * dir[1];
-	min = (-cyl->scale[2] / 2);
-	max = (cyl->scale[2] / 2);
+	min = (-cyl->scale[1] / 2);
+	max = (cyl->scale[1] / 2);
 	xs[0].obj = NULL;
 	xs[1].obj = NULL;
 	if (y0 > min && y0 < max)

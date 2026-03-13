@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:10:11 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 15:38:19 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,32 +38,30 @@ static int	check_cam_pos(char *data)
 
 static double	**transform_cam(char *identifier_1, char *identifier_2)
 {
-	double	*cam_pos;
-	double	**translate;
-	double	**transform_matrix;
+	double	*from;
+	double	*dir;
+	double	*up;
+	double	*to;
+	double	**transform;
 
-	cam_pos = str_to_double(identifier_1, 1);
-	if (!cam_pos)
-		return (NULL);
-	translate = translation(cam_pos);
-	if (!translate)
-		return (free(cam_pos), NULL);
-	transform_matrix = align_to_vec(identifier_2, translate);
-	if (!transform_matrix)
-		return (free(cam_pos), free_grid(translate), NULL);
-	return (free(cam_pos), free_grid(translate), transform_matrix);
+	from = str_to_double(identifier_1, 1);
+	dir = str_to_double(identifier_2, 1);
+	up = allocate_tuple(0, 1, 0, 0);
+	to = add_tuple(from, dir);
+	transform = view_transform(from, to, up);
+	return (free(from), free(dir), free(up), free(to), transform);
 }
 
 static t_camera	*allocate_camera(char **identifier, int id)
 {
 	t_camera	*cam;
-	double		half_view;
-	double		aspect;
+	double		fov_degrees;
 
 	cam = ft_calloc(1, sizeof(t_camera));
 	if (!cam)
 		return (perror(MALL_ERR), NULL);
-	cam->field_of_view = ft_atof(identifier[3]);
+	fov_degrees = ft_atof(identifier[3]);
+	cam->field_of_view = fov_degrees * (PI / 180);
 	cam->id = id;
 	cam->hsize = WIN_W;
 	cam->vsize = WIN_H;
@@ -73,13 +71,7 @@ static t_camera	*allocate_camera(char **identifier, int id)
 	cam->inverse = inverse(cam->transform, 4);
 	if (!cam->inverse || !cam->transform)
 		return (free(cam), NULL);
-	half_view = tan(cam->field_of_view / 2);
-	aspect = cam->hsize / cam->vsize;
-	if (aspect < 1)
-		aspect = 1 / aspect;
-	cam->half_width = half_view;
-	cam->half_height = half_view / aspect;
-	cam->pixel_size = (cam->half_width * 2) / cam->hsize;
+	pixel_size(cam);
 	return (cam);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 13:02:40 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 19:03:28 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 15:11:01 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,13 @@ void	print_object_list(t_object *lst)
 			printf("%f %f %f\n", lst->rgb[0], lst->rgb[1], lst->rgb[2]);
 		else
 			printf("(null)\n");
-		printf("Brightness: %f\n", lst->brightness);
-		printf("Angle: %f\n", lst->angle);
 		printf("Transform matrix:\n");
-		if (lst->transform)
-			print_grid(lst->transform);
 		if (lst->scale)
 			printf("scale: %f, %f, %f, \n", lst->scale[0],
 				lst->scale[1], lst->scale[2]);
+		print_grid(lst->transform);
 		printf("Inverse matrix:\n");
-		if (lst->inverse)
-			print_grid(lst->inverse);
+		print_grid(lst->inverse);
 		printf("--------------------------------------\n\n");
 		lst = lst->next;
 	}

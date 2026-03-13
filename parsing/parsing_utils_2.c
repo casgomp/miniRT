@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 20:36:32 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 13:12:20 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/13 18:23:14 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,47 +67,51 @@ int	rgb_parse(char *rgb)
 	return (ft_free_array(&rgb_values), 1);
 }
 
-double	***compute_rotation(char *identifier_2)
+double	**compute_rotation(double *axis, double angle)
 {
-	double		**x;
-	double		**y;
-	double		**z;
-	double		*vec;
-	double		***rotation_fest;
+	double	**m;
+	double	c;
+	double	s;
+	double	t;
 
-	rotation_fest = malloc (3 * sizeof(double **));
-	if (!rotation_fest)
-		return (perror(MALL_ERR), NULL);
-	vec = str_to_double(identifier_2, 0);
-	if (!vec)
-		return (free(rotation_fest), NULL);
-	x = rotation_x(acos(vec[0]));
-	y = rotation_y(acos(vec[1]));
-	z = rotation_z(acos(vec[2]));
-	if (!x || !y || !z)
-		return (free(vec), free(rotation_fest), NULL);
-	rotation_fest[0] = x;
-	rotation_fest[1] = y;
-	rotation_fest[2] = z;
-	return (free(vec), rotation_fest);
+	normalize_vector(axis);
+	c = cos(angle);
+	s = sin(angle);
+	t = 1 - c;
+	m = identity_mtrx(4);
+	if (!m)
+		return (NULL);
+	m[0][0] = t * axis[0] * axis[0] + c;
+	m[0][1] = t * axis[0] * axis[1] - s * axis[2];
+	m[0][2] = t * axis[0] * axis[2] + s * axis[1];
+	m[1][0] = t * axis[0] * axis[1] + s * axis[2];
+	m[1][1] = t * axis[1] * axis[1] + c;
+	m[1][2] = t * axis[1] * axis[2] - s * axis[0];
+	m[2][0] = t * axis[0] * axis[2] - s * axis[1];
+	m[2][1] = t * axis[1] * axis[2] + s * axis[0];
+	m[2][2] = t * axis[2] * axis[2] + c;
+	return (m);
 }
 
 double	**align_to_vec(char *identifier_2, double **matrix)
 {
-	double		**rotate_x;
-	double		**rotate_y;
-	double		**rotate_z;
-	double		***rotation_fest;
+	double		*axis;
+	double		*up;
+	double		angle;
+	double		*target;
+	double		**rotation_fest;
+	double		**result;
 
-	rotation_fest = compute_rotation(identifier_2);
-	if (!rotation_fest)
+	up = allocate_tuple(0, 1, 0, 0);
+	target = str_to_double(identifier_2, 0);
+	if (!up || ! target)
 		return (NULL);
-	rotate_x = matrix_multiply(matrix, rotation_fest[0]);
-	rotate_y = matrix_multiply(rotate_x, rotation_fest[1]);
-	rotate_z = matrix_multiply(rotate_y, rotation_fest[2]);
-	if (!rotate_x || !rotate_y || !rotate_z)
-		return (NULL);
-	return (free_grid(rotation_fest[0]), free_grid(rotation_fest[1])
-		, free_grid(rotation_fest[2]), free_grid(rotate_x), free(rotation_fest)
-		, free_grid(rotate_y), rotate_z);
+	if (fabs(dot_product_tuple(up, target)) > 1)
+		return (matrix);
+	axis = cross_product(up, target);
+	angle = acos(dot_product_tuple(up, target));
+	rotation_fest = compute_rotation(axis, angle);
+	result = matrix_multiply(matrix, rotation_fest);
+	return (free_grid(rotation_fest), free(axis)
+		, free(up), free(target), result);
 }
