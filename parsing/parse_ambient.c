@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 14:05:59 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/12 16:17:42 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 14:18:22 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static t_light	*allocate_ambient(char **identifier, int id)
 		return (perror(MALL_ERR), NULL);
 	ambient->id = id;
 	ambient->type = AMBIENT_LIGHT;
+	//ambient->position = NULL;
 	ambient->intensity = allocate_tuple(ft_atof(identifier[1]), ft_atof(identifier[1]), ft_atof(identifier[1]), 0);
 	ambient->rgb = str_to_rgb(identifier[2], 0);
 	if (!ambient->rgb)

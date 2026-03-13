@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:08:19 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/11 14:59:21 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 16:00:00 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_intersection	*intersect_list_append(t_intersection *xs,
 	int				i;
 
 	newptr = NULL;
-	if (*count + 2 > *capacity) //2 would eventually be a number passed to function based on object intersected(i.e. planes only have 1 intersection point).
+	if (*count + 2 > *capacity)
 	{
 		*capacity = *capacity * 2;
 		newptr = malloc(sizeof(t_intersection) * *capacity);
@@ -74,7 +74,7 @@ t_intersection	*intersect_list_append(t_intersection *xs,
 	}
 	xslst[*count] = xs[0];
 	xslst[*count + 1] = xs[1];
-	*count += 2; //eventually change to the number of actual object(i.e. planes only have 1 intersection point).
+	*count += 2;
 	free(xs);
 	return (xslst);
 }
@@ -129,5 +129,7 @@ t_intersection	*intersect_world(t_world *world, t_ray ray, int *count)
 		curr = curr->next;
 	}
 	sort_intersections(xslst, count);
+	if (*count == 0)
+		return(free(xslst), NULL);
 	return(xslst);
 }

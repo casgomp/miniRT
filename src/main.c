@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/12 16:21:46 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 11:31:35 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,6 @@ t_material	*init_material(double *color, double ambient, double specular, double
 	double	*to = allocate_tuple(0,1,0,1);
 	double	*up = allocate_tuple(0,1,0,1); */
 
-	printf("main, scene->camera->transform = \n");
-    print_grid(scene->camera->transform);
-
 	//c->transform = view_transform(from, to, up);
 	//print_grid(c->transform);
 
@@ -83,9 +80,8 @@ t_material	*init_material(double *color, double ambient, double specular, double
 	//init ambient;
 	//render_loop(&data, w, c);
 	render_loop(&data, scene);
-	mlx_loop(data.mlx_ptr);
+	mlx_loop(data.mlx_ptr);//this will cause a massive leak since it exits and never comes back here to free_world(scene)
 	free_world(scene);
-	free(scene);
 	return (0);
 } //*/
 

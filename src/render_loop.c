@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/11 20:08:32 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 15:19:14 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ double	*color_at(t_world *world, t_ray ray)
 	t_comps			*comps;
 	double			*colord;
 	
+	comps = NULL;
 	xs = intersect_world(world, ray, &count);
 	if (!xs)
 		return (BLACK_PIXEL);
@@ -40,8 +41,15 @@ double	*color_at(t_world *world, t_ray ray)
 		comps = prepare_computations(hit, ray);
 		colord = shade_hit(world, comps);
 	}
-	//free function for freeing arrays
-	free(xs);//free each intersection, then free list
+
+	if (comps)
+	{
+		free(comps->point);
+		free(comps->eyev);
+		free(comps->normalv);
+		free(comps);
+	}
+
 	return (colord);
 }
 

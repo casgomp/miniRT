@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:25:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/12 16:04:45 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 14:30:33 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ double	*shade_hit(t_world *world, t_comps *comps)
 		old_color = NULL;
 		if (world->ambient)
 		{
-			color = multiply_tuple_tuple(comps->obj->material->color, world->ambient->rgb);//mateial color, world ambient rgb
+			color = multiply_tuple_tuple(comps->obj->material->color, world->ambient->rgb);//material color, world ambient rgb
 			old_color = color;
 			color = multiply_scalar(color, comps->obj->material->ambient * world->ambient->intensity[0]);//mult scalar color, material ambient * world ambient intensity
 			free(old_color);
@@ -36,8 +36,8 @@ double	*shade_hit(t_world *world, t_comps *comps)
 		current_light = world->light;
 		while (current_light)
 		{
-			tmp = (lighting(comps->obj->material, current_light, 
-		comps->point, comps->eyev, comps->normalv, in_shadow));
+			tmp = lighting(comps->obj->material, current_light, 
+		comps->point, comps->eyev, comps->normalv, in_shadow);
 			old_color = color;
 			color = add_tuple(color, tmp);
 			free(old_color);

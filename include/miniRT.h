@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/12 13:21:47 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 15:18:41 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ typedef struct s_intersection
 	double		t;
 	t_object	*obj;
 } t_intersection;
-
+/* 
 typedef struct s_intersection_lst
 {
 	double						*t;
@@ -171,14 +171,13 @@ typedef struct s_intersection_lst
 	double						object_id;
 	struct s_intersection_lst	*next;
 }	t_instersection_lst;
-
+ */
 typedef struct s_ray
 {
 	double					*ray_origin;
 	double					*ray_direction;
-	t_instersection_lst		*intersection_lst;
+	//t_instersection_lst		*intersection_lst;
 }	t_ray;
-
 
 typedef struct s_light
 {

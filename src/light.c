@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/12 13:42:25 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 15:18:58 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ double  *reflect(double *in, double *w_normal)
     scalar = 2 * dot_product_tuple(in, w_normal);
     vector = multiply_scalar(w_normal, scalar);
     reflectv = subtract_tuple(in, vector);
+
+    free(vector);
+
     return (reflectv);
 }
 
@@ -28,6 +31,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
 {
     double  *effective_color;
     double  *lightv;
+    double  *negative;
     double  *lightv_neg;
     double  *ambient;
     double  *diffuse;
@@ -36,8 +40,11 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     double  *reflectv;
     double  reflect_dot_eye;
     double  factor;
+    double  *tmp;
     double  *result;
 
+    reflectv = NULL;
+    lightv_neg = NULL;
     effective_color = multiply_tuple_tuple(material->color, light->intensity);
     ambient = multiply_scalar(effective_color, material->ambient);
     if (in_shadow)
@@ -45,7 +52,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
         free(effective_color);
         return(ambient);
     }
-    lightv_neg = allocate_tuple(-1,-1,-1,0);//better create a general negative tuple to avoid memory leaks later
+    negative = allocate_tuple(-1,-1,-1,0);
     lightv = subtract_tuple(light->position, hit_point);
     normalize_vector(lightv);
     light_dot_normal = dot_product_tuple(lightv, normalv);
@@ -57,26 +64,32 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     else
     {
         diffuse = multiply_scalar(effective_color, material->diffuse * light_dot_normal);
-        lightv_neg = multiply_tuple_tuple(lightv, lightv_neg);//this is memory leak for sure not freeing prev lightv_neg
+        lightv_neg = multiply_tuple_tuple(lightv, negative);
         reflectv = reflect(lightv_neg, normalv);
         reflect_dot_eye = dot_product_tuple(reflectv, eyev);
         if (reflect_dot_eye <= 0)
             specular = allocate_tuple(0,0,0,0);
         else
         {
-            factor = pow(reflect_dot_eye, material->shininess);//what to use for shininess;
+            factor = pow(reflect_dot_eye, material->shininess);
             specular = multiply_scalar(light->intensity, material->specular * factor);
         }
     }
-
+    //printf("ambient = %f,%f,%f, diffuse = %f,%f,%f\n", ambient[0],ambient[1],ambient[2],diffuse[0],diffuse[1],diffuse[2]);
+    tmp = add_tuple(ambient,diffuse);
+    //printf("tmp = %f,%f,%f, specular = %f,%f,%f\n", tmp[0],tmp[1],tmp[2],specular[0],specular[1],specular[2]);
+    result = add_tuple(tmp, specular);
+    
     free(effective_color);
-    free(lightv);
-    free(lightv_neg);
     free(ambient);
-    //free all double* variables.
+    free(lightv);
+    free(negative);
+    free(lightv_neg);
+    free(reflectv);
+    free(diffuse);
+    free(tmp);
+    free(specular);
 
-    result = add_tuple(ambient,diffuse);
-    result = add_tuple(result, specular);
     return (result);
 }
 
@@ -99,9 +112,11 @@ double  *normal_at(t_object *object, double *world_point)
     world_normal = multiply_matrix_tuple(transposed_inverse, local_normal);
     world_normal[3] = 0;//must do this little trick (see p.82)
     normalize_vector(world_normal);
+    
     free(local_point);
     free(local_normal);
     free_grid(transposed_inverse);
+    
     return (world_normal);
 }
 
@@ -112,7 +127,9 @@ double  *ray_position(t_ray r, double t)
 
     scaled_dir = multiply_scalar(r.ray_direction, t);
     pos = add_tuple(r.ray_origin, scaled_dir);
+    
     free (scaled_dir);
+    
     return (pos);
 }
 

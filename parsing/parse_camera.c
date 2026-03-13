@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/12 14:57:12 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 12:56:07 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ static double	**transform_cam(char *identifier_1, char *identifier_2)
 	up = allocate_tuple(0, 1, 0, 0);
 	to = add_tuple(from, dir);
 	transform =  view_transform(from, to, up);
+	/* printf("DEBUG: From: %f, %f, %f | To: %f, %f, %f\n", from[0], from[1], from[2], to[0], to[1], to[2]);
+	printf("DEBUG: From: %p, %p, %p | To: %p, %p, %p\n", (void *)&from[0], (void *)&from[1], (void *)&from[2], (void *)&to[0], (void *)&to[1], (void *)&to[2]); */
 	free(from);
 	free(dir);
 	free(up);
 	free(to);
-	printf("DEBUG: From: %f, %f, %f | To: %f, %f, %f\n", from[0], from[1], from[2], to[0], to[1], to[2]);
 	return (transform);
 
 /* 	cam_pos = str_to_double(identifier_1, 1);
