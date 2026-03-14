@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 15:18:41 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 13:29:50 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,6 @@ typedef enum e_OBJECT_TYP
 	LIGHT,
 	AMBIENT_LIGHT,
 }	t_OBJECT_TYP;
-
-typedef struct s_img
-{
-	void	*mlx_img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}	t_img;
-
-typedef struct s_data
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	int			exit_code;
-	char		*error_msg;
-	t_img		img;
-
-}	t_data;
 
 typedef struct s_matrix
 {
@@ -222,11 +203,27 @@ typedef struct s_world
 	t_camera	*camera;
 }	t_world;
 
+typedef struct s_img
+{
+	void	*mlx_img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}	t_img;
+
+typedef struct s_data
+{
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int			exit_code;
+	char		*error_msg;
+	t_img		img;
+	t_world		*scene;
+}	t_data;
+
 //main
 int				main(int argc, char **argv);
-//main ch.7 utils
-t_object		*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
-t_material		*init_material(double *color, double ambient, double specular, double shininess);
 
 //render_loop
 double			*color_at(t_world *world, t_ray ray);
@@ -330,6 +327,7 @@ void	lstadd(t_object **lst, t_object *new);
 t_object	*lstlast(t_object *lst);
 t_comps	*prepare_computations(t_intersection *intersection, t_ray ray);
 double	*shade_hit(t_world *world, t_comps *comps);
+t_material		*init_material(double *color, double ambient, double specular, double shininess);
 
 //main ch.7 utils
 t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 15:19:14 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 11:14:28 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ double	*color_at(t_world *world, t_ray ray)
 		free(comps->normalv);
 		free(comps);
 	}
-
+	free(xs); //must somehow free xs[i] before freeing xs?
 	return (colord);
 }
 
@@ -76,6 +76,10 @@ void	render_loop(t_data *data, t_world *scene)
 			//colord = color_at(w, *r);
 			colord = color_at(scene, *r);
 			color = color_to_int(colord);
+			free(r->ray_direction);
+			free(r->ray_origin);
+			free(r);
+			free(colord);
 			img_pix_put(&(data->img), x, y, color);
 		}
 	}

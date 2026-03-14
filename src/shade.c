@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:25:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/13 14:30:33 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 11:10:49 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,11 @@ double	*shade_hit(t_world *world, t_comps *comps)
 		while (current_light)
 		{
 			tmp = lighting(comps->obj->material, current_light, 
-		comps->point, comps->eyev, comps->normalv, in_shadow);
+				comps->point, comps->eyev, comps->normalv, in_shadow);
 			old_color = color;
 			color = add_tuple(color, tmp);
 			free(old_color);
+			free(tmp);
 			current_light = current_light->next;
 		}
 		return (color);

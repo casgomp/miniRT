@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/13 15:18:29 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 13:30:03 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,4 +118,19 @@ t_object	*lstlast(t_object *lst)
 	while ((tmp -> next) != NULL)
 		tmp = tmp -> next;
 	return (tmp);
+}
+
+t_material	*init_material(double *color, double ambient, double specular, double shininess)//temporary util to initialize material (eventually done in parsing)
+{
+	t_material	*m;
+
+	m = malloc(sizeof(t_material));
+	if (!m)
+		return (NULL);
+	m->color = color;
+	m->ambient = ambient;
+	m->diffuse = 0.7;
+	m->specular = specular;
+	m->shininess = shininess;
+	return (m);
 }

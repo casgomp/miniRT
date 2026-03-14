@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 19:57:26 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/11 20:08:27 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 11:40:06 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ double  **view_transform(double *from, double *to, double *up)//what parameter d
     double  *negative;
     double  **translate;
     double  **transform;
+    double  **idemtrx;
     int     i;
     
     forward = subtract_tuple(to, from);
@@ -32,21 +33,21 @@ double  **view_transform(double *from, double *to, double *up)//what parameter d
     true_up = cross_product(left, forward);
     negative = allocate_tuple(-1,-1,-1,0);
     forward_neg = multiply_tuple_tuple(forward, negative);//-forward
-    transform = identity_mtrx(4);
+    idemtrx = identity_mtrx(4);
     i = -1;
     while (++i < 3)
-        transform[0][i] = left[i];
+        idemtrx[0][i] = left[i];
     i = -1;
     while (++i < 3)
-        transform[1][i] = true_up[i];
+        idemtrx[1][i] = true_up[i];
     i = -1;
     while (++i < 3)
-        transform[2][i] = forward_neg[i];
+        idemtrx[2][i] = forward_neg[i];
 
     from_neg = multiply_tuple_tuple(from, negative);//-from
     translate = translation(from_neg);
 
-    transform = matrix_multiply(transform, translate);
+    transform = matrix_multiply(idemtrx, translate);
 
     free(from_neg);
     free(forward);
@@ -54,10 +55,9 @@ double  **view_transform(double *from, double *to, double *up)//what parameter d
     free(left);
     free(true_up);
     free(negative);
+    free_grid(idemtrx);
     free_grid(translate);
-
-    printf("implemenet_camera, transform = \n");
-    print_grid(transform);
+    
     return (transform);
 }
 

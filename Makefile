@@ -6,7 +6,7 @@
 #    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/13 14:07:42 by pecastro         ###   ########.fr        #
+#    Updated: 2026/03/14 11:44:15 by pecastro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ NAME = miniRT
 CC = cc
 DFLAG = -g
 
-FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include -fsanitize=address
-LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz -fsanitize=address
+FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include #-fsanitize=address
+LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz #-fsanitize=address
 SRC_RENDER = $(addprefix src/, main.c \
 						render_loop.c \
 						intersections.c \
