@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/10 14:21:42 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/14 14:38:48 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,21 +69,3 @@ t_world	*parse_input(char *input, t_world *scene)
 	}
 	return (close(fd), ft_free_array(&rd_lines), scene);
 }
-
-/*int	main(int argc, char **argv)
-{
-	t_world		*scene;
-
-	if (argc != 2)
-		return (write(2, "Error\nenter one argument only\n", 30), 1);
-	if (!file_format_error(argv[1]))
-		return (1);
-	scene = ft_calloc(1, sizeof(t_world));
-	if (!scene)
-		return (1);
-	scene = parse_input(argv[1], scene);
-	print_world(scene);
-	free_world(scene);
-	free(scene);
-	return (0);
-}*/

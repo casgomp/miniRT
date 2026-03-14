@@ -6,22 +6,40 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/14 11:14:28 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:09:46 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+double	*hit_comps_color(t_world *world, t_ray ray, t_intersection *hit)
+{
+	double			*colord;
+	t_comps			*comps;
+
+	comps = NULL;
+	colord = NULL;
+	comps = prepare_computations(hit, ray);
+	colord = shade_hit(world, comps);
+	if (comps)
+	{
+		free(comps->point);
+		free(comps->eyev);
+		free(comps->normalv);
+		free(comps);
+	}
+	return (colord);
+}
 
 double	*color_at(t_world *world, t_ray ray)
 {
 	t_intersection	*xs;
 	t_intersection	*hit;
 	int				count;
-	int				i;
-	t_comps			*comps;
 	double			*colord;
-	
-	comps = NULL;
+	int				i;
+
+	colord = NULL;
 	xs = intersect_world(world, ray, &count);
 	if (!xs)
 		return (BLACK_PIXEL);
@@ -35,25 +53,12 @@ double	*color_at(t_world *world, t_ray ray)
 			break ;
 		}
 	}
-	colord = NULL;
 	if (hit)
-	{
-		comps = prepare_computations(hit, ray);
-		colord = shade_hit(world, comps);
-	}
-
-	if (comps)
-	{
-		free(comps->point);
-		free(comps->eyev);
-		free(comps->normalv);
-		free(comps);
-	}
-	free(xs); //must somehow free xs[i] before freeing xs?
+		colord = hit_comps_color(world, ray, hit);
+	free(xs);
 	return (colord);
 }
 
-//void	render_loop(t_data *data, t_world *w, t_camera *c)
 void	render_loop(t_data *data, t_world *scene)
 {
 	double			x;
@@ -63,17 +68,12 @@ void	render_loop(t_data *data, t_world *scene)
 	int				color;
 
 	y = -1.0;
-	//while (++y < c->vsize)
 	while (++y < scene->camera->vsize)
 	{
 		x = -1.0;
-		//while (++x < c->hsize)
 		while (++x < scene->camera->hsize)
 		{
-			//r = ray_for_pixel(c, x, y);
 			r = ray_for_pixel(scene->camera, x, y);
-			
-			//colord = color_at(w, *r);
 			colord = color_at(scene, *r);
 			color = color_to_int(colord);
 			free(r->ray_direction);
@@ -83,5 +83,6 @@ void	render_loop(t_data *data, t_world *scene)
 			img_pix_put(&(data->img), x, y, color);
 		}
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, 
+		data->img.mlx_img, 0, 0);
 }

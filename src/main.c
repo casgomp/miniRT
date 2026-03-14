@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/14 13:30:05 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:09:48 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	main(int argc, char **argv)
 {
 	t_world		*scene;
-	t_data 		data;
+	t_data		data;
 
 	if (argc != 2)
 		return (write(2, "Error\nenter one argument only\n", 30), 1);

@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/14 13:29:50 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:09:44 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,8 +226,8 @@ typedef struct s_data
 int				main(int argc, char **argv);
 
 //render_loop
+double			*hit_comps_color(t_world *world, t_ray ray, t_intersection *hit);
 double			*color_at(t_world *world, t_ray ray);
-//void			render_loop(t_data *data, t_world *w, t_camera *c);
 void			render_loop(t_data *data, t_world *scene);
 
 //intersections
@@ -239,10 +239,11 @@ void			sort_intersections(t_intersection *xs, int *count);
 t_intersection	*intersect_world(t_world *world, t_ray ray, int *count);
 
 //implement_camera
-double  		**view_transform(double *from, double *to, double *up);
+double			**view_transform(double *from, double *to, double *up);
 t_camera    	*camera(double hsize, double vsize, double field_of_view);
 void  			pixel_size(t_camera *c);
 t_ray			*ray_for_pixel(t_camera *c, double px, double py);
+double			*get_point_w(t_camera *c, double px, double py);
 
 //light
 double  		*reflect(double *in, double *w_normal);
