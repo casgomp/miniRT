@@ -6,7 +6,7 @@
 #    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/14 11:44:15 by pecastro         ###   ########.fr        #
+#    Updated: 2026/03/15 13:00:44 by pecastro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,10 +20,12 @@ FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include #-
 LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz #-fsanitize=address
 SRC_RENDER = $(addprefix src/, main.c \
 						render_loop.c \
-						intersections.c \
+						ray_for_pixel.c \
 						implement_camera.c \
-						light.c \
-						shade.c \
+						intersections.c \
+						intersections2.c \
+						computations.c \
+						lighting.c \
 						transform_matrix.c \
 						transform_tuple.c \
 						utils_matrix.c \

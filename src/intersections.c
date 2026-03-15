@@ -6,20 +6,11 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:08:19 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/14 10:49:47 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/15 14:21:07 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
-
-t_ray   transform_ray(t_ray r, double **m)//double or a simple t_matrix works too.
-{
-    t_ray   new_ray;
-
-    new_ray.ray_origin = multiply_matrix_tuple(m, r.ray_origin);
-    new_ray.ray_direction = multiply_matrix_tuple(m, r.ray_direction);
-    return (new_ray);
-}
 
 t_intersection	*intersection(t_ray r, t_object *objp)
 {
@@ -27,30 +18,20 @@ t_intersection	*intersection(t_ray r, t_object *objp)
 	double			b;
 	double			c;
 	double			discriminant;
-	double			*sphere_to_ray;
 	t_ray			local_r;
-	t_intersection	*xs;
 
 	local_r = transform_ray(r, objp->inverse);
-	sphere_to_ray = local_r.ray_origin;
-	local_r.ray_direction[3] = 0;//important to set this to 0, otherwise the dot_product_tuple will return a wrong result.
-	sphere_to_ray[3] = 0;//important to set this to 0, otherwise the dot_product_tuple will return a wrong result.
+	local_r.ray_direction[3] = 0;
+	local_r.ray_origin[3] = 0;
 	a = dot_product_tuple(local_r.ray_direction, local_r.ray_direction);
-	b = 2 * dot_product_tuple(local_r.ray_direction, sphere_to_ray);
-	c = dot_product_tuple(sphere_to_ray, sphere_to_ray) - 1;
-	free(local_r.ray_origin);//free only local copies
-	free(local_r.ray_direction);//free only local copies
+	b = 2 * dot_product_tuple(local_r.ray_direction, local_r.ray_origin);
+	c = dot_product_tuple(local_r.ray_origin, local_r.ray_origin) - 1;
+	free(local_r.ray_origin);
+	free(local_r.ray_direction);
 	discriminant = pow(b, 2) - (4 * a * c);
 	if (discriminant < 0)
 		return (NULL);
-	xs = malloc(sizeof(t_intersection) * 2);//norminette too many variables...make function to create xs and store values.
-	if (!xs)
-		return (NULL);
-	xs[0].t = (-b - sqrt(discriminant)) / (2 * a);
-	xs[1].t = (-b + sqrt(discriminant)) / (2 * a);
-	xs[0].obj = objp;
-	xs[1].obj = objp;
-	return (xs);
+	return (get_xs(objp, discriminant, a, b));
 }
 
 t_intersection	*intersect_list_append(t_intersection *xs, 
@@ -79,31 +60,6 @@ t_intersection	*intersect_list_append(t_intersection *xs,
 	return (xslst);
 }
 
-void	sort_intersections(t_intersection *xs, int *count)
-{
-	int	i;
-	int	j;
-
-	t_intersection	temp;
-
-	i = 0;
-	while (i < (*count) - 1)
-	{
-		j = 0;
-		while (j < (*count) - i - 1)
-		{
-			if (xs[j].t > xs[j + 1].t)
-			{
-				temp = xs[j];
-				xs[j] = xs[j + 1];
-				xs[j + 1] = temp;
-			}
-			j ++;
-		}
-		i ++;
-	}
-}
-
 t_intersection	*intersect_world(t_world *world, t_ray ray, int *count)
 {
 	t_intersection	*xs;
@@ -117,7 +73,7 @@ t_intersection	*intersect_world(t_world *world, t_ray ray, int *count)
 	if (!xslst)
 		return (NULL);
 	curr = world->object;
-	while(curr)
+	while (curr)
 	{
 		xs = intersection(ray, curr);
 		if (xs)
@@ -129,7 +85,5 @@ t_intersection	*intersect_world(t_world *world, t_ray ray, int *count)
 		curr = curr->next;
 	}
 	sort_intersections(xslst, count);
-	if (*count == 0)
-		return(free(xslst), NULL);
-	return(xslst);
+	return (xslst);
 }

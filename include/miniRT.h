@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/14 16:09:44 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/15 14:28:33 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,34 +226,45 @@ typedef struct s_data
 int				main(int argc, char **argv);
 
 //render_loop
-double			*hit_comps_color(t_world *world, t_ray ray, t_intersection *hit);
+double			*hit_comps_color(t_world *world, 
+					t_ray ray, t_intersection *hit);
 double			*color_at(t_world *world, t_ray ray);
 void			render_loop(t_data *data, t_world *scene);
 
-//intersections
-t_ray			transform_ray(t_ray r, double **m);//double or a simple t_matrix works too.
-t_intersection	*intersection(t_ray r, t_object *objp);
-t_intersection	*intersect_list_append(t_intersection *xs,
-							t_intersection *xslst, int *count, int *capacity);
-void			sort_intersections(t_intersection *xs, int *count);
-t_intersection	*intersect_world(t_world *world, t_ray ray, int *count);
-
-//implement_camera
-double			**view_transform(double *from, double *to, double *up);
-t_camera    	*camera(double hsize, double vsize, double field_of_view);
-void  			pixel_size(t_camera *c);
+//ray_for_pixel
 t_ray			*ray_for_pixel(t_camera *c, double px, double py);
 double			*get_point_w(t_camera *c, double px, double py);
 
-//light
-double  		*reflect(double *in, double *w_normal);
-double  		*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
-double  		*normal_at(t_object *object, double *world_point);
-double  		*ray_position(t_ray r, double t);
+//implement_camera
+double			**view_transform(double *from, double *to, double *up);
+t_camera		*camera(double hsize, double vsize, double field_of_view);
+void			pixel_size(t_camera *c);
+double			**get_idemtrx_view_translate(double *forward, 
+					double *left, double *true_up);
+double			**get_transform_mtrx_view_transform(double *from, 
+					double *forward, double *left, double *true_up);
+
+//intersections
+t_intersection	*intersection(t_ray r, t_object *objp);
+t_intersection	*intersect_list_append(t_intersection *xs,
+					t_intersection *xslst, int *count, int *capacity);
+t_intersection	*intersect_world(t_world *world, t_ray ray, int *count);
+
+//intersections2
+t_ray			transform_ray(t_ray r, double **m);
+t_intersection	*get_xs(t_object *objp, double discriminant, 
+					double a, double b);
+void			sort_intersections(t_intersection *xs, int *count);
+
+//computations
+double			*normal_at(t_object *object, double *world_point);
+double			*ray_position(t_ray r, double t);
 t_comps			*prepare_computations(t_intersection *intersection, t_ray ray);
 
-//shade
+//lighting
 double			*shade_hit(t_world *world, t_comps *comps);
+double			*reflect(double *in, double *w_normal);
+double			*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
 
 //matrix utils
 void			print_grid(double **grid);
