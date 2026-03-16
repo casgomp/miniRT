@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 22:11:41 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/16 20:11:12 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <math.h>
 # include <string.h>
 # include <sys/time.h>
-# include <sys/time.h>
 
 # define RD_ERR "read file failure\n"
 # define MALL_ERR "memory allocation failure\n"
@@ -33,8 +32,8 @@
 # define MLX_ERR "mlx_intialization failure\n"
 # define PI 3.14159265358979323846
 # define ESC 0xff1b
-# define WIN_W 1920 //800 is good size
-# define WIN_H 1080
+# define WIN_W 800 //800 is good size
+# define WIN_H 450
 # define EPSILON 1e-6
 //# define GREEN_PIXEL 0xFF00
 //# define RED_PIXEL 0xFF0000
@@ -56,25 +55,6 @@ typedef enum e_OBJECT_TYP
 	AMBIENT_LIGHT,
 }	t_OBJECT_TYP;
 
-typedef struct s_img
-{
-	void	*mlx_img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}	t_img;
-
-typedef struct s_data
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	int			exit_code;
-	char		*error_msg;
-	t_img		img;
-
-}	t_data;
-
 typedef struct s_matrix
 {
 	double	**grid;
@@ -90,7 +70,7 @@ typedef struct s_tuple
 {
 	double			*tuple;
 	t_TUPLE_TYP		tuple_type;
-	double			*unit_vector;//can delete and simply override the double *tuple with unit vecotr. In case we need original back multiply unit*magnitude
+	double			*unit_vector;
 	double			magnitude;
 }	t_tuple;
 
@@ -121,7 +101,7 @@ typedef struct s_cylinder
 	int		color;
 }	t_cylinder;
 
-typedef struct s_sphere //probably won't need individual shape structs.
+typedef struct s_sphere
 {
 	double	radius;
 	double	*center;
@@ -149,13 +129,6 @@ typedef struct s_object
 	struct s_object		*next;
 }	t_object;
 
-//temp intersection struct for the camera file.
-/*typedef struct s_intersection
-{
-	double		t;
-	t_sphere	*sphere;
-} t_intersection;*/
-
 //temp intersection struct for the camera file v2.
 typedef struct s_intersection
 {
@@ -163,23 +136,12 @@ typedef struct s_intersection
 	t_object	*obj;
 } t_intersection;
 
-typedef struct s_intersection_lst
-{
-	double						*t;
-	double						**points_lst;
-	double						hit;
-	double						*hit_points;
-	double						object_id;
-	struct s_intersection_lst	*next;
-}	t_instersection_lst;
-
 typedef struct s_ray
 {
 	double					*ray_origin;
 	double					*ray_direction;
-	t_instersection_lst		*intersection_lst;
+	//t_instersection_lst		*intersection_lst;
 }	t_ray;
-
 
 typedef struct s_light
 {
@@ -224,42 +186,70 @@ typedef struct s_world
 	t_camera	*camera;
 }	t_world;
 
+typedef struct s_img
+{
+	void	*mlx_img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}	t_img;
+
+typedef struct s_data
+{
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int			exit_code;
+	char		*error_msg;
+	t_img		img;
+	t_world		*scene;
+}	t_data;
 
 //main
 int				main(int argc, char **argv);
-//main ch.7 utils
-t_object		*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
-t_material		*init_material(double *color, double ambient, double specular, double shininess);
-t_material		*init_material(double *color, double ambient, double specular, double shininess);
 
 //render_loop
+t_intersection	*check_if_hit(t_intersection *xs, int *count);
+double			*hit_comps_color(t_world *world,
+					t_ray ray, t_intersection *hit);
 double			*color_at(t_world *world, t_ray ray);
-//void			render_loop(t_data *data, t_world *w, t_camera *c);
 void			render_loop(t_data *data, t_world *scene);
 
-//intersections
-t_ray			transform_ray(t_ray r, double **m);//double or a simple t_matrix works too.
-t_intersection	*intersection(t_ray r, t_object *objp);
-t_intersection	*intersect_list_append(t_intersection *xs,
-							t_intersection *xslst, int *count, int *capacity);
-void			sort_intersections(t_intersection *xs, int *count);
-t_intersection	*intersect_world(t_world *world, t_ray ray, int *count);
+//ray_for_pixel
+t_ray			*ray_for_pixel(t_camera *c, double px, double py);
+double			*get_point_w(t_camera *c, double px, double py);
 
 //implement_camera
-double  		**view_transform(double *from, double *to, double *up);
-t_camera    	*camera(double hsize, double vsize, double field_of_view);
-void  			pixel_size(t_camera *c);
-t_ray			*ray_for_pixel(t_camera *c, double px, double py);
+double			**view_transform(double *from, double *to, double *up);
+t_camera		*camera(double hsize, double vsize, double field_of_view);
+void			pixel_size(t_camera *c);
+double			**get_idemtrx_view_translate(double *forward,
+					double *left, double *true_up);
+double			**get_transform_mtrx_view_transform(double *from,
+					double *forward, double *left, double *true_up);
 
-//light
-double  		*reflect(double *in, double *w_normal);
-double  		*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
-double  		*normal_at(t_object *object, double *world_point);
-double  		*ray_position(t_ray r, double t);
+//intersections
+t_intersection	*intersection(t_ray r, t_object *objp);
+t_intersection	*intersect_list_append(t_intersection *xs,
+					t_intersection *xslst, int *count, int *capacity);
+t_intersection	*intersect_world(t_world *world, t_ray ray, int *count);
+
+//intersections2
+t_ray			transform_ray(t_ray r, double **m);
+t_intersection	*get_xs(t_object *objp, double discriminant,
+					double a, double b);
+void			sort_intersections(t_intersection *xs, int *count);
+
+//computations
+double			*normal_at(t_object *object, double *world_point);
+double			*ray_position(t_ray r, double t);
 t_comps			*prepare_computations(t_intersection *intersection, t_ray ray);
 
-//shade
+//lighting
+bool			is_shadowed(t_world *world, double *point, t_light *light);
 double			*shade_hit(t_world *world, t_comps *comps);
+double			*reflect(double *in, double *w_normal);
+double			*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
 
 //matrix utils
 void			print_grid(double **grid);
@@ -279,74 +269,42 @@ double			**translation(double *coord);
 double			**inverse(double **grid, int size);
 double			**transpose_grid(double **tmtrx);
 t_matrix		construct_matrix(double **grid);
-double			**get_submatrix(double **mtrx, int size, int rowskip, int colskip);
+double			**get_submatrix(double **mtrx, int size,
+					int rowskip, int colskip);
 double			cofactor(double **mtrx, int size, int row, int col);
 double			**identity_mtrx(int size);
 
 //tuples
-t_tuple		construct_tuple(double x, double y, double z, double w);
-//void		normalize_vector(t_tuple *vector);
-void		normalize_vector(double *vector);
-void		free_tuple(t_tuple *tuple);
-double		determinant(double **grid, int size);
-double		*allocate_tuple(double x, double y, double z, double w);
-double		degrees_to_radians(double degrees);
-double		radians_to_degrees(double radians);
-double		*matrix_to_tuple(double **grid);
-double		*rotate_tuple_x(double *tuple, double angle);
-double		*rotate_tuple_y(double *tuple, double angle);
-double		*rotate_tuple_z(double *tuple, double angle);
-double		*scale_tuple(double *tuple);
-double		*translate_tuple(double *tuple);
-double		*cross_product(double *vector_1, double *vector_2);
-double		*add_tuple(double *tuple_1, double *tuple_2);
-double		*subtract_tuple(double *tuple_1, double *tuple_2);
-double		dot_product_tuple(double *tuple_1, double *tuple_2);
-
-/*//test_camera
-t_intersection	*intersection(t_ray r, t_sphere *s);
-t_intersection	*intersect_list_append(t_intersection *xs,
-							t_intersection *xslst, int *count, int *capacity);
-int				get_pixel_color(t_ray r, t_sphere *s);
-void			render_loop(t_data *data, t_sphere *s);
-//*/
+t_tuple			construct_tuple(double x, double y, double z, double w);
+double			get_vector_magnitude(double *vector);
+void			apply_normalize_vector(double *vector, double magnitude);
+void			normalize_vector(double *vector);
+void			free_tuple(t_tuple *tuple);
+double			determinant(double **grid, int size);
+double			*allocate_tuple(double x, double y, double z, double w);
+double			degrees_to_radians(double degrees);
+double			radians_to_degrees(double radians);
+double			**tuple_to_matrix(double *tuple, int i);
+double			*matrix_to_tuple(double **grid);
+double			*rotate_tuple_x(double *tuple, double angle);
+double			*rotate_tuple_y(double *tuple, double angle);
+double			*rotate_tuple_z(double *tuple, double angle);
+double			*scale_tuple(double *tuple);
+double			*translate_tuple(double *tuple);
+double			*cross_product(double *vector_1, double *vector_2);
+double			*add_tuple(double *tuple_1, double *tuple_2);
+double			*subtract_tuple(double *tuple_1, double *tuple_2);
+double			dot_product_tuple(double *tuple_1, double *tuple_2);
+double			*multiply_matrix_tuple(double **m, double *t);
+double			*multiply_tuple_tuple(double *t1, double *t2);
 
 //test_camera2
 t_intersection	*intersection2(t_ray r, t_object *s);
 t_intersection	*intersect_list_append2(t_intersection *xs,
-							t_intersection *xslst, int *count, int *capacity);
-//int				get_pixel_color2(t_ray r, t_object *objp, t_light *light);
+					t_intersection *xslst, int *count, int *capacity);
 double			*color_at(t_world *world, t_ray ray);
-//void			render_loop2(t_data *data, t_object *s, t_light *light);
-//void			render_loop2(t_data *data, t_world *w);
 void			render_loop2(t_data *data, t_world *w, t_camera *c);
-t_tuple		construct_tuple(double x, double y, double z, double w);
-//void		normalize_vector(t_tuple *vector);
-void		normalize_vector(double *vector);
-void		free_tuple(t_tuple *tuple);
-double		determinant(double **grid, int size);
-double		*allocate_tuple(double x, double y, double z, double w);
-double		degrees_to_radians(double degrees);
-double		radians_to_degrees(double radians);
-double		**tuple_to_matrix(double *tuple, int i);
-double		*matrix_to_tuple(double **grid);
-double		*rotate_tuple_x(double *tuple, double angle);
-double		*rotate_tuple_y(double *tuple, double angle);
-double		*rotate_tuple_z(double *tuple, double angle);
-double		*scale_tuple(double *tuple);
-double		*translate_tuple(double *tuple);
-double		*cross_product(double *vector_1, double *vector_2);
-double		*add_tuple(double *tuple_1, double *tuple_2);
-double		*subtract_tuple(double *tuple_1, double *tuple_2);
-double		dot_product_tuple(double *tuple_1, double *tuple_2);
-
-/*//test_camera
-t_intersection	*intersection(t_ray r, t_sphere *s);
-t_intersection	*intersect_list_append(t_intersection *xs,
-							t_intersection *xslst, int *count, int *capacity);
-int				get_pixel_color(t_ray r, t_sphere *s);
-void			render_loop(t_data *data, t_sphere *s);
-//*/
+t_tuple			construct_tuple(double x, double y, double z, double w);
 
 //test_camera2
 t_intersection	*intersection(t_ray r, t_object *s);
@@ -362,57 +320,27 @@ t_intersection	*intersection_plane(t_intersection *xs, t_object *plane,
 					double *ray_origin, double *ray_dir);
 t_intersection	*intersection_sphere(t_intersection *xs, t_object *sphere,
 					double *ray_origin, double *ray_dir);
-//int				get_pixel_color2(t_ray r, t_object *objp, t_light *light);
 double			*color_at(t_world *world, t_ray ray);
-//void			render_loop2(t_data *data, t_object *s, t_light *light);
-//void			render_loop2(t_data *data, t_world *w);
 void			render_loop2(t_data *data, t_world *w, t_camera *c);
 
-//utils
-t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
-double  *multiply_matrix_tuple(double **m, double *t);
-double  *multiply_tuple_tuple(double *t1, double *t2);
-double  *normal_at(t_object *object, double *world_point);
-double  *ray_position(t_ray r, double t);
-//void    *point_light(double  *intensity, double *position);
-int 	color_to_int(double *color_percent);
-void	lstadd(t_object **lst, t_object *new);
-t_object	*lstlast(t_object *lst);
-t_comps	*prepare_computations(t_intersection *intersection, t_ray ray);
-double	*shade_hit(t_world *world, t_comps *comps);
+//lightshade
+int				color_to_int(double *color_percent);
+void			lstadd(t_object **lst, t_object *new);
+t_object		*lstlast(t_object *lst);
+t_material		*init_material(double *color, double ambient,
+					double specular, double shininess);
 
 //main ch.7 utils
-t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
+t_object		*init_obj(double **transform, t_OBJECT_TYP object_type,
+					t_material *m);
 //implement_camera
-double  	**view_transform(double *from, double *to, double *up);
-t_camera    *camera(double hsize, double vsize, double field_of_view);
-void  		pixel_size(t_camera *c);
-t_ray		*ray_for_pixel(t_camera *c, double px, double py);
+double			**view_transform(double *from, double *to, double *up);
+t_camera		*camera(double hsize, double vsize, double field_of_view);
+void			pixel_size(t_camera *c);
+t_ray			*ray_for_pixel(t_camera *c, double px, double py);
 
 //lightshade
-double  *reflect(double *in, double *w_normal);
-t_ray   transform_ray(t_ray r, double **m);//or simple t_matrix
-double  *multiply_matrix_tuple(double **m, double *t);
-double  *multiply_tuple_tuple(double *t1, double *t2);
-double  *normal_at(t_object *object, double *world_point);
-double  *ray_position(t_ray r, double t);
-//void    *point_light(double  *intensity, double *position);
-int 	color_to_int(double *color_percent);
-void	lstadd(t_object **lst, t_object *new);
-t_object	*lstlast(t_object *lst);
-t_comps	*prepare_computations(t_intersection *intersection, t_ray ray);
-double	*shade_hit(t_world *world, t_comps *comps);
-
-//main ch.7 utils
-t_object	*init_obj(double **transform, t_OBJECT_TYP object_type, t_material *m);
-//implement_camera
-double  	**view_transform(double *from, double *to, double *up);
-t_camera    *camera(double hsize, double vsize, double field_of_view);
-void  		pixel_size(t_camera *c);
-t_ray		*ray_for_pixel(t_camera *c, double px, double py);
-
-//lightshade
-double  *reflect(double *in, double *w_normal);
+double			*reflect(double *in, double *w_normal);
 //construct intersections
 double			*ray_sphere_intersection(double *ray_origin,
 					double *ray_direction, double *sphere_center);
@@ -433,32 +361,24 @@ int				handle_keypress(int keysym, void *param);
 void			terminate(t_data *data, int exit_code, char *error_msg);
 
 // parsing
-int			parse_ambient(char **data, t_world **lst, int i);
-int			parse_camera(char **data, t_world **lst, int id);
-int			parse_light(char **data, t_world **lst, int id);
-int			parse_sphere(char **data, t_world **lst, int id);
-int			parse_plane(char **data, t_world **lst, int id);
-int			parse_cylinder(char **data, t_world **lst, int id);
-t_world		*parse_input(char *input, t_world *scene);
+int				parse_ambient(char **data, t_world **lst, int i);
+int				parse_camera(char **data, t_world **lst, int id);
+int				parse_light(char **data, t_world **lst, int id);
+int				parse_sphere(char **data, t_world **lst, int id);
+int				parse_plane(char **data, t_world **lst, int id);
+int				parse_cylinder(char **data, t_world **lst, int id);
+t_world			*parse_input(char *input, t_world *scene);
 
 // parsing_utils
-int			print_error(int fd, const char *msg);
-int			file_format_error(char *filename);
-double		*str_to_double(char *str, double i);
-double		*str_to_rgb(char *str, double i);
-int			rgb_parse(char *rgb);
-int			is_normal_vec(char *vec_str);
-double		**align_to_vec(char *identifier_2, double **matrix);
-void		print_object_list(t_object *lst);
-void		print_world(t_world *world);
-void		free_world(t_world *scene);
-// parsing
-int			parse_ambient(char **data, t_world **lst, int i);
-int			parse_camera(char **data, t_world **lst, int id);
-int			parse_light(char **data, t_world **lst, int id);
-int			parse_sphere(char **data, t_world **lst, int id);
-int			parse_plane(char **data, t_world **lst, int id);
-int			parse_cylinder(char **data, t_world **lst, int id);
-t_world		*parse_input(char *input, t_world *scene);
+int				print_error(int fd, const char *msg);
+int				file_format_error(char *filename);
+double			*str_to_double(char *str, double i);
+double			*str_to_rgb(char *str, double i);
+int				rgb_parse(char *rgb);
+int				is_normal_vec(char *vec_str);
+double			**align_to_vec(char *identifier_2, double **matrix);
+void			print_object_list(t_object *lst);
+void			print_world(t_world *world);
+void			free_world(t_world *scene);
 
 #endif

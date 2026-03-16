@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 17:33:21 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/09 18:33:15 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/14 13:28:47 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void	terminate(t_data *data, int exit_code, char *error_msg)
 		mlx_destroy_display(data->mlx_ptr);
 		free(data->mlx_ptr);
 	}
+	if (data->scene)
+		free_world(data->scene);
 	if (error_msg)
 		perror(error_msg);
 	exit(exit_code);
@@ -68,7 +70,6 @@ int	ft_minilibx_setup(t_data *data)
 	data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIN_W, WIN_H);
 	data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp,
 			&data->img.line_len, &data->img.endian);
-	//mlx_loop_hook(data->mlx_ptr, &render, data); //use only for animations
 	mlx_hook(data->win_ptr, 17, 0, handle_destroy_notify, data);
 	mlx_hook(data->win_ptr, KeyPress, KeyPressMask, handle_keypress, data);
 	return (0);

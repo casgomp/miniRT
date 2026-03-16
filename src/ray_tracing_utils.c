@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 17:21:43 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 19:28:59 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/13 12:56:11 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ double	*add_tuple(double *tuple_1, double *tuple_2)
 	double	*sum;
 
 	sum = malloc (4 * sizeof(double));
-	if (! sum)
+	if (!sum)
 		return (perror(MALL_ERR), NULL);
+	/* if (!tuple_2[0] || !tuple_1[0])
+		printf("!add_tuple: tuple_2[0] || !tuple_1[0]\n"); */
 	sum[0] = tuple_2[0] + tuple_1[0];
 	sum[1] = tuple_2[1] + tuple_1[1];
 	sum[2] = tuple_2[2] + tuple_1[2];

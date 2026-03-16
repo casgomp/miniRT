@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/13 15:02:30 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/16 19:58:53 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,16 +16,17 @@ NAME = miniRT
 CC = cc
 DFLAG = -g
 
-FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include
-LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
+FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include #-fsanitize=address
+LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz #-fsanitize=address
 SRC_RENDER = $(addprefix src/, main.c \
 						render_loop.c \
+						ray_for_pixel.c \
 						intersections.c \
 						intersect_cylinder_utils.c \
 						intersect_objects.c \
 						implement_camera.c \
-						light.c \
-						shade.c \
+						computations.c \
+						lighting.c \
 						transform_matrix.c \
 						transform_tuple.c \
 						utils_matrix.c \
