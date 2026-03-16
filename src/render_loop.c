@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/16 14:22:53 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:34:27 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,22 +55,11 @@ double	*color_at(t_world *world, t_ray ray)
 	t_intersection	*hit;
 	int				count;
 	double			*colord;
-	//int				i;
 
 	colord = NULL;
 	xs = intersect_world(world, ray, &count);
 	if (!xs)
 		return (BLACK_PIXEL);
-	/* hit = NULL;
-	i = -1;
-	while (++i < count)
-	{
-		if (xs[i].t > 0.0001)
-		{
-			hit = &xs[i];
-			break ;
-		}
-	} */
 	hit = check_if_hit(xs, &count);
 	if (hit)
 		colord = hit_comps_color(world, ray, hit);

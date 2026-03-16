@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/16 14:22:54 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:46:16 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ double			*ray_position(t_ray r, double t);
 t_comps			*prepare_computations(t_intersection *intersection, t_ray ray);
 
 //lighting
-bool			is_shadowed(t_world *world, double *point);
+bool			is_shadowed(t_world *world, double *point, t_light *light);
 double			*shade_hit(t_world *world, t_comps *comps);
 double			*reflect(double *in, double *w_normal);
 double			*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params

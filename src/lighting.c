@@ -6,13 +6,13 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:25:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/16 15:34:53 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:45:38 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
 
-bool	is_shadowed(t_world *world, double *point)
+bool	is_shadowed(t_world *world, double *point, t_light *light)
 {
 	double			*vector;
 	double			distance;
@@ -24,7 +24,8 @@ bool	is_shadowed(t_world *world, double *point)
 	r = malloc(sizeof(t_ray));
 	if (!r)
 		return (NULL);
-	vector = subtract_tuple(world->light->position, point);
+	//vector = subtract_tuple(world->light->position, point);
+	vector = subtract_tuple(light->position, point);
 	distance = get_vector_magnitude(vector);
 	r->ray_origin = point;
 	r->ray_direction = vector;
@@ -49,7 +50,7 @@ double	*shade_hit(t_world *world, t_comps *comps)
 	double	*old_color;
 	t_light	*current_light;
 
-	in_shadow = is_shadowed(world, comps->point);
+	//in_shadow = is_shadowed(world, comps->point);
 	color = NULL;
 	old_color = NULL;
 	if (world->ambient)
@@ -67,6 +68,7 @@ double	*shade_hit(t_world *world, t_comps *comps)
 	current_light = world->light;
 	while (current_light)
 	{
+		in_shadow = is_shadowed(world, comps->point, current_light);
 		tmp = lighting(comps->obj->material, current_light, 
 				comps->point, comps->eyev, comps->normalv, in_shadow);
 		old_color = color;
