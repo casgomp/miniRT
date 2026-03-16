@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 12:56:07 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/16 15:50:52 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static t_camera	*allocate_camera(char **identifier, int id)
 	if (!cam)
 		return (perror(MALL_ERR), NULL);
 	fov_degrees = ft_atof(identifier[3]);
-	cam->field_of_view = fov_degrees * (PI / 180);//must convert to radians because tan function from math library expects radians
+	cam->field_of_view = fov_degrees * (PI / 180);//to radians for tan function
 	cam->id = id;
 	cam->hsize = WIN_W;
 	cam->vsize = WIN_H;

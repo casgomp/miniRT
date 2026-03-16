@@ -6,11 +6,29 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/14 16:09:46 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/16 14:22:53 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+t_intersection	*check_if_hit(t_intersection *xs, int *count)
+{
+	t_intersection	*hit;
+	int				i;
+
+	hit = NULL;
+	i = -1;
+	while (++i < *count)
+	{
+		if (xs[i].t > 0.0001)
+		{
+			hit = &xs[i];
+			break ;
+		}
+	}
+	return (hit);
+}
 
 double	*hit_comps_color(t_world *world, t_ray ray, t_intersection *hit)
 {
@@ -37,13 +55,13 @@ double	*color_at(t_world *world, t_ray ray)
 	t_intersection	*hit;
 	int				count;
 	double			*colord;
-	int				i;
+	//int				i;
 
 	colord = NULL;
 	xs = intersect_world(world, ray, &count);
 	if (!xs)
 		return (BLACK_PIXEL);
-	hit = NULL;
+	/* hit = NULL;
 	i = -1;
 	while (++i < count)
 	{
@@ -52,7 +70,8 @@ double	*color_at(t_world *world, t_ray ray)
 			hit = &xs[i];
 			break ;
 		}
-	}
+	} */
+	hit = check_if_hit(xs, &count);
 	if (hit)
 		colord = hit_comps_color(world, ray, hit);
 	free(xs);

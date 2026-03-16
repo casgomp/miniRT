@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:42:12 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/04 20:40:37 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/16 14:23:01 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,39 @@ void	normalize_vector(t_tuple *vector)
 }
 */
 
-void	normalize_vector(double *vector)
+double	get_vector_magnitude(double *vector)
 {
 	double	magnitude;
 
-	magnitude = sqrt((vector[0] * vector[0]) +
-					(vector[1] * vector[1]) +
-					(vector[2] * vector[2]));
+	magnitude = sqrt((vector[0] * vector[0])
+			+ (vector[1] * vector[1])
+			+ (vector[2] * vector[2]));
+	return (magnitude);
+}
 
-	if (magnitude == 0)
-		return ;
-
+void	apply_normalize_vector(double *vector, double magnitude)
+{
 	vector[0] /= magnitude;
 	vector[1] /= magnitude;
 	vector[2] /= magnitude;
 	vector[3] = 0;
+}
+
+void	normalize_vector(double *vector)
+{
+	double	magnitude;
+
+	/* magnitude = sqrt((vector[0] * vector[0]) +
+					(vector[1] * vector[1]) +
+					(vector[2] * vector[2])); */
+	magnitude = get_vector_magnitude(vector);
+	if (magnitude == 0)
+		return ;
+	apply_normalize_vector(vector, magnitude);
+/* 	vector[0] /= magnitude;
+	vector[1] /= magnitude;
+	vector[2] /= magnitude;
+	vector[3] = 0; */
 }
 /*
 t_tuple	construct_tuple(double x, double y, double z, double w)

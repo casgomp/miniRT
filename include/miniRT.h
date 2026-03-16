@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/15 14:28:33 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/16 14:22:54 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,7 @@ typedef struct s_data
 int				main(int argc, char **argv);
 
 //render_loop
+t_intersection	*check_if_hit(t_intersection *xs, int *count);
 double			*hit_comps_color(t_world *world, 
 					t_ray ray, t_intersection *hit);
 double			*color_at(t_world *world, t_ray ray);
@@ -262,6 +263,7 @@ double			*ray_position(t_ray r, double t);
 t_comps			*prepare_computations(t_intersection *intersection, t_ray ray);
 
 //lighting
+bool			is_shadowed(t_world *world, double *point);
 double			*shade_hit(t_world *world, t_comps *comps);
 double			*reflect(double *in, double *w_normal);
 double			*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
@@ -289,25 +291,26 @@ double			cofactor(double **mtrx, int size, int row, int col);
 double			**identity_mtrx(int size);
 
 //tuples
-t_tuple		construct_tuple(double x, double y, double z, double w);
-//void		normalize_vector(t_tuple *vector);
-void		normalize_vector(double *vector);
-void		free_tuple(t_tuple *tuple);
-double		determinant(double **grid, int size);
-double		*allocate_tuple(double x, double y, double z, double w);
-double		degrees_to_radians(double degrees);
-double		radians_to_degrees(double radians);
-double		**tuple_to_matrix(double *tuple);
-double		*matrix_to_tuple(double **grid);
-double		*rotate_tuple_x(double *tuple, double angle);
-double		*rotate_tuple_y(double *tuple, double angle);
-double		*rotate_tuple_z(double *tuple, double angle);
-double		*scale_tuple(double *tuple);
-double		*translate_tuple(double *tuple);
-double		*cross_product(double *vector_1, double *vector_2);
-double		*add_tuple(double *tuple_1, double *tuple_2);
-double		*subtract_tuple(double *tuple_1, double *tuple_2);
-double		dot_product_tuple(double *tuple_1, double *tuple_2);
+t_tuple			construct_tuple(double x, double y, double z, double w);
+double			get_vector_magnitude(double *vector);
+void			apply_normalize_vector(double *vector, double magnitude);
+void			normalize_vector(double *vector);
+void			free_tuple(t_tuple *tuple);
+double			determinant(double **grid, int size);
+double			*allocate_tuple(double x, double y, double z, double w);
+double			degrees_to_radians(double degrees);
+double			radians_to_degrees(double radians);
+double			**tuple_to_matrix(double *tuple);
+double			*matrix_to_tuple(double **grid);
+double			*rotate_tuple_x(double *tuple, double angle);
+double			*rotate_tuple_y(double *tuple, double angle);
+double			*rotate_tuple_z(double *tuple, double angle);
+double			*scale_tuple(double *tuple);
+double			*translate_tuple(double *tuple);
+double			*cross_product(double *vector_1, double *vector_2);
+double			*add_tuple(double *tuple_1, double *tuple_2);
+double			*subtract_tuple(double *tuple_1, double *tuple_2);
+double			dot_product_tuple(double *tuple_1, double *tuple_2);
 
 /*//test_camera
 t_intersection	*intersection(t_ray r, t_sphere *s);
