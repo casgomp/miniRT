@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/16 20:11:12 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/16 20:22:30 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 # define MLX_ERR "mlx_intialization failure\n"
 # define PI 3.14159265358979323846
 # define ESC 0xff1b
-# define WIN_W 800 //800 is good size
-# define WIN_H 450
+# define WIN_W 200 //800 is good size
+# define WIN_H 100
 # define EPSILON 1e-6
 //# define GREEN_PIXEL 0xFF00
 //# define RED_PIXEL 0xFF0000
@@ -140,7 +140,6 @@ typedef struct s_ray
 {
 	double					*ray_origin;
 	double					*ray_direction;
-	//t_instersection_lst		*intersection_lst;
 }	t_ray;
 
 typedef struct s_light

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/16 19:39:53 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/16 20:51:41 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,23 @@ double	*normal_at(t_object *object, double *world_point)
 	}
 	else if (object->object_type == PLANE)
 		local_normal = allocate_tuple(0, 1, 0, 0);
+
+	if (!local_normal)
+	{
+		free(local_point);
+		return (NULL);
+	}
+
 	transposed_inverse = transpose_grid(object->inverse);
 	world_normal = multiply_matrix_tuple(transposed_inverse, local_normal);
-	world_normal[3] = 0;//must do this little trick (see p.82)
+	if (!world_normal)
+	{
+		free(local_point);
+		free(local_normal);
+		free_grid(transposed_inverse);
+		return (NULL);
+	}
+	world_normal[3] = 0;
 	normalize_vector(world_normal);
 	free(local_point);
 	free(local_normal);

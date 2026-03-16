@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:08:19 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/16 19:34:20 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/16 20:55:33 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,29 @@ t_intersection	*intersection(t_ray r, t_object *objp)
 {
 	t_ray			local_r;
 	t_intersection	*xs;
+	t_intersection	*result;
 
 	local_r = transform_ray(r, objp->inverse);
 	xs = malloc(sizeof(t_intersection) * 2);
 	if (!xs)
 		return (NULL);
+	result = NULL;
 	if (objp->object_type == SPHERE)
-		return (intersection_sphere(xs, objp, local_r.ray_origin
-				, local_r.ray_direction));
+		result = intersection_sphere(xs, objp,
+				local_r.ray_origin, local_r.ray_direction);
 	else if (objp->object_type == PLANE)
-		return (intersection_plane(xs, objp, local_r.ray_origin
-				, local_r.ray_direction));
+		result = intersection_plane(xs, objp,
+				local_r.ray_origin, local_r.ray_direction);
 	else if (objp->object_type == CYLINDER)
-		return (intersection_cylinder(xs, objp, local_r.ray_origin
-				, local_r.ray_direction));
+		result = intersection_cylinder(xs, objp,
+				local_r.ray_origin, local_r.ray_direction);
 	else
-		return (free(xs), NULL);
+	{
+		free(local_r.ray_origin);
+		free(local_r.ray_direction);
+		free(xs);
+	}
+	return (result);
 }
 
 t_intersection	*intersect_list_append(t_intersection *xs,

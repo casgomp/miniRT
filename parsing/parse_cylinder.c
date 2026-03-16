@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 21:07:16 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/16 20:26:23 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static double	**cylinder_transform(char *pos_id,
 {
 	double *pos;
 	double **scale;
+	double **identity_matrix;
 	double **rotate;
 	double **translate;
 	double **tmp;
@@ -55,12 +56,13 @@ static double	**cylinder_transform(char *pos_id,
 	scale[0][0] = ft_atof(radius_id);
 	scale[1][1] = ft_atof(height_id) / 2.0;
 	scale[2][2] = ft_atof(radius_id);
-	rotate = align_to_vec(dir_id, identity_mtrx(4));
+	identity_matrix = identity_mtrx(4);
+	rotate = align_to_vec(dir_id, identity_matrix);
 	translate = translation(pos);
 	tmp = matrix_multiply(rotate, scale);
 	transform = matrix_multiply(translate, tmp);
 	return (free_grid(scale), free_grid(rotate), free_grid(translate)
-		, free_grid(tmp), free(pos), transform);
+		, free_grid(tmp), free_grid(identity_matrix),free(pos), transform);
 }
 
 static t_object	*allocate_cylinder(char **identifier, int id)
