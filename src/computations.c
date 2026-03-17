@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/16 14:22:59 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/17 13:56:49 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ double	*normal_at(t_object *object, double *world_point)
 		local_normal = allocate_tuple(0, 1, 0, 0);
 	transposed_inverse = transpose_grid(object->inverse);
 	world_normal = multiply_matrix_tuple(transposed_inverse, local_normal);
-	world_normal[3] = 0;//must do this little trick (see p.82)
+	world_normal[3] = 0;
 	normalize_vector(world_normal);
 	free(local_point);
 	free(local_normal);
