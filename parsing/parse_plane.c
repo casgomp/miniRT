@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:06:17 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 15:10:33 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 20:51:31 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,29 +70,10 @@ static t_object	*allocate_plane(char **indentifier, int id)
 	obj->object_type = PLANE;
 	obj->object_id = id;
 	obj->rgb = rgb;
-	//obj->material = init_material(rgb, 0.0, 0.0, 0.1);
 	obj->material = init_material(rgb, 0.1, 0.7, 200.0);
 	obj->scale = NULL;
 	obj->next = NULL;
 	return (obj);
-}
-
-static t_object	*append_object_lst(t_world **scene, t_object *new)
-{
-	t_object	*tmp;
-
-	if (!new)
-		return ((*scene)->object);
-	if (!(*scene)->object)
-	{
-		(*scene)->object = new;
-		return ((*scene)->object);
-	}
-	tmp = (*scene)->object;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-	return ((*scene)->object);
 }
 
 int	parse_plane(char **data, t_world **scene, int id)

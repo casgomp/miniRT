@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 18:58:45 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 20:52:22 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static int	cylinder_base(char *data)
 	ft_free_array(&plane_pos);
 	return (1);
 }
-
 
 static double	**orient(char *radius, char *height, char *dir)
 {
@@ -95,24 +94,6 @@ static t_object	*allocate_cylinder(char **identifier, int id)
 		return (NULL);
 	obj->material = init_material(obj->rgb, 0.1, 0.7, 200.0);
 	return (obj);
-}
-
-static t_object	*append_object_lst(t_world **scene, t_object *new)
-{
-	t_object	*tmp;
-
-	if (!new)
-		return ((*scene)->object);
-	if (!(*scene)->object)
-	{
-		(*scene)->object = new;
-		return ((*scene)->object);
-	}
-	tmp = (*scene)->object;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-	return ((*scene)->object);
 }
 
 int	parse_cylinder(char **data, t_world **scene, int id)

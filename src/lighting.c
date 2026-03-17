@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lighting.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:25:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/17 13:56:46 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/17 20:35:53 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ double	*shade_hit(t_world *world, t_comps *comps)
 	old_color = NULL;
 	if (world->ambient)
 	{
-		color = multiply_tuple_tuple(comps->obj->material->color, 
+		color = multiply_tuple_tuple(comps->obj->material->color,
 				world->ambient->rgb);
 		old_color = color;
-		color = multiply_scalar(color, 
+		color = multiply_scalar(color,
 				comps->obj->material->ambient * world->ambient->intensity[0]);
 		free(old_color);
 		old_color = NULL;
@@ -69,7 +69,7 @@ double	*shade_hit(t_world *world, t_comps *comps)
 	while (current_light)
 	{
 		in_shadow = is_shadowed(world, comps->point, current_light);
-		tmp = lighting(comps->obj->material, current_light, 
+		tmp = lighting(comps->obj->material, current_light,
 				comps->point, comps->eyev, comps->normalv, in_shadow);
 		old_color = color;
 		color = add_tuple(color, tmp);
@@ -117,7 +117,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     //effective_color = multiply_tuple_tuple(material->color, light->intensity);
     ambient = multiply_scalar(effective_color, material->ambient);
     if (in_shadow)
-        return(free(effective_color), ambient);//just ambient or ambient light too?
+        return(free(light_color), free(effective_color), ambient);//just ambient or ambient light too?
     negative = allocate_tuple(-1,-1,-1,0);
     lightv = subtract_tuple(light->position, hit_point);
     normalize_vector(lightv);

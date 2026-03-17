@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 20:36:32 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 18:23:14 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 21:26:12 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	is_normal_vec(char *vec_str)
 	magnitude = sqrt(powf(ft_atof(coordinates[0]), 2)
 			+ powf(ft_atof(coordinates[1]), 2)
 			+ powf(ft_atof(coordinates[2]), 2));
-	if (magnitude > 1)
+	if (fabs(magnitude - 1.0) > EPSILON)
 		return (ft_free_array(&coordinates)
 			, print_error(2, "vecotor is not normaliszed\n"));
 	return (ft_free_array(&coordinates), 1);
@@ -67,12 +67,13 @@ int	rgb_parse(char *rgb)
 	return (ft_free_array(&rgb_values), 1);
 }
 
-double	**compute_rotation(double *axis, double angle)
+double	**compute_rotation(double *axis, double angle, double **matrix)
 {
 	double	**m;
 	double	c;
 	double	s;
 	double	t;
+	double	**result;
 
 	normalize_vector(axis);
 	c = cos(angle);
@@ -90,7 +91,8 @@ double	**compute_rotation(double *axis, double angle)
 	m[2][0] = t * axis[0] * axis[2] - s * axis[1];
 	m[2][1] = t * axis[1] * axis[2] + s * axis[0];
 	m[2][2] = t * axis[2] * axis[2] + c;
-	return (m);
+	result = matrix_multiply(matrix, m);
+	return (free_grid(m), result);
 }
 
 double	**align_to_vec(char *identifier_2, double **matrix)
@@ -100,7 +102,6 @@ double	**align_to_vec(char *identifier_2, double **matrix)
 	double		angle;
 	double		*target;
 	double		**rotation_fest;
-	double		**result;
 
 	up = allocate_tuple(0, 1, 0, 0);
 	target = str_to_double(identifier_2, 0);
@@ -110,8 +111,25 @@ double	**align_to_vec(char *identifier_2, double **matrix)
 		return (matrix);
 	axis = cross_product(up, target);
 	angle = acos(dot_product_tuple(up, target));
-	rotation_fest = compute_rotation(axis, angle);
-	result = matrix_multiply(matrix, rotation_fest);
-	return (free_grid(rotation_fest), free(axis)
-		, free(up), free(target), result);
+	rotation_fest = compute_rotation(axis, angle, matrix);
+	return (free(axis), free(up),
+		free(target), rotation_fest);
+}
+
+t_object	*append_object_lst(t_world **scene, t_object *new)
+{
+	t_object	*tmp;
+
+	if (!new)
+		return ((*scene)->object);
+	if (!(*scene)->object)
+	{
+		(*scene)->object = new;
+		return ((*scene)->object);
+	}
+	tmp = (*scene)->object;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return ((*scene)->object);
 }

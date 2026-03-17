@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:52:21 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 15:00:51 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 20:38:33 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static t_light	*allocate_light(char **identifier, int i)
 	if (!light_pos || !rgb)
 		return (NULL);
 	light->id = i;
-	light->intensity = allocate_tuple(ft_atof(identifier[2]), ft_atof(identifier[2]), ft_atof(identifier[2]), 0);
+	light->intensity = allocate_tuple(ft_atof(identifier[2]),
+			ft_atof(identifier[2]), ft_atof(identifier[2]), 0);
 	light->position = light_pos;
 	light->rgb = rgb;
 	light->type = LIGHT;

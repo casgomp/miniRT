@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 19:06:53 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 17:13:18 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 20:51:42 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,24 +87,6 @@ static t_object	*allocate_sphere(char **identifier, int id)
 	obj->object_type = SPHERE;
 	obj->next = NULL;
 	return (obj);
-}
-
-static t_object	*append_object_lst(t_world **scene, t_object *new)
-{
-	t_object	*tmp;
-
-	if (!new)
-		return ((*scene)->object);
-	if (!(*scene)->object)
-	{
-		(*scene)->object = new;
-		return ((*scene)->object);
-	}
-	tmp = (*scene)->object;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-	return ((*scene)->object);
 }
 
 int	parse_sphere(char **data, t_world **scene, int id)

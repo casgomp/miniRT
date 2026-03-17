@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 13:02:40 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 15:11:01 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 20:48:15 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	print_light_lst(t_light *lst)
 		else
 			printf("(null)\n");
 		if (lst->intensity)
-			printf("Brightness: %f, %f, %f\n", lst->intensity[0]
-				, lst->intensity[1], lst->intensity[2]);
+			printf("Brightness: %f, %f, %f\n", lst->intensity[0],
+				lst->intensity[1], lst->intensity[2]);
 		if (lst->position)
 			printf("light position: %f, %f, %f\n", lst->position[0],
 				lst->position[1], lst->position[2]);

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 18:51:18 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 21:01:58 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 # define MLX_ERR "mlx_intialization failure\n"
 # define PI 3.14159265358979323846
 # define ESC 0xff1b
-# define WIN_W 200 //800 is good size
-# define WIN_H 100
+# define WIN_W 1400 //800 is good size
+# define WIN_H 850
 # define EPSILON 1e-6
 //# define GREEN_PIXEL 0xFF00
 //# define RED_PIXEL 0xFF0000
@@ -366,6 +366,7 @@ int				parse_light(char **data, t_world **lst, int id);
 int				parse_sphere(char **data, t_world **lst, int id);
 int				parse_plane(char **data, t_world **lst, int id);
 int				parse_cylinder(char **data, t_world **lst, int id);
+t_object		*append_object_lst(t_world **scene, t_object *new);
 t_world			*parse_input(char *input, t_world *scene);
 
 // parsing_utils

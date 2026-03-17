@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 17:11:30 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 21:36:33 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_world	*parse_input(char *input, t_world *scene)
 	fd = open(input, O_RDONLY);
 	if (fd < 0)
 		return (perror(MALL_ERR), NULL);
-	line = ft_trim_newline(get_next_line(fd));
+	line = get_next_line(fd);
 	while (line)
 	{
 		rd_lines = ft_append_str(rd_lines, line);

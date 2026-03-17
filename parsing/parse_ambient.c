@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 14:05:59 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 17:51:07 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 20:48:40 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ static t_light	*allocate_ambient(char **identifier, int id)
 	ambient->next = NULL;
 	return (ambient);
 }
-
 
 int	parse_ambient(char **data, t_world **scene, int id)
 {
