@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:08:19 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/16 20:55:33 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 15:59:24 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ t_intersection	*intersection(t_ray r, t_object *objp)
 		free(local_r.ray_direction);
 		free(xs);
 	}
+	if (!result)
+		free(xs);
 	return (result);
 }
 
