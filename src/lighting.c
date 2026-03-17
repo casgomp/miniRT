@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:25:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/16 16:45:38 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/17 13:56:46 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ double	*reflect(double *in, double *w_normal)
 
 double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow)//can only take 4 params
 {
+	double	*light_color;
     double  *effective_color;
     double  *lightv;
     double  *negative;
@@ -111,7 +112,9 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
 
     reflectv = NULL;
     lightv_neg = NULL;
-    effective_color = multiply_tuple_tuple(material->color, light->intensity);
+	light_color = multiply_scalar(light->rgb, light->intensity[0]);
+	effective_color = multiply_tuple_tuple(material->color, light_color);
+    //effective_color = multiply_tuple_tuple(material->color, light->intensity);
     ambient = multiply_scalar(effective_color, material->ambient);
     if (in_shadow)
         return(free(effective_color), ambient);//just ambient or ambient light too?
@@ -140,6 +143,7 @@ double  *lighting(t_material *material, t_light *light, double *hit_point, doubl
     }
     tmp = add_tuple(ambient,diffuse);
     result = add_tuple(tmp, specular);
+	free(light_color);
     free(effective_color);
     free(ambient);
     free(lightv);

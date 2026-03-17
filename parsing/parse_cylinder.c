@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:26:02 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/16 20:26:23 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 18:58:45 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,43 @@ static int	cylinder_base(char *data)
 	return (1);
 }
 
+
+static double	**orient(char *radius, char *height, char *dir)
+{
+	double	**scale;
+	double	**identity_matrix;
+	double	**rotate;
+	double	**scale_rotate;
+
+	scale = identity_mtrx(4);
+	scale[0][0] = ft_atof(radius) / 2;
+	scale[1][1] = ft_atof(height) / 2.0;
+	scale[2][2] = ft_atof(radius) / 2;
+	identity_matrix = identity_mtrx(4);
+	rotate = align_to_vec(dir, identity_matrix);
+	scale_rotate = matrix_multiply(rotate, scale);
+	return (free_grid(rotate), free_grid(scale)
+		, free_grid(identity_matrix), scale_rotate);
+}
+
 static double	**cylinder_transform(char *pos_id,
 								char *dir_id,
 								char *radius_id,
 								char *height_id)
 {
-	double *pos;
-	double **scale;
-	double **identity_matrix;
-	double **rotate;
-	double **translate;
-	double **tmp;
-	double **transform;
+	double	*pos;
+	double	**scale_rotate;
+	double	**translate;
+	double	**transform;
 
 	pos = str_to_double(pos_id, 1);
 	if (!pos)
 		return (NULL);
-	scale = identity_mtrx(4);
-	scale[0][0] = ft_atof(radius_id);
-	scale[1][1] = ft_atof(height_id) / 2.0;
-	scale[2][2] = ft_atof(radius_id);
-	identity_matrix = identity_mtrx(4);
-	rotate = align_to_vec(dir_id, identity_matrix);
+	scale_rotate = orient(radius_id, height_id, dir_id);
 	translate = translation(pos);
-	tmp = matrix_multiply(rotate, scale);
-	transform = matrix_multiply(translate, tmp);
-	return (free_grid(scale), free_grid(rotate), free_grid(translate)
-		, free_grid(tmp), free_grid(identity_matrix),free(pos), transform);
+	transform = matrix_multiply(translate, scale_rotate);
+	return (free_grid(scale_rotate), free_grid(translate)
+		, free(pos), transform);
 }
 
 static t_object	*allocate_cylinder(char **identifier, int id)

@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 19:06:53 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/16 18:36:01 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 17:13:18 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ static double	**transform_sphere(char *identifier_1, char *identifier_2)
 	raduis = malloc(4 * sizeof(double));
 	if (!sphere_center || ! raduis)
 		return (NULL);
-	raduis[0] = ft_atof(identifier_2);
-	raduis[1] = ft_atof(identifier_2);
-	raduis[2] = ft_atof(identifier_2);
+	raduis[0] = ft_atof(identifier_2) / 2;
+	raduis[1] = ft_atof(identifier_2) / 2;
+	raduis[2] = ft_atof(identifier_2) / 2;
 	raduis[3] = 1;
 	translate = translation(sphere_center);
 	scale = scaling(raduis);

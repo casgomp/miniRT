@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/17 16:01:56 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/17 18:23:36 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ NAME = miniRT
 CC = cc
 DFLAG = -g
 
-FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include #-fsanitize=address
-LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz #-fsanitize=address
+FLAG = -Wall -Wextra -Werror -I./lib/Libft_all -I./minilibx-linux -I./include
+LFLAG = -L./lib/Libft_all -lft -L./minilibx-linux -lmlx -lX11 -lXext -lm -lz
 SRC_RENDER = $(addprefix src/, main.c \
 						render_loop.c \
 						ray_for_pixel.c \
