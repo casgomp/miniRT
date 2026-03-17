@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 21:36:33 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 22:56:40 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,30 +42,58 @@ static int	identifier_check(char *identifier_line, t_world **scene, int id)
 	return (res);
 }
 
-t_world	*parse_input(char *input, t_world *scene)
+static int	is_empty_line(char *s)
 {
-	char		**rd_lines;
-	char		*line;
-	int			fd;
-	int			i;
+	int	i;
 
-	rd_lines = NULL;
-	fd = open(input, O_RDONLY);
+	i = 0;
+	while (s[i])
+	{
+		if (!ft_isspace(s[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static char	**read_lines(const char *filename)
+{
+	char	**lines;
+	char	*line;
+	int		fd;
+
+	lines = NULL;
+	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		return (perror(MALL_ERR), NULL);
 	line = get_next_line(fd);
 	while (line)
 	{
-		rd_lines = ft_append_str(rd_lines, line);
-		line = ft_trim_newline(get_next_line(fd));
+		ft_trim_newline(line);
+		if (!is_empty_line(line))
+			lines = ft_append_str(lines, line);
+		else
+			free(line);
+		line = get_next_line(fd);
 	}
+	close(fd);
+	return (lines);
+}
+
+t_world	*parse_input(char *input, t_world *scene)
+{
+	char	**lines;
+	int		i;
+
+	lines = read_lines(input);
+	if (!lines)
+		return (NULL);
 	i = 0;
-	while (rd_lines && rd_lines[i])
+	while (lines[i])
 	{
-		if (!identifier_check(rd_lines[i], &scene, i))
-			return (ft_free_array(&rd_lines)
-				, close(fd), free(line), NULL);
-		i ++;
+		if (!identifier_check(lines[i], &scene, i))
+			return (ft_free_array(&lines), NULL);
+		i++;
 	}
-	return (close(fd), ft_free_array(&rd_lines), scene);
+	return (ft_free_array(&lines), scene);
 }
