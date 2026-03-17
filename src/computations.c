@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/17 16:17:28 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/17 16:36:06 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 {
 	t_comps			*comps;
 	double			*negative;
+	double			*tmp;
 
 	comps = malloc(sizeof(t_comps));
 	if (!comps)
@@ -90,7 +91,9 @@ t_comps	*prepare_computations(t_intersection *intersection, t_ray ray)
 	if (dot_product_tuple(comps->normalv, comps->eyev) < 0)
 	{
 		comps->inside = true;
-		comps->normalv = multiply_tuple_tuple(comps->normalv, negative);
+		tmp = multiply_tuple_tuple(comps->normalv, negative);
+		free(comps->normalv);
+		comps->normalv = tmp;
 	}
 	else
 		comps->inside = false;
