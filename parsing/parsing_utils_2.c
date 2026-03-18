@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 20:36:32 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 21:51:24 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 19:54:56 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,29 @@ int	is_normal_vec(char *vec_str)
 {
 	char	**coordinates;
 	double	magnitude;
+	double	*vector;
 	int		i;
 
 	i = 0;
 	coordinates = ft_split(vec_str, ',');
-	if (!coordinates)
+	vector = str_to_double(vec_str, 0);
+	if (!coordinates || !vector)
 		return (perror(MALL_ERR), 0);
 	if (ft_lst_strsize(coordinates) != 3)
-		return (print_error(2, "vec dir misconfigured ex: <0.0, 0.0, 1.0>\n"));
+		return (ft_free_array(&coordinates),
+			print_error(2, "vec dir misconfigured ex: <0.0, 0.0, 1.0>\n"));
 	while (coordinates[i])
 	{
-		if (ft_isnumber(coordinates[i]))
-			i ++;
-		else
+		if (!ft_isnumber(coordinates[i]))
 			return (ft_free_array(&coordinates),
-				print_error(2, "vector vlaue is not a number""\n"));
+				print_error(2, "vector value is not a number\n"));
+		i++;
 	}
-	magnitude = sqrt(powf(ft_atof(coordinates[0]), 2)
-			+ powf(ft_atof(coordinates[1]), 2)
-			+ powf(ft_atof(coordinates[2]), 2));
+	magnitude = get_vector_magnitude(vector);
 	if (fabs(magnitude - 1.0) > EPSILON)
-		return (ft_free_array(&coordinates)
-			, print_error(2, "vecotor is not normaliszed\n"));
-	return (ft_free_array(&coordinates), 1);
+		return (ft_free_array(&coordinates), free(vector),
+			print_error(2, "vector is not normalized\n"));
+	return (ft_free_array(&coordinates), free(vector), 1);
 }
 
 int	rgb_parse(char *rgb)
@@ -53,7 +53,7 @@ int	rgb_parse(char *rgb)
 		return (perror(MALL_ERR), 0);
 	err_msg = "RGB format misconfigured ex: ""255,255,255""\n";
 	if (ft_lst_strsize(rgb_values) != 3)
-		return (print_error(2, err_msg));
+		return (ft_free_array(&rgb_values), print_error(2, err_msg));
 	while (rgb_values[i])
 	{
 		if (!ft_isnumber(rgb_values[i]))

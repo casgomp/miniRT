@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:31 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 12:56:09 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/18 19:29:23 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,21 @@ double	*str_to_rgb(char *str, double i)
 	coordinates[3] = i;
 	ft_free_array(&str_coordinates);
 	return (coordinates);
+}
+
+int	missing_component_check(t_world *scene)
+{
+	if (!scene->ambient)
+		return (print_error(2, "missing ambient light\n"), 1);
+	if (!scene->camera)
+		return (print_error (2, "missing camera\n"), 1);
+	if (!scene->light)
+		return (print_error(2, "missing light\n"), 1);
+	if (!scene->object)
+		return (print_error(2, "missing objects\n"), 1);
+	if (scene->ambient->next)
+		return (print_error(2, "repeated ambient\n"), 1);
+	if (scene->camera->next)
+		return (print_error(2, "repeated camera\n"), 1);
+	return (0);
 }

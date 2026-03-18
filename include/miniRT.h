@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 22:16:38 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:19:11 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@
 # define MLX_ERR "mlx_intialization failure\n"
 # define PI 3.14159265358979323846
 # define ESC 0xff1b
-# define WIN_W 200 //800 is good size
-# define WIN_H 200
-# define EPSILON 1e-6
+# define WIN_W 1440 //800 is good size
+# define WIN_H 900
+# define EPSILON 1e-5
 //# define GREEN_PIXEL 0xFF00
 //# define RED_PIXEL 0xFF0000
 # define BLACK_PIXEL 0X000
@@ -372,6 +372,7 @@ t_world			*parse_input(char *input, t_world *scene);
 // parsing_utils
 int				print_error(int fd, const char *msg);
 int				file_format_error(char *filename);
+int				missing_component_check(t_world *scene);
 double			*str_to_double(char *str, double i);
 double			*str_to_rgb(char *str, double i);
 int				rgb_parse(char *rgb);

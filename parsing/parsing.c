@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:04:36 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 22:56:40 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 19:24:08 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	**read_lines(const char *filename)
 	lines = NULL;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		return (perror(MALL_ERR), NULL);
+		return (perror("Error\n"), NULL);
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -77,6 +77,8 @@ static char	**read_lines(const char *filename)
 		line = get_next_line(fd);
 	}
 	close(fd);
+	if (!lines)
+		return (print_error(2, "empty file\n"), NULL);
 	return (lines);
 }
 
@@ -87,13 +89,15 @@ t_world	*parse_input(char *input, t_world *scene)
 
 	lines = read_lines(input);
 	if (!lines)
-		return (NULL);
+		return (free_world(scene), NULL);
 	i = 0;
 	while (lines[i])
 	{
 		if (!identifier_check(lines[i], &scene, i))
-			return (ft_free_array(&lines), NULL);
+			return (ft_free_array(&lines), free_world(scene), NULL);
 		i++;
 	}
+	if (missing_component_check(scene))
+		return (ft_free_array(&lines), free_world(scene), NULL);
 	return (ft_free_array(&lines), scene);
 }

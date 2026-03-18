@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 19:20:33 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 16:46:46 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 19:19:32 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ int	main(int argc, char **argv)
 	scene = ft_calloc(1, sizeof(t_world));
 	if (!scene)
 		return (1);
-	scene = parse_input(argv[1], scene);
-	if (!scene)
+	if (!parse_input(argv[1], scene))
 		return (1);
 	if (ft_minilibx_setup(&data))
 		return (perror("minilibx_setup"), 1);

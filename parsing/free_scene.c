@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 12:59:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/16 18:26:51 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 19:17:08 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,12 @@ static void	free_cam_list(t_camera *lst)
 
 void	free_world(t_world *scene)
 {
+	if (!scene)
+		return ;
 	free_cam_list(scene->camera);
 	free_light_list(scene->light);
 	free_light_list(scene->ambient);
 	free_object_list(scene->object);
 	free(scene);
+	scene = NULL;
 }

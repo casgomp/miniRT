@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 14:05:59 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 20:48:40 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 19:42:18 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,30 @@ static t_light	*allocate_ambient(char **identifier, int id)
 	return (ambient);
 }
 
+static t_light	*append_ambient_lst(t_world **scene, t_light *new)
+{
+	t_light	*tmp;
+
+	if (!new)
+		return ((*scene)->ambient);
+	if (!(*scene)->ambient)
+	{
+		(*scene)->ambient = new;
+		return ((*scene)->ambient);
+	}
+	tmp = (*scene)->ambient;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return ((*scene)->ambient);
+}
+
 int	parse_ambient(char **data, t_world **scene, int id)
 {
 	double		value;
 	char		*err_msg_1;
 	char		*err_msg_2;
+	t_light		*new;
 
 	err_msg_1 = "ambient light value out of range ""0 <= vlaue <= 1"" \n";
 	err_msg_2 = "ambient light prams misconfigured <intensity> <RGB vlaue>\n";
@@ -48,6 +67,7 @@ int	parse_ambient(char **data, t_world **scene, int id)
 		return (print_error(2, err_msg_1));
 	if (!rgb_parse(data[2]))
 		return (0);
-	(*scene)->ambient = allocate_ambient(data, id);
+	new = allocate_ambient(data, id);
+	(*scene)->ambient = append_ambient_lst(scene, new);
 	return (1);
 }

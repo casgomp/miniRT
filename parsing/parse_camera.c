@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 18:48:07 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/16 18:34:28 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:17:40 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ static double	**transform_cam(char *identifier_1, char *identifier_2)
 	from = str_to_double(identifier_1, 1);
 	dir = str_to_double(identifier_2, 1);
 	up = allocate_tuple(0, 1, 0, 0);
+	if (fabs(dir[0]) < EPSILON
+		&& fabs(fabs(dir[1]) - 1.0) < EPSILON
+		&& fabs(dir[2]) < EPSILON)
+	{
+		free(up);
+		up = allocate_tuple(0, 0, 1, 0);
+	}
 	to = add_tuple(from, dir);
 	transform = view_transform(from, to, up);
 	return (free(from), free(dir), free(up), free(to), transform);
