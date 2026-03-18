@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 20:06:17 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 20:51:31 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/18 21:00:07 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static t_object	*allocate_plane(char **indentifier, int id)
 	obj->object_type = PLANE;
 	obj->object_id = id;
 	obj->rgb = rgb;
-	obj->material = init_material(rgb, 0.1, 0.7, 200.0);
+	obj->material = init_material(rgb, 0.1, 0.0, 200.0);
 	obj->scale = NULL;
 	obj->next = NULL;
 	return (obj);
