@@ -8,6 +8,8 @@ miniRT implements the fundamental concepts of ray tracing, including object tran
 
 This project serves as an introduction to rendering techniques and demonstrates how mathematical and physical principles can be applied to generate visually coherent 3D scenes.
 
+![tree scene](example_scenes/tree.png)
+
 # Instructions
 ### Compilation
 The project is compiled using the provided Makefile. The rules are:
