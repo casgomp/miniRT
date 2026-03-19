@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   construct_matrix.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 15:21:48 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/07 14:53:57 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:11:25 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ double	**duplicate_grid(double **grid)
 	double	**duplicate_grid;
 
 	i = 0;
-	//size = grid_size(grid);
 	size = 4;
 	duplicate_grid = allocate_grid(size);
 	if (!duplicate_grid)
@@ -60,7 +59,6 @@ double	**transpose_grid(double **tmtrx)
 	double	**dup_matrix;
 
 	i = 0;
-	//size = grid_size(tmtrx);//grid size might cause SIGSEV?
 	size = 4;
 	dup_matrix = duplicate_grid(tmtrx);
 	if (!dup_matrix)

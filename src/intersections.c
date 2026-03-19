@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:08:19 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/17 15:59:24 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:09:00 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,6 @@ t_intersection	*intersection(t_ray r, t_object *objp)
 	else if (objp->object_type == CYLINDER)
 		result = intersection_cylinder(xs, objp,
 				local_r.ray_origin, local_r.ray_direction);
-	else
-	{
-		free(local_r.ray_origin);
-		free(local_r.ray_direction);
-		free(xs);
-	}
 	if (!result)
 		free(xs);
 	return (result);

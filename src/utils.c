@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 17:52:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/16 19:52:03 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:30:32 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	grid_cpy(double **dst, double src[100][100], int size)
 {
-	int i = 0;
-	int j = 0;
+	int	i;
+	int	j;
 
+	i = 0;
+	j = 0;
 	while (i < size)
 	{
 		j = 0;
@@ -29,70 +31,66 @@ void	grid_cpy(double **dst, double src[100][100], int size)
 	}
 }
 
-//utils tuple
-double  *multiply_matrix_tuple(double **m, double *t)
+double	*multiply_matrix_tuple(double **m, double *t)
 {
-    double  *res;
-    int     i;
-    static int b = 1;
+	double		*res;
+	int			i;
+	static int	b = 1;
 
-    res = malloc(sizeof(double) * 4);
-    if (!res)
-        return (NULL);
-    i = -1;
-    while (++i < 4)
-    {
-        res[i] = (m[i][0] * t[0]) +
-                 (m[i][1] * t[1]) +
-                 (m[i][2] * t[2]) +
-                 (m[i][3] * t[3]);
-    }
-    b ++;
-    return (res);
+	res = malloc(sizeof(double) * 4);
+	if (!res)
+		return (NULL);
+	i = -1;
+	while (++i < 4)
+	{
+		res[i] = (m[i][0] * t[0])
+			+ (m[i][1] * t[1])
+			+ (m[i][2] * t[2])
+			+ (m[i][3] * t[3]);
+	}
+	b ++;
+	return (res);
 }
 
-double  *multiply_tuple_tuple(double *t1, double *t2)
+double	*multiply_tuple_tuple(double *t1, double *t2)
 {
-    double  *new;
-    int     i;
+	double		*new;
+	int			i;
 
-    new = ft_calloc(4, sizeof(double));
-    if (!new)
-        return (NULL);
-    i = -1;
-    while (++i < 4)
-        new[i] = t1[i] * t2[i];
-    return (new);
+	new = ft_calloc(4, sizeof(double));
+	if (!new)
+		return (NULL);
+	i = -1;
+	while (++i < 4)
+		new[i] = t1[i] * t2[i];
+	return (new);
 }
 
-int color_to_int(double *color_percent)
+int	color_to_int(double *color_percent)
 {
-    int rgb;
-    int i;
-    int color;
+	int		rgb;
+	int		i;
+	int		color;
 
-    if (!color_percent)
-        return (0);
-    //store individual colors in standard 255 value range and correct when overflow.
-    //use OR to put all rgb bits into color
-    rgb = 0;
-    color = 0;
-    i = -1;
-    while (++i < 3)
-    {
-        rgb = color_percent[i] * 255.99;
-        if (rgb > 255)
-            rgb = 255;
-        else if (rgb < 0)
-            rgb = 0;
-        if (i < 2)
-            rgb <<= (2 - i) * 8;
-        color |= rgb;
-    }
-    return (color);
+	if (!color_percent)
+		return (0);
+	rgb = 0;
+	color = 0;
+	i = -1;
+	while (++i < 3)
+	{
+		rgb = color_percent[i] * 255.99;
+		if (rgb > 255)
+			rgb = 255;
+		else if (rgb < 0)
+			rgb = 0;
+		if (i < 2)
+			rgb <<= (2 - i) * 8;
+		color |= rgb;
+	}
+	return (color);
 }
 
-//create list utils
 void	lstadd(t_object **lst, t_object *new)
 {
 	t_object	*last;
@@ -120,7 +118,8 @@ t_object	*lstlast(t_object *lst)
 	return (tmp);
 }
 
-t_material	*init_material(double *color, double ambient, double specular, double shininess)//temporary util to initialize material (eventually done in parsing)
+t_material	*init_material(double *color, double ambient
+		, double specular, double shininess)
 {
 	t_material	*m;
 

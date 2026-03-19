@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_tracing_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 17:21:43 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 12:56:11 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:38:16 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ double	*add_tuple(double *tuple_1, double *tuple_2)
 	sum = malloc (4 * sizeof(double));
 	if (!sum)
 		return (perror(MALL_ERR), NULL);
-	/* if (!tuple_2[0] || !tuple_1[0])
-		printf("!add_tuple: tuple_2[0] || !tuple_1[0]\n"); */
 	sum[0] = tuple_2[0] + tuple_1[0];
 	sum[1] = tuple_2[1] + tuple_1[1];
 	sum[2] = tuple_2[2] + tuple_1[2];
@@ -53,5 +51,19 @@ double	dot_product_tuple(double *tuple_1, double *tuple_2)
 		+ tuple_2[2] * tuple_1[2]
 		+ tuple_2[3] * tuple_1[3];
 
+	return (result);
+}
+
+double	*multiply_scalar(double *tuple, double scalar)
+{
+	double	*result;
+
+	result = allocate_tuple(0, 0, 0, 0);
+	if (!result)
+		return (NULL);
+	result[0] = tuple[0] * scalar;
+	result[1] = tuple[1] * scalar;
+	result[2] = tuple[2] * scalar;
+	result[3] = 0;
 	return (result);
 }

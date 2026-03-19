@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_swap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 11:11:51 by pecastro          #+#    #+#             */
-/*   Updated: 2026/02/16 11:13:10 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:34:04 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,3 @@ void	ft_swap(double *a, double *b)
 	*a = *b;
 	*b = tmp;
 }
-

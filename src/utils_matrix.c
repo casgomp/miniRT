@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_matrix.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 17:16:55 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/13 13:19:57 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:19:54 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ double	**allocate_grid(int size)
 	return (grid);
 }
 
-//this function assumes a grid with NULL terminated rows.
-//Might cause SIGSEV when used
 int	grid_size(double **grid)
 {
 	int		rows;

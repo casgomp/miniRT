@@ -6,7 +6,7 @@
 /*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 18:17:54 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/05 18:18:30 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 10:34:10 by aabdella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_free_double(double **arr, int rows)
 	int	i;
 
 	if (!arr)
-		return;
+		return ;
 	i = 0;
 	while (i < rows)
 	{

@@ -6,7 +6,7 @@
 #    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/17 18:23:36 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/19 10:16:39 by aabdella         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,6 @@ SRC_RENDER = $(addprefix src/, main.c \
 						construct_matrix.c \
 						construct_tuples.c \
 						inversion_matrix.c \
-						line_line_intersection.c \
-						ray_sphere_intersection.c \
 						ray_tracing_utils.c\
 						utils.c \
 						cleanup.c \
