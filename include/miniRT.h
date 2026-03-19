@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 18:33:44 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/19 10:32:46 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:45:17 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,8 @@ typedef struct s_data
 int				main(int argc, char **argv);
 
 //render_loop
+bool			check_if_hit_tval(t_world *world, t_ray *r, 
+					int *count, double distance);
 t_intersection	*check_if_hit(t_intersection *xs, int *count);
 double			*hit_comps_color(t_world *world,
 					t_ray ray, t_intersection *hit);
@@ -242,10 +244,20 @@ double			*ray_position(t_ray r, double t);
 t_comps			*prepare_computations(t_intersection *intersection, t_ray ray);
 
 //lighting
+double			*get_ambient_color(t_world *world, t_comps *comps);
 bool			is_shadowed(t_world *world, double *point, t_light *light);
 double			*shade_hit(t_world *world, t_comps *comps);
 double			*reflect(double *in, double *w_normal);
-double			*lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow);//can only take 4 params
+double			*lighting(t_comps *comps, t_light *light, bool in_shadow);
+
+//lighting2.c
+double			*get_effective_color(t_light *light, t_comps *comps);
+double			*get_ambient(double *effective_color, t_comps *comps);
+double			*get_result_color(double *diffuse, double *specular, 
+					double *effective_color, t_comps *comps);
+void			find_specular(t_light *light, t_comps *comps, 
+					double *lightv, double **specular);
+void			zeroed_diffuse_specular(double	**diffuse, double **specular);
 
 //matrix utils
 void			print_grid(double **grid);
@@ -260,6 +272,7 @@ double			**rotation_y(double r);
 double			**rotation_z(double r);
 double			**scaling(double *coord);
 double			**translation(double *coord);
+void			grid_cpy(double **dst, double src[100][100], int size);
 
 //construct matrix
 double			**inverse(double **grid, int size);

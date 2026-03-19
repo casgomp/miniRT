@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+         #
+#    By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/02 18:51:43 by aabdella          #+#    #+#              #
-#    Updated: 2026/03/19 10:16:39 by aabdella         ###   ########.fr        #
+#    Updated: 2026/03/19 15:43:09 by pecastro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC_RENDER = $(addprefix src/, main.c \
 						implement_camera.c \
 						computations.c \
 						lighting.c \
+						lighting2.c \
 						transform_matrix.c \
 						transform_tuple.c \
 						utils_matrix.c \
@@ -36,6 +37,7 @@ SRC_RENDER = $(addprefix src/, main.c \
 						inversion_matrix.c \
 						ray_tracing_utils.c\
 						utils.c \
+						utils2.c \
 						cleanup.c \
 						minilibx.c)
 SRC_PARSING = $(addprefix parsing/, parsing.c \

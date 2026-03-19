@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_tracing_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 17:21:43 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/19 10:38:16 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:42:00 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ double	dot_product_tuple(double *tuple_1, double *tuple_2)
 		+ tuple_2[1] * tuple_1[1]
 		+ tuple_2[2] * tuple_1[2]
 		+ tuple_2[3] * tuple_1[3];
-
 	return (result);
 }
 

@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   lighting.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 18:25:57 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/17 20:35:53 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 14:50:43 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+double	*get_ambient_color(t_world *world, t_comps *comps)
+{
+	double	*color;
+	double	*old_color;
+
+	color = multiply_tuple_tuple(comps->obj->material->color,
+			world->ambient->rgb);
+	old_color = color;
+	color = multiply_scalar(color,
+			comps->obj->material->ambient * world->ambient->intensity[0]);
+	free(old_color);
+	return (color);
+}
 
 bool	is_shadowed(t_world *world, double *point, t_light *light)
 {
@@ -18,28 +32,17 @@ bool	is_shadowed(t_world *world, double *point, t_light *light)
 	double			distance;
 	int				count;
 	t_ray			*r;
-	t_intersection	*xs;
-	t_intersection	*hit;
 
 	r = malloc(sizeof(t_ray));
 	if (!r)
 		return (NULL);
-	//vector = subtract_tuple(world->light->position, point);
 	vector = subtract_tuple(light->position, point);
 	distance = get_vector_magnitude(vector);
 	r->ray_origin = point;
 	r->ray_direction = vector;
 	vector = NULL;
 	normalize_vector(r->ray_direction);
-	//create new function for this next part xs and hit are now in other function:
-	xs = intersect_world(world, *r, &count);
-	hit = check_if_hit(xs, &count);
-	free(r->ray_direction);
-	free(r);
-	if (hit && hit->t < distance)
-		return (free(xs), true);
-	else
-		return (free(xs), false);
+	return (check_if_hit_tval(world, r, &count, distance));
 }
 
 double	*shade_hit(t_world *world, t_comps *comps)
@@ -50,27 +53,17 @@ double	*shade_hit(t_world *world, t_comps *comps)
 	double	*old_color;
 	t_light	*current_light;
 
-	//in_shadow = is_shadowed(world, comps->point);
 	color = NULL;
 	old_color = NULL;
 	if (world->ambient)
-	{
-		color = multiply_tuple_tuple(comps->obj->material->color,
-				world->ambient->rgb);
-		old_color = color;
-		color = multiply_scalar(color,
-				comps->obj->material->ambient * world->ambient->intensity[0]);
-		free(old_color);
-		old_color = NULL;
-	}
+		color = get_ambient_color(world, comps);
 	else
 		color = allocate_tuple(0, 0, 0, 0);
 	current_light = world->light;
 	while (current_light)
 	{
 		in_shadow = is_shadowed(world, comps->point, current_light);
-		tmp = lighting(comps->obj->material, current_light,
-				comps->point, comps->eyev, comps->normalv, in_shadow);
+		tmp = lighting(comps, current_light, in_shadow);
 		old_color = color;
 		color = add_tuple(color, tmp);
 		free(old_color);
@@ -93,65 +86,30 @@ double	*reflect(double *in, double *w_normal)
 	return (reflectv);
 }
 
-double  *lighting(t_material *material, t_light *light, double *hit_point, double *eyev, double *normalv, bool in_shadow)//can only take 4 params
+double	*lighting(t_comps *comps, t_light *light, bool in_shadow)
 {
-	double	*light_color;
-    double  *effective_color;
-    double  *lightv;
-    double  *negative;
-    double  *lightv_neg;
-    double  *ambient;
-    double  *diffuse;
-    double  *specular;
-    double  light_dot_normal;
-    double  *reflectv;
-    double  reflect_dot_eye;
-    double  factor;
-    double  *tmp;
-    double  *result;
+	double	*effective_color;
+	double	*lightv;
+	double	*diffuse;
+	double	*specular;
+	double	light_dot_normal;
 
-    reflectv = NULL;
-    lightv_neg = NULL;
-	light_color = multiply_scalar(light->rgb, light->intensity[0]);
-	effective_color = multiply_tuple_tuple(material->color, light_color);
-    //effective_color = multiply_tuple_tuple(material->color, light->intensity);
-    ambient = multiply_scalar(effective_color, material->ambient);
-    if (in_shadow)
-        return(free(light_color), free(effective_color), ambient);//just ambient or ambient light too?
-    negative = allocate_tuple(-1,-1,-1,0);
-    lightv = subtract_tuple(light->position, hit_point);
-    normalize_vector(lightv);
-    light_dot_normal = dot_product_tuple(lightv, normalv);
-    if (light_dot_normal < 0)
-    {
-        diffuse = allocate_tuple(0,0,0,0);
-        specular = allocate_tuple(0,0,0,0);
-    }
-    else
-    {
-        diffuse = multiply_scalar(effective_color, material->diffuse * light_dot_normal);
-        lightv_neg = multiply_tuple_tuple(lightv, negative);
-        reflectv = reflect(lightv_neg, normalv);
-        reflect_dot_eye = dot_product_tuple(reflectv, eyev);
-        if (reflect_dot_eye <= 0)
-            specular = allocate_tuple(0,0,0,0);
-        else
-        {
-            factor = pow(reflect_dot_eye, material->shininess);
-            specular = multiply_scalar(light->intensity, material->specular * factor);
-        }
-    }
-    tmp = add_tuple(ambient,diffuse);
-    result = add_tuple(tmp, specular);
-	free(light_color);
-    free(effective_color);
-    free(ambient);
-    free(lightv);
-    free(negative);
-    free(lightv_neg);
-    free(reflectv);
-    free(diffuse);
-    free(tmp);
-    free(specular);
-    return (result);
+	diffuse = NULL;
+	specular = NULL;
+	effective_color = get_effective_color(light, comps);
+	if (in_shadow)
+		return (get_ambient(effective_color, comps));
+	lightv = subtract_tuple(light->position, comps->point);
+	normalize_vector(lightv);
+	light_dot_normal = dot_product_tuple(lightv, comps->normalv);
+	if (light_dot_normal < 0)
+		zeroed_diffuse_specular(&diffuse, &specular);
+	else
+	{
+		diffuse = multiply_scalar(effective_color, 
+				comps->obj->material->diffuse * light_dot_normal);
+		find_specular(light, comps, lightv, &specular);
+	}
+	return (free(lightv), 
+		get_result_color(diffuse, specular, effective_color, comps));
 }

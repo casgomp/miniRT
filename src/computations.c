@@ -3,14 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   computations.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 17:21:06 by pecastro          #+#    #+#             */
-/*   Updated: 2026/03/17 16:45:56 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:46:12 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+double	*compute_local_normal(t_object *object, double *local_pnt)
+{
+	double		*local_normal;
+	double		dist;
+
+	local_normal = NULL;
+	if (object->object_type == SPHERE)
+		local_normal = allocate_tuple(local_pnt[0], local_pnt[1],
+				local_pnt[2], 0);
+	else if (object->object_type == CYLINDER)
+	{
+		dist = local_pnt[0] * local_pnt[0] + local_pnt[2] * local_pnt[2];
+		if ((dist < 1.0)
+			&& (local_pnt[1] >= (object->scale[1] / 2.0 - EPSILON)))
+			local_normal = allocate_tuple(0, 1, 0, 0);
+		else if ((dist < 1.0)
+			&& (local_pnt[1] <= (-object->scale[1] / 2.0 + EPSILON)))
+			local_normal = allocate_tuple(0, -1, 0, 0);
+		else
+			local_normal = allocate_tuple(local_pnt[0], 0, local_pnt[2], 0);
+	}
+	else if (object->object_type == PLANE)
+		local_normal = allocate_tuple(0, 1, 0, 0);
+	return (local_normal);
+}
 
 double	*normal_at(t_object *object, double *world_point)
 {
@@ -20,46 +46,22 @@ double	*normal_at(t_object *object, double *world_point)
 	double	*world_normal;
 
 	local_point = multiply_matrix_tuple(object->inverse, world_point);
-	local_normal = NULL;
-	if (object->object_type == SPHERE)
-		local_normal = allocate_tuple(local_point[0],
-				local_point[1], local_point[2], 0);
-	else if (object->object_type == CYLINDER)
-	{
-		double dist = local_point[0] * local_point[0]
-					+ local_point[2] * local_point[2];
-
-		if (dist < 1 && local_point[1] >= object->scale[1] / 2 - EPSILON)
-			local_normal = allocate_tuple(0, 1, 0, 0);
-		else if (dist < 1 && local_point[1] <= (-object->scale[1] / 2) + EPSILON)
-			local_normal = allocate_tuple(0, -1, 0, 0);
-		else
-			local_normal = allocate_tuple(local_point[0], 0, local_point[2], 0);
-	}
-	else if (object->object_type == PLANE)
-		local_normal = allocate_tuple(0, 1, 0, 0);
-
-	if (!local_normal)
-	{
-		free(local_point);
+	if (local_point == NULL)
 		return (NULL);
-	}
-
+	local_normal = compute_local_normal(object, local_point);
+	if (local_normal == NULL)
+		return (free(local_point), NULL);
 	transposed_inverse = transpose_grid(object->inverse);
+	if (transposed_inverse == NULL)
+		return (free(local_point), free(local_normal), NULL);
 	world_normal = multiply_matrix_tuple(transposed_inverse, local_normal);
-	if (!world_normal)
-	{
-		free(local_point);
-		free(local_normal);
-		free_grid(transposed_inverse);
-		return (NULL);
-	}
+	if (world_normal == NULL)
+		return (free(local_point), free(local_normal)
+			, free_grid(transposed_inverse), NULL);
 	world_normal[3] = 0;
 	normalize_vector(world_normal);
-	free(local_point);
-	free(local_normal);
-	free_grid(transposed_inverse);
-	return (world_normal);
+	return (free(local_point), free(local_normal)
+		, free_grid(transposed_inverse), world_normal);
 }
 
 double	*ray_position(t_ray r, double t)

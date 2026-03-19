@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   render_loop.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabdella <aabdella@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:28:46 by aabdella          #+#    #+#             */
-/*   Updated: 2026/03/17 16:46:57 by aabdella         ###   ########.fr       */
+/*   Updated: 2026/03/19 12:18:26 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "miniRT.h"
+
+bool	check_if_hit_tval(t_world *world, t_ray *r, int *count, double distance)
+{
+	t_intersection	*xs;
+	t_intersection	*hit;
+
+	xs = intersect_world(world, *r, count);
+	hit = check_if_hit(xs, count);
+	free(r->ray_direction);
+	free(r);
+	if (hit && hit->t < distance)
+		return (free(xs), true);
+	else
+		return (free(xs), false);
+}
 
 t_intersection	*check_if_hit(t_intersection *xs, int *count)
 {

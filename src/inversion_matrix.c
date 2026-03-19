@@ -6,7 +6,7 @@
 /*   By: pecastro <pecastro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 18:40:41 by aabdella          #+#    #+#             */
-/*   Updated: 2026/02/25 19:28:52 by pecastro         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:38:26 by pecastro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,20 @@ double	**inverse(double **grid, int size)
 		j = -1;
 		while (++j < size)
 		{
-			invgrid[j][i] = cofactor(grid, size, i,j) / det;
+			invgrid[j][i] = cofactor(grid, size, i, j) / det;
 		}
 	}
 	return (invgrid);
+}
+
+int	init_get_submatrix(double ***sub, int *i, int *si, int size)
+{
+	*sub = allocate_grid(size - 1);
+	if (!sub)
+		return (1);
+	*si = 0;
+	*i = 0;
+	return (0);
 }
 
 double	**get_submatrix(double **mtrx, int size, int rowskip, int colskip)
@@ -43,15 +53,10 @@ double	**get_submatrix(double **mtrx, int size, int rowskip, int colskip)
 	int		i;
 	int		si;
 	int		j;
-	int 	sj;
+	int		sj;
 
-	if (!mtrx || rowskip >= size || colskip >= size)
+	if (init_get_submatrix(&sub, &i, &si, size) == 1)
 		return (NULL);
-	sub = allocate_grid(size - 1);
-	if (!sub)
-		return (NULL);
-	si = 0;
-	i = 0;
 	while (i < size)
 	{
 		if (i != rowskip)
@@ -61,10 +66,7 @@ double	**get_submatrix(double **mtrx, int size, int rowskip, int colskip)
 			while (j < size)
 			{
 				if (j != colskip)
-				{
-					sub[si][sj] = mtrx[i][j];
-					sj ++;
-				}
+					sub[si][sj++] = mtrx[i][j];
 				j ++;
 			}
 			si ++;
@@ -81,7 +83,6 @@ double	cofactor(double **mtrx, int size, int row, int col)
 	int		sign;
 
 	submtrx = get_submatrix(mtrx, size, row, col);
-	//if !submtrx return NULL;
 	det = determinant(submtrx, size - 1);
 	free_grid(submtrx);
 	sign = 1;
